@@ -18,13 +18,14 @@ namespace PCLStorage
 	{
 		readonly string _name;
 		readonly IsoStoreFolder _parentFolder;
-		readonly Lazy<string> _path;
+		readonly string _path;
 
 		public IsoStoreFile(string name, IsoStoreFolder parentFolder)
 		{
 			_name = name;
 			_parentFolder = parentFolder;
-			_path = new Lazy<string>(() => System.IO.Path.Combine(_parentFolder.Path, _name));
+			_path = System.IO.Path.Combine(_parentFolder.Path, _name);
+
 		}
 
 		public string Name
@@ -34,17 +35,34 @@ namespace PCLStorage
 
 		public string Path
 		{
-			get { return _path.Value; }
+			get { return _path; }
 		}
 
 		public Task<Stream> OpenAsync(FileAccess fileAccess)
 		{
-			throw new NotImplementedException();
+			System.IO.FileAccess nativeFileAccess;
+			if (fileAccess == FileAccess.Read)
+			{
+				nativeFileAccess = System.IO.FileAccess.Read;
+			}
+			else if (fileAccess == FileAccess.ReadAndWrite)
+			{
+				nativeFileAccess = System.IO.FileAccess.ReadWrite;
+			}
+			else
+			{
+				throw new ArgumentException("Unrecognized FileAccess value: " + fileAccess);
+			}
+
+			IsolatedStorageFileStream stream = _parentFolder.Root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
+
+			return TaskEx.FromResult<Stream>(stream);
 		}
 
-		public System.Threading.Tasks.Task DeleteAsync()
+		public Task DeleteAsync()
 		{
-			throw new NotImplementedException();
+			_parentFolder.Root.DeleteFile(Path);
+			return TaskEx.FromResult(true);
 		}
 	}
 }
