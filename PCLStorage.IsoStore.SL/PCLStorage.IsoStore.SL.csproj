@@ -78,6 +78,9 @@
     <Compile Include="..\PCLStorage\IFolder.cs">
       <Link>IFolder.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage\Storage.cs">
+      <Link>Storage.cs</Link>
+    </Compile>
     <Compile Include="IsoStoreFile.cs" />
     <Compile Include="IsoStoreFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

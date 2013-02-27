@@ -41,6 +41,7 @@
     <Compile Include="IFile.cs" />
     <Compile Include="IFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks">
