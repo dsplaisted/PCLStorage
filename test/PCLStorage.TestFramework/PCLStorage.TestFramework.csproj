@@ -40,6 +40,9 @@
   <ItemGroup>
     <Compile Include="Assert.cs" />
     <Compile Include="Attributes.cs" />
+    <Compile Include="Infrastructure\Test.cs" />
+    <Compile Include="Infrastructure\TestDiscoverer.cs" />
+    <Compile Include="Infrastructure\TestRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +59,7 @@
       <HintPath>..\..\packages\Microsoft.Bcl.1.0.16-rc\lib\portable-net40+sl4+win8+wp71\System.Threading.Tasks.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.0-rc\tools\Microsoft.Bcl.Build.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
