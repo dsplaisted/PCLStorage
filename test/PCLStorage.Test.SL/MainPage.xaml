@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <Button x:Name="RunTestsButton" Content="Run Tests" Click="RunTestsButton_Click"/>
         <TextBox x:Name="ResultsTextBox"
-            Grid.Row="1" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+            Grid.Row="1" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"/>
         
     </Grid>
 </UserControl>

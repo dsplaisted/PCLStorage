@@ -16,7 +16,8 @@ namespace PCLStorage.Test
 		{
 			string fileName = Guid.NewGuid().ToString();
 			IFolder folder = Storage.AppLocalStorage;
-			await Assert.ThrowsAsync<IOException>(async () => await folder.GetFileAsync(fileName));
+			Exception ex = await Assert.ThrowsAsync<IOException>(async () => await folder.GetFileAsync(fileName));
+			Assert.AreEqual("System.IO.FileNotFoundException", ex.GetType().FullName);
 		}
     }
 }
