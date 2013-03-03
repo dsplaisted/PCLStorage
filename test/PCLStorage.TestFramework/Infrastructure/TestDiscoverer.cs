@@ -26,11 +26,6 @@ namespace PCLStorage.TestFramework.Infrastructure
 			List<Test> ret = new List<Test>();
 			foreach (MethodInfo method in type.GetMethods())
 			{
-				if (!method.IsStatic)
-				{
-					continue;
-				}
-
 				if (method.GetCustomAttributes(typeof(TestMethodAttribute), false).Any())
 				{
 					var test = new Test(method);

@@ -46,18 +46,37 @@ namespace PCLStorage.TestFramework.Infrastructure
 			try
 			{
 				//	Use compiled lambdas so that exceptions won't be wrapped in a TargetInvocationException
-				if (_method.ReturnType == typeof(void))
-				{
-					var callExpression = Expression.Call(_method);
-					var lambda = Expression.Lambda<Action>(callExpression);
-					lambda.Compile()();
-				}
-				else
-				{
-					var callExpression = Expression.Call(_method);
-					var lambda = Expression.Lambda<Func<Task>>(callExpression);
-					await lambda.Compile()();
-				}
+                if (_method.IsStatic)
+                {
+                    if (_method.ReturnType == typeof(void))
+                    {
+                        var callExpression = Expression.Call(_method);
+                        var lambda = Expression.Lambda<Action>(callExpression);
+                        lambda.Compile()();
+                    }
+                    else
+                    {
+                        var callExpression = Expression.Call(_method);
+                        var lambda = Expression.Lambda<Func<Task>>(callExpression);
+                        await lambda.Compile()();
+                    }
+                }
+                else
+                {
+                    object testClassInstance = Activator.CreateInstance(_method.ReflectedType);
+                    if (_method.ReturnType == typeof(void))
+                    {
+                        var callExpression = Expression.Call(Expression.Constant(testClassInstance, _method.ReflectedType), _method);
+                        var lambda = Expression.Lambda<Action>(callExpression);
+                        lambda.Compile()();
+                    }
+                    else
+                    {
+                        var callExpression = Expression.Call(Expression.Constant(testClassInstance, _method.ReflectedType), _method);
+                        var lambda = Expression.Lambda<Func<Task>>(callExpression);
+                        await lambda.Compile()();
+                    }
+                }
 				TestState = TestState.Passed;
 			}
 			catch (Exception ex)

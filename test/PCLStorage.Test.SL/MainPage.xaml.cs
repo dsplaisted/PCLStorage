@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using PCLStorage.TestFramework.Infrastructure;
+using System.IO.IsolatedStorage;
 
 namespace PCLStorage.Test.SL
 {
@@ -33,5 +34,20 @@ namespace PCLStorage.Test.SL
 				ResultsTextBox.Text = ex.ToString();
 			}
 		}
+
+        private void ClearIsoStoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                foreach (var file in isoStore.GetFileNames())
+                {
+                    isoStore.DeleteFile(file);
+                }
+                foreach (var directory in isoStore.GetDirectoryNames())
+                {
+                    isoStore.DeleteDirectory(directory);
+                }
+            }
+        }
 	}
 }

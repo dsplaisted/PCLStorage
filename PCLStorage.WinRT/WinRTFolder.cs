@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,18 @@ namespace PCLStorage
 	public class WinRTFolder : IFolder
 	{
 		StorageFolder _wrappedFolder;
+        bool _isRootFolder;
 
-		public WinRTFolder(StorageFolder wrappedFolder)
+		private WinRTFolder(StorageFolder wrappedFolder, bool isRootFolder)
 		{
 			_wrappedFolder = wrappedFolder;
+            _isRootFolder = isRootFolder;
 		}
+
+        public WinRTFolder(StorageFolder wrappedFolder)
+            : this(wrappedFolder, true)
+        {
+        }
 
 		public string Name
 		{
@@ -49,24 +57,29 @@ namespace PCLStorage
 		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
 			StorageFolder wrtFolder = await _wrappedFolder.CreateFolderAsync(desiredName, GetWinRTCreationCollisionOption(option));
-			return new WinRTFolder(wrtFolder);
+			return new WinRTFolder(wrtFolder, false);
 		}
 
 		public async Task<IFolder> GetFolderAsync(string name)
 		{
 			StorageFolder wrtFolder = await _wrappedFolder.GetFolderAsync(name);
-			return new WinRTFolder(wrtFolder);
+			return new WinRTFolder(wrtFolder, false);
 		}
 
 		public async Task<IList<IFolder>> GetFoldersAsync()
 		{
 			var wrtFolders = await _wrappedFolder.GetFoldersAsync();
-			var folders = wrtFolders.Select(f => new WinRTFolder(f)).ToList<IFolder>();
+			var folders = wrtFolders.Select(f => new WinRTFolder(f, false)).ToList<IFolder>();
 			return new ReadOnlyCollection<IFolder>(folders);
 		}
 
 		public Task DeleteAsync()
 		{
+            if (_isRootFolder)
+            {
+                throw new IOException("Cannot delete root storage folder.");
+            }
+
 			return _wrappedFolder.DeleteAsync().AsTask();
 		}
 

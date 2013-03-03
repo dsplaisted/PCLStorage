@@ -65,11 +65,12 @@ namespace PCLStorage
 						nameToUse = desiredName + "(" + num + ")";
 						path = System.IO.Path.Combine(Path, nameToUse);
 					}
+                    InternalCreateFile(path);
 				}
 				else if (option == CreationCollisionOption.ReplaceExisting)
 				{
 					Root.DeleteFile(path);
-					using (Root.CreateFile(path)) { }
+                    InternalCreateFile(path);
 				}
 				else if (option == CreationCollisionOption.FailIfExists)
 				{
@@ -87,12 +88,19 @@ namespace PCLStorage
 			else
 			{
 				//	Create file
-				using (Root.CreateFile(path)) { }
+                InternalCreateFile(path);
 			}
 
 			var ret = new IsoStoreFile(nameToUse, this);
 			return TaskEx.FromResult<IFile>(ret);
 		}
+
+        void InternalCreateFile(string path)
+        {
+            using (var stream = new IsolatedStorageFileStream(path, FileMode.OpenOrCreate, Root))
+            {
+            }
+        }
 
 		public Task<IFile> GetFileAsync(string name)
 		{
@@ -173,6 +181,10 @@ namespace PCLStorage
 
 		public Task DeleteAsync()
 		{
+            if (string.IsNullOrEmpty(Path))
+            {
+                throw new IOException("Cannot delete root Isolated Storage folder.");
+            }
 			Root.DeleteDirectory(Path);
 			return TaskEx.FromResult(true);
 		}

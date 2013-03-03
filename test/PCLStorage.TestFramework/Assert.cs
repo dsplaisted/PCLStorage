@@ -20,7 +20,7 @@ namespace PCLStorage.TestFramework
 
 		}
 	}
-
+#if !NETFX_CORE
 	public static class Assert
 	{
 		public static void AreEqual(object expected, object actual, string message = null)
@@ -42,6 +42,28 @@ namespace PCLStorage.TestFramework
 			}
 		}
 
+        static void HandleFail(string assertName, string failMessage, string message, Exception innerException = null)
+        {
+            string finalMessage = "Assert." + assertName + " failed.  " + failMessage;
+            if (!string.IsNullOrEmpty(message))
+            {
+                message += "  " + message;
+            }
+
+            if (innerException == null)
+            {
+                throw new AssertFailedException(finalMessage);
+            }
+            else
+            {
+                throw new AssertFailedException(finalMessage, innerException);
+            }
+        }
+    }
+#endif
+
+    public static class ExceptionAssert
+    {
 		public static T Throws<T>(Action action, string message = null) where T : Exception
 		{
 			string failMessage;
@@ -90,22 +112,22 @@ namespace PCLStorage.TestFramework
 			return null;
 		}
 
-		static void HandleFail(string assertName, string failMessage, string message, Exception innerException = null)
-		{
-			string finalMessage = "Assert." + assertName + " failed.  " + failMessage;
-			if (!string.IsNullOrEmpty(message))
-			{
-				message += "  " + message;
-			}
+        static void HandleFail(string assertName, string failMessage, string message, Exception innerException = null)
+        {
+            string finalMessage = "ExceptionAssert." + assertName + " failed.  " + failMessage;
+            if (!string.IsNullOrEmpty(message))
+            {
+                message += "  " + message;
+            }
 
-			if (innerException == null)
-			{
-				throw new AssertFailedException(finalMessage);
-			}
-			else
-			{
-				throw new AssertFailedException(finalMessage, innerException);
-			}
-		}
+            if (innerException == null)
+            {
+                throw new AssertFailedException(finalMessage);
+            }
+            else
+            {
+                throw new AssertFailedException(finalMessage, innerException);
+            }
+        }
 	}
 }

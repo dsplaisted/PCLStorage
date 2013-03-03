@@ -11,9 +11,16 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Button x:Name="RunTestsButton" Content="Run Tests" Click="RunTestsButton_Click"/>
+        <Button x:Name="ClearIsoStoreButton" Content="Clear IsoStore"
+                Grid.Column="1" Click="ClearIsoStoreButton_Click"/>
         <TextBox x:Name="ResultsTextBox"
-            Grid.Row="1" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"/>
+            Grid.Row="1" Grid.ColumnSpan="2" AcceptsReturn="True"
+            VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"/>
         
     </Grid>
 </UserControl>
