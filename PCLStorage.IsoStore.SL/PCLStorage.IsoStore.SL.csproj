@@ -74,6 +74,9 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\PCLStorage\FileExtensions.cs">
+      <Link>FileExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage\IFile.cs">
       <Link>IFile.cs</Link>
     </Compile>
