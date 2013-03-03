@@ -37,7 +37,20 @@ namespace PCLStorage
 
 		public async Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
 		{
-			StorageFile wrtFile = await _wrappedFolder.CreateFileAsync(desiredName, GetWinRTCreationCollisionOption(option));
+            StorageFile wrtFile;
+            try
+            {
+                wrtFile = await _wrappedFolder.CreateFileAsync(desiredName, GetWinRTCreationCollisionOption(option));
+            }
+            catch (Exception ex)
+            {
+                if (ex.HResult == -2147024713) // 0x800700B7
+                {
+                    //  File already exists (and potentially other failures, not sure what the HResult represents)
+                    throw new IOException(ex.Message, ex);
+                }
+                throw;
+            }
 			return new WinRTFile(wrtFile);
 		}
 

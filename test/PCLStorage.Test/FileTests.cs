@@ -47,5 +47,85 @@ namespace PCLStorage.Test
             //  Cleanup
             await file.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task CreateFileNameCollision_GenerateUniqueName()
+        {
+            //  Arrange
+            IFolder folder = Storage.AppLocalStorage;
+            string baseFileName = "Collision_Unique";
+            IFile file1 = await folder.CreateFileAsync(baseFileName + ".txt", CreationCollisionOption.FailIfExists);
+
+            //  Act
+            IFile file2 = await folder.CreateFileAsync(baseFileName + ".txt", CreationCollisionOption.GenerateUniqueName);
+
+            //  Assert
+            Assert.AreEqual(baseFileName + " (2).txt", file2.Name);
+
+            //  Cleanup
+            await file1.DeleteAsync();
+            await file2.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateFileNameCollision_ReplaceExisting()
+        {
+            //  Arrange
+            IFolder folder = Storage.AppLocalStorage;
+            string fileName = "Collision_Replace.txt";
+            IFile file1 = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            await file1.WriteAllTextAsync("Hello, World");
+
+            //  Act
+            IFile file2 = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+            //  Assert
+            Assert.AreEqual(file2.Name, fileName);
+            string file2Contents = await file2.ReadAllTextAsync();
+            Assert.AreEqual(string.Empty, file2Contents);
+
+            //  Cleanup
+            await file2.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateFileNameCollision_FailIfExists()
+        {
+            //  Arrange
+            IFolder folder = Storage.AppLocalStorage;
+            string fileName = "Collision_Fail.txt";
+            IFile file1 = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+
+            //  Act & Assert
+            await ExceptionAssert.ThrowsAsync<IOException>(async () =>
+                {
+                    await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+                });
+
+            //  Cleanup
+            await file1.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateFileNameCollision_OpenIfExists()
+        {
+            //  Arrange
+            IFolder folder = Storage.AppLocalStorage;
+            string fileName = "Collision_OpenIfExists.txt";
+            IFile file1 = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            string contents = "Hello, World!";
+            await file1.WriteAllTextAsync(contents);
+
+            //  Act
+            IFile file2 = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+
+            //  Assert
+            Assert.AreEqual(file2.Name, fileName);
+            string file2Contents = await file2.ReadAllTextAsync();
+            Assert.AreEqual(contents, file2Contents);
+
+            //  Cleanup
+            await file2.DeleteAsync();
+        }
     }
 }
