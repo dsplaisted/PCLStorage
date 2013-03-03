@@ -54,14 +54,61 @@ namespace PCLStorage
 				throw new ArgumentException("Unrecognized FileAccess value: " + fileAccess);
 			}
 
-			IsolatedStorageFileStream stream = _parentFolder.Root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
-
-			return TaskEx.FromResult<Stream>(stream);
+			try
+			{
+				IsolatedStorageFileStream stream = _parentFolder.Root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
+				return TaskEx.FromResult<Stream>(stream);
+			}
+			catch (IsolatedStorageException ex)
+			{
+				//	Check to see if error is because file does not exist, if so throw a more specific exception
+				bool fileDoesntExist = false;
+				try
+				{
+					if (!_parentFolder.Root.FileExists(Path))
+					{
+						fileDoesntExist = true;
+					}
+				}
+				catch { }
+				if (fileDoesntExist)
+				{
+					throw new FileNotFoundException("File does not exist: " + Path, ex);
+				}
+				else
+				{
+					throw;
+				}
+			}
 		}
 
 		public Task DeleteAsync()
 		{
-			_parentFolder.Root.DeleteFile(Path);
+            try
+            {
+                _parentFolder.Root.DeleteFile(Path);
+            }
+            catch (IsolatedStorageException ex)
+            {
+                //	Check to see if error is because file does not exist, if so throw a more specific exception
+                bool fileDoesntExist = false;
+                try
+                {
+                    if (!_parentFolder.Root.FileExists(Path))
+                    {
+                        fileDoesntExist = true;
+                    }
+                }
+                catch { }
+                if (fileDoesntExist)
+                {
+                    throw new FileNotFoundException("File does not exist: " + Path, ex);
+                }
+                else
+                {
+                    throw;
+                }
+            }
 			return TaskEx.FromResult(true);
 		}
 	}

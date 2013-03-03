@@ -36,14 +36,6 @@ namespace PCLStorage.Test
             //  Assert
             Assert.AreEqual("foo.txt", file.Name);
 
-            //using (var stream = await file.OpenAsync(FileAccess.ReadAndWrite))
-            //{
-            //    using (var sw = new StreamWriter(stream))
-            //    {
-            //        await sw.WriteLineAsync("Hello, World");
-            //    }
-            //}
-
             //  Cleanup
             await file.DeleteAsync();
         }
@@ -127,5 +119,66 @@ namespace PCLStorage.Test
             //  Cleanup
             await file2.DeleteAsync();
         }
+
+		[TestMethod]
+		public async Task WriteAndReadFile()
+		{
+			//	Arrange
+			IFolder folder = Storage.AppLocalStorage;
+			IFile file = await folder.CreateFileAsync("readWriteFile.txt", CreationCollisionOption.FailIfExists);
+			string contents = "And so we beat on, boats against the current, born back ceaselessly into the past.";
+
+			//	Act
+			await file.WriteAllTextAsync(contents);
+			string readContents = await file.ReadAllTextAsync();
+
+			//	Assert
+			Assert.AreEqual(contents, readContents);
+
+			//	Cleanup
+			await file.DeleteAsync();
+		}
+
+		[TestMethod]
+		public async Task DeleteFile()
+		{
+			//	Arrange
+			IFolder folder = Storage.AppLocalStorage;
+			string fileName = "fileToDelete.txt";
+			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+
+			//	Act
+			await file.DeleteAsync();
+
+			//	Assert
+			var files = await folder.GetFilesAsync();
+			Assert.IsFalse(files.Any(f => f.Name == fileName));
+		}
+
+		[TestMethod]
+		public async Task OpenDeletedFile()
+		{
+			//	Arrange
+			IFolder folder = Storage.AppLocalStorage;
+			string fileName = "fileToDeleteAndOpen.txt";
+			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+			await file.DeleteAsync();
+
+			//	Act & Assert
+			await ExceptionAssert.ThrowsAsync<IOException>(async () => { await file.OpenAsync(FileAccess.ReadAndWrite); });
+		}
+
+		[TestMethod]
+		public async Task DeleteFileTwice()
+		{
+			//	Arrange
+			IFolder folder = Storage.AppLocalStorage;
+			string fileName = "fileToDeleteTwice.txt";
+			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+			await file.DeleteAsync();
+
+			//	Act & Assert
+			await ExceptionAssert.ThrowsAsync<IOException>(async () => { await file.DeleteAsync(); });
+		}
     }
 }

@@ -42,9 +42,31 @@ namespace PCLStorage.TestFramework
 			}
 		}
 
+		public static void IsTrue(bool condition, string message = null)
+		{
+			if (!condition)
+			{
+				HandleFail("IsTrue", null, message);
+			}
+		}
+
+		public static void IsFalse(bool condition, string message = null)
+		{
+			if (condition)
+			{
+				HandleFail("IsFalse", null, message);
+			}
+		}
+
+		
+
         static void HandleFail(string assertName, string failMessage, string message, Exception innerException = null)
         {
-            string finalMessage = "Assert." + assertName + " failed.  " + failMessage;
+			string finalMessage = "Assert." + assertName + " failed.";
+			if (!string.IsNullOrEmpty(failMessage))
+			{
+				message += "  " + failMessage;
+			}
             if (!string.IsNullOrEmpty(message))
             {
                 message += "  " + message;
