@@ -60,9 +60,11 @@ namespace PCLStorage
 			{
 				if (option == CreationCollisionOption.GenerateUniqueName)
 				{
-					for (int num = 1; Root.FileExists(path) ; num++)
+                    string desiredRoot = System.IO.Path.GetFileNameWithoutExtension(desiredName);
+                    string desiredExtension = System.IO.Path.GetExtension(desiredName);
+					for (int num = 2; Root.FileExists(path) ; num++)
 					{
-						nameToUse = desiredName + "(" + num + ")";
+						nameToUse = desiredRoot + " (" + num + ")" + desiredExtension;
 						path = System.IO.Path.Combine(Path, nameToUse);
 					}
                     InternalCreateFile(path);
@@ -128,11 +130,12 @@ namespace PCLStorage
 			{
 				if (option == CreationCollisionOption.GenerateUniqueName)
 				{
-					for (int num = 1; Root.DirectoryExists(path); num++)
+					for (int num = 2; Root.DirectoryExists(path); num++)
 					{
 						nameToUse = desiredName + "(" + num + ")";
 						path = System.IO.Path.Combine(Path, nameToUse);
 					}
+                    Root.CreateDirectory(path);
 				}
 				else if (option == CreationCollisionOption.ReplaceExisting)
 				{
