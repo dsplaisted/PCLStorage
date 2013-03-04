@@ -109,7 +109,7 @@ namespace PCLStorage
 			string path = System.IO.Path.Combine(Path, name);
 			if (!Root.FileExists(path))
 			{
-				throw new FileNotFoundException("File does not exist: " + path);
+                throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + path);
 			}
 			var ret = new IsoStoreFile(name, this);
 			return TaskEx.FromResult<IFile>(ret);
@@ -169,7 +169,7 @@ namespace PCLStorage
 			string path = System.IO.Path.Combine(Path, name);
 			if (!Root.DirectoryExists(path))
 			{
-				throw new DirectoryNotFoundException("Directory does not exist: " + path);
+				throw new PCLStorage.Exceptions.DirectoryNotFoundException("Directory does not exist: " + path);
 			}
 			var ret = new IsoStoreFolder(name, this);
 			return TaskEx.FromResult<IFolder>(ret);

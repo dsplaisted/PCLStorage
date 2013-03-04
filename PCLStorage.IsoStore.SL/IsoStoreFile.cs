@@ -73,7 +73,7 @@ namespace PCLStorage
 				catch { }
 				if (fileDoesntExist)
 				{
-					throw new FileNotFoundException("File does not exist: " + Path, ex);
+                    throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path, ex);
 				}
 				else
 				{
@@ -102,7 +102,7 @@ namespace PCLStorage
                 catch { }
                 if (fileDoesntExist)
                 {
-                    throw new FileNotFoundException("File does not exist: " + Path, ex);
+                    throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path, ex);
                 }
                 else
                 {

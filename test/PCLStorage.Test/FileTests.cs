@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 #if NETFX_CORE
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 #endif
+#if PORTABLE
+using PCLStorage.Exceptions;
+#endif
 using PCLStorage.TestFramework;
 
 
@@ -20,8 +23,7 @@ namespace PCLStorage.Test
 		{
 			string fileName = Guid.NewGuid().ToString();
 			IFolder folder = Storage.AppLocalStorage;
-			Exception ex = await ExceptionAssert.ThrowsAsync<IOException>(async () => await folder.GetFileAsync(fileName));
-			Assert.AreEqual("System.IO.FileNotFoundException", ex.GetType().FullName);
+			await ExceptionAssert.ThrowsAsync<FileNotFoundException>(async () => await folder.GetFileAsync(fileName));
 		}
 
         [TestMethod]
