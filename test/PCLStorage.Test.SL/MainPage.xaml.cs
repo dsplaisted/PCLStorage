@@ -23,6 +23,9 @@ namespace PCLStorage.Test.SL
 
 		private async void RunTestsButton_Click(object sender, RoutedEventArgs e)
 		{
+            RunTestsButton.IsEnabled = false;
+            ClearIsoStoreButton.IsEnabled = false;
+
 			try
 			{
 				var testRunner = new TestRunner(typeof(FileTests).Assembly);
@@ -33,21 +36,30 @@ namespace PCLStorage.Test.SL
 			{
 				ResultsTextBox.Text = ex.ToString();
 			}
+
+            RunTestsButton.IsEnabled = true;
+            ClearIsoStoreButton.IsEnabled = true;
 		}
 
-        private void ClearIsoStoreButton_Click(object sender, RoutedEventArgs e)
+        private async void ClearIsoStoreButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+            RunTestsButton.IsEnabled = false;
+            ClearIsoStoreButton.IsEnabled = false;
+
+            var isoStore = Storage.AppLocalStorage;
             {
-                foreach (var file in isoStore.GetFileNames())
+                foreach (var file in await isoStore.GetFilesAsync())
                 {
-                    isoStore.DeleteFile(file);
+                    await file.DeleteAsync();
                 }
-                foreach (var directory in isoStore.GetDirectoryNames())
+                foreach (var directory in await isoStore.GetFoldersAsync())
                 {
-                    isoStore.DeleteDirectory(directory);
+                    await directory.DeleteAsync();
                 }
             }
+
+            RunTestsButton.IsEnabled = true;
+            ClearIsoStoreButton.IsEnabled = true;
         }
 	}
 }

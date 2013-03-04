@@ -182,14 +182,24 @@ namespace PCLStorage
 			return TaskEx.FromResult(ret);
 		}
 
-		public Task DeleteAsync()
+		public async Task DeleteAsync()
 		{
             if (string.IsNullOrEmpty(Path))
             {
                 throw new IOException("Cannot delete root Isolated Storage folder.");
             }
+
+            foreach (var subfolder in await GetFoldersAsync())
+            {
+                await subfolder.DeleteAsync();
+            }
+
+            foreach (var file in await GetFilesAsync())
+            {
+                await file.DeleteAsync();
+            }
+
 			Root.DeleteDirectory(Path);
-			return TaskEx.FromResult(true);
 		}
 	}
 }
