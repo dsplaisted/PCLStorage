@@ -108,6 +108,44 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public async Task CreateFolder()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string folderName = "FolderToCreate";
+
+            //  Act
+            IFolder folder = await rootFolder.CreateFolderAsync(folderName, CreationCollisionOption.FailIfExists);
+
+            //  Assert
+            Assert.AreEqual(folderName, folder.Name);
+            Assert.AreEqual(PortablePath.Combine(rootFolder.Path, folderName), folder.Path, "Folder path");
+
+            //  Cleanup
+            await folder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateNestedFolder()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string subFolderName = "NestedSubFolder";
+            IFolder subFolder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+            string leafFolderName = "NestedLeafFolder";
+
+            //  Act
+            IFolder testFolder = await subFolder.CreateFolderAsync(leafFolderName, CreationCollisionOption.FailIfExists);
+
+            //  Assert
+            Assert.AreEqual(leafFolderName, testFolder.Name);
+            Assert.AreEqual(PortablePath.Combine(rootFolder.Path, subFolderName, leafFolderName), testFolder.Path, "Leaf folder path");
+
+            //  Cleanup
+            await subFolder.DeleteAsync();
+        }
+
+        [TestMethod]
         public async Task DeleteAppLocalStorageThrows()
         {
             //  Arrange
