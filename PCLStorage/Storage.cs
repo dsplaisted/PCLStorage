@@ -16,9 +16,14 @@ namespace PCLStorage
 #elif NETFX_CORE
 				return new WinRTFolder(Windows.Storage.ApplicationData.Current.LocalFolder);
 #else
-				throw new NotImplementedException();
+                throw Storage.NotImplementedInReferenceAssembly();
 #endif
 			}
 		}
+
+        internal static Exception NotImplementedInReferenceAssembly()
+        {
+            return new NotImplementedException();
+        }
 	}
 }

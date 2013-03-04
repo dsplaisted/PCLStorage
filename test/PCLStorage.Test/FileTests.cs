@@ -31,15 +31,38 @@ namespace PCLStorage.Test
         {
             //  Arrange
             IFolder folder = Storage.AppLocalStorage;
+            string fileName = "fileToCreate.txt";
 
             //  Act
-            IFile file = await folder.CreateFileAsync("foo.txt", CreationCollisionOption.FailIfExists);
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 
             //  Assert
-            Assert.AreEqual("foo.txt", file.Name);
+            Assert.AreEqual(fileName, file.Name);
+            Assert.AreEqual(PortablePath.Combine(folder.Path, fileName), file.Path, "File Path");
 
             //  Cleanup
             await file.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateFileSubFolder()
+        {
+            //  Arrange
+            IFolder folder = Storage.AppLocalStorage;
+            string subFolderName = "CreateFileSubFolder";
+            IFolder subFolder = await folder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+            string fileName = "fileToCreateInSubFolder.txt";
+
+            //  Act
+            IFile file = await subFolder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+
+            //  Assert
+            Assert.AreEqual(fileName, file.Name);
+            Assert.AreEqual(PortablePath.Combine(folder.Path, subFolderName, fileName), file.Path, "File Path");
+
+            //  Cleanup
+            await file.DeleteAsync();
+            await subFolder.DeleteAsync();
         }
 
         [TestMethod]
@@ -182,5 +205,49 @@ namespace PCLStorage.Test
 			//	Act & Assert
 			await ExceptionAssert.ThrowsAsync<IOException>(async () => { await file.DeleteAsync(); });
 		}
+
+        [TestMethod]
+        public async Task OpenFileForRead()
+        {
+            //  Arrange
+            IFolder folder = Storage.AppLocalStorage;
+            string fileName = "fileToOpenForRead.txt";
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+
+            //  Act
+            using (Stream stream = await file.OpenAsync(FileAccess.Read))
+            {
+
+                //  Assert
+                Assert.IsFalse(stream.CanWrite);
+                Assert.IsTrue(stream.CanRead);
+                Assert.IsTrue(stream.CanSeek);
+            }
+
+            //  Cleanup
+            await file.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task OpenFileForReadAndWrite()
+        {
+            //  Arrange
+            IFolder folder = Storage.AppLocalStorage;
+            string fileName = "fileToOpenForReadAndWrite";
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+
+            //  Act
+            using (Stream stream = await file.OpenAsync(FileAccess.ReadAndWrite))
+            {
+
+                //  Assert
+                Assert.IsTrue(stream.CanWrite);
+                Assert.IsTrue(stream.CanRead);
+                Assert.IsTrue(stream.CanSeek);                
+            }
+
+            //  Cleanup
+            await file.DeleteAsync();
+        }
     }
 }

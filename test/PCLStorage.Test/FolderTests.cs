@@ -21,9 +21,6 @@ namespace PCLStorage.Test
         {
             IFolder folder = Storage.AppLocalStorage;
             await ExceptionAssert.ThrowsAsync<IOException>(async () => await folder.DeleteAsync());
-            
-
-            
         }
     }
 }

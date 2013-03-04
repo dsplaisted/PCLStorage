@@ -114,6 +114,9 @@
     <Compile Include="..\PCLStorage\IFolder.cs">
       <Link>IFolder.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage\PortablePath.cs">
+      <Link>PortablePath.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage\Storage.cs">
       <Link>Storage.cs</Link>
     </Compile>
