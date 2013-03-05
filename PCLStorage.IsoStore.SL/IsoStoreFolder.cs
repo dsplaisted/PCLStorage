@@ -122,7 +122,7 @@ namespace PCLStorage
 			return TaskEx.FromResult(ret);
 		}
 
-		public Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
+		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
 			string nameToUse = desiredName;
 			string path = System.IO.Path.Combine(Path, nameToUse);
@@ -132,14 +132,15 @@ namespace PCLStorage
 				{
 					for (int num = 2; Root.DirectoryExists(path); num++)
 					{
-						nameToUse = desiredName + "(" + num + ")";
+						nameToUse = desiredName + " (" + num + ")";
 						path = System.IO.Path.Combine(Path, nameToUse);
 					}
                     Root.CreateDirectory(path);
 				}
 				else if (option == CreationCollisionOption.ReplaceExisting)
 				{
-					Root.DeleteDirectory(path);
+                    IsoStoreFolder folderToDelete = new IsoStoreFolder(nameToUse, this);
+                    await folderToDelete.DeleteAsync();
 					Root.CreateDirectory(path);
 				}
 				else if (option == CreationCollisionOption.FailIfExists)
@@ -161,7 +162,7 @@ namespace PCLStorage
 			}
 
 			var ret = new IsoStoreFolder(nameToUse, this);
-			return TaskEx.FromResult<IFolder>(ret);
+            return ret;
 		}
 
 		public Task<IFolder> GetFolderAsync(string name)

@@ -146,6 +146,86 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public async Task CreateFolderCollision_GenerateUniqueName()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string subFolderName = "Collision_Unique";
+            IFolder existingFolder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+
+            //  Act
+            IFolder folder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.GenerateUniqueName);
+
+            //  Assert
+            Assert.AreEqual(subFolderName + " (2)", folder.Name);
+
+            //  Cleanup
+            await existingFolder.DeleteAsync();
+            await folder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateFolderCollision_ReplaceExisting()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string subFolderName = "Collision_Replace";
+            IFolder existingFolder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+            await existingFolder.CreateFileAsync("FileInFolder.txt", CreationCollisionOption.FailIfExists);
+
+            //  Act
+            IFolder newFolder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.ReplaceExisting);
+
+            //  Assert
+            Assert.AreEqual(subFolderName, newFolder.Name);
+            var files = await newFolder.GetFilesAsync();
+            Assert.AreEqual(0, files.Count, "New folder file count");
+
+            //  Cleanup
+            await newFolder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateFolderCollision_FailIfExists()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string subFolderName = "Collision_Fail";
+            IFolder existingFolder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+
+            //  Act & Assert
+            await ExceptionAssert.ThrowsAsync<IOException>(async () =>
+                {
+                    await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+                });
+
+            //  Cleanup
+            await existingFolder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task CreateFolderCollision_OpenIfExists()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string subFolderName = "Collision_Open";
+            IFolder existingFolder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+            await existingFolder.CreateFileAsync("FileInFolder.txt", CreationCollisionOption.FailIfExists);
+
+            //  Act
+            IFolder newFolder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.OpenIfExists);
+
+            //  Assert
+            Assert.AreEqual(subFolderName, newFolder.Name);
+            var files = await newFolder.GetFilesAsync();
+            Assert.AreEqual(1, files.Count);
+            Assert.AreEqual("FileInFolder.txt", files[0].Name);
+
+            //  Cleanup
+            await newFolder.DeleteAsync();
+        }
+
+        [TestMethod]
         public async Task DeleteAppLocalStorageThrows()
         {
             //  Arrange

@@ -69,7 +69,20 @@ namespace PCLStorage
 
 		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
-			StorageFolder wrtFolder = await _wrappedFolder.CreateFolderAsync(desiredName, GetWinRTCreationCollisionOption(option));
+			StorageFolder wrtFolder;
+            try
+            {
+                wrtFolder = await _wrappedFolder.CreateFolderAsync(desiredName, GetWinRTCreationCollisionOption(option));
+            }
+            catch (Exception ex)
+            {
+                if (ex.HResult == -2147024713) // 0x800700B7
+                {
+                    //  Folder already exists (and potentially other failures, not sure what the HResult represents)
+                    throw new IOException(ex.Message, ex);
+                }
+                throw;
+            }
 			return new WinRTFolder(wrtFolder, false);
 		}
 

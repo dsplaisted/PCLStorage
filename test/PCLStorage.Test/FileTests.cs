@@ -97,7 +97,7 @@ namespace PCLStorage.Test
             IFile file2 = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
             //  Assert
-            Assert.AreEqual(file2.Name, fileName);
+            Assert.AreEqual(fileName, file2.Name);
             string file2Contents = await file2.ReadAllTextAsync();
             Assert.AreEqual(string.Empty, file2Contents);
 
@@ -137,7 +137,7 @@ namespace PCLStorage.Test
             IFile file2 = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
             //  Assert
-            Assert.AreEqual(file2.Name, fileName);
+            Assert.AreEqual(fileName, file2.Name);
             string file2Contents = await file2.ReadAllTextAsync();
             Assert.AreEqual(contents, file2Contents);
 
