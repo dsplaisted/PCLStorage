@@ -32,6 +32,7 @@ namespace PCLStorage.Test
 
             //  Assert
             Assert.AreEqual(fileName, gottenFile.Name);
+            Assert.AreEqual(PortablePath.Combine(folder.Path, fileName), gottenFile.Path);
 
             //  Cleanup
             await createdFile.DeleteAsync();
@@ -224,6 +225,38 @@ namespace PCLStorage.Test
             //  Cleanup
             await newFolder.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task GetFolder()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string folderName = "FolderToGet";
+            IFolder createdFolder = await rootFolder.CreateFolderAsync(folderName, CreationCollisionOption.FailIfExists);
+
+            //  Act
+            IFolder gottenFolder = await rootFolder.GetFolderAsync(folderName);
+
+            //  Assert
+            Assert.AreEqual(folderName, gottenFolder.Name);
+            Assert.AreEqual(PortablePath.Combine(rootFolder.Path, folderName), gottenFolder.Path);
+
+            //  Cleanup
+            await gottenFolder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task GetFolderThatDoesNotExist()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string folderName = "FolderThatDoesNotExist";
+
+            //  Act & Assert
+            await ExceptionAssert.ThrowsAsync<PCLStorage.Exceptions.DirectoryNotFoundException>(
+                async () => await rootFolder.GetFolderAsync(folderName));
+        }
+
 
         [TestMethod]
         public async Task DeleteAppLocalStorageThrows()

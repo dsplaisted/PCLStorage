@@ -88,7 +88,16 @@ namespace PCLStorage
 
 		public async Task<IFolder> GetFolderAsync(string name)
 		{
-			StorageFolder wrtFolder = await _wrappedFolder.GetFolderAsync(name);
+			StorageFolder wrtFolder;
+            try
+            {
+                wrtFolder = await _wrappedFolder.GetFolderAsync(name);
+            }
+            catch (FileNotFoundException ex)
+            {
+                //  Folder does not exist
+                throw new Exceptions.DirectoryNotFoundException(ex.Message, ex);
+            }
 			return new WinRTFolder(wrtFolder, false);
 		}
 
