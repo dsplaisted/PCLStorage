@@ -16,7 +16,9 @@ namespace PCLStorage
 #elif NETFX_CORE
 				return new WinRTFolder(Windows.Storage.ApplicationData.Current.LocalFolder);
 #elif FILE_SYSTEM
-                var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                //  SpecialFolder.LocalApplicationData is not app-specific, so use the Windows Forms API to get the app data path
+                //var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                var localAppData = System.Windows.Forms.Application.LocalUserAppDataPath;
                 return new FileSystemFolder(localAppData);
 #else
                 throw Storage.NotImplementedInReferenceAssembly();
