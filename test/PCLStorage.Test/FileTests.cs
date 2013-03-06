@@ -249,5 +249,57 @@ namespace PCLStorage.Test
             //  Cleanup
             await file.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task NestedFolderWithSameName()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string folderName = "NestedFolderName";
+            IFolder level1 = await rootFolder.CreateFolderAsync(folderName, CreationCollisionOption.FailIfExists);
+            
+            //  Act
+            IFolder level2 = await level1.CreateFolderAsync(folderName, CreationCollisionOption.FailIfExists);
+
+            //  Assert
+            Assert.AreEqual(PortablePath.Combine(rootFolder.Path, folderName, folderName), level2.Path);
+            IList<IFolder> level1Folders = await level1.GetFoldersAsync();
+            IList<IFolder> level2Folders = await level2.GetFoldersAsync();
+            Assert.AreEqual(1, level1Folders.Count, "Level 1 folder count");
+            Assert.AreEqual(0, level2Folders.Count, "Level 2 folder count");
+
+            //  Cleanup
+            await level1.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task SiblingFoldersContentsDiffer()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            IFolder siblingFolder1 = await rootFolder.CreateFolderAsync("SiblingFolder1", CreationCollisionOption.FailIfExists);
+            IFolder siblingFolder2 = await rootFolder.CreateFolderAsync("SiblingFolder2", CreationCollisionOption.FailIfExists);
+            string fileName = "file.txt";
+            string contents1 = "This is the first file";
+            string contents2 = "This is the second file";
+
+            //  Act
+            IFile file1 = await siblingFolder1.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            await file1.WriteAllTextAsync(contents1);
+            IFile file2 = await siblingFolder2.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            await file2.WriteAllTextAsync(contents2);
+
+            //  Assert
+            file1 = await siblingFolder1.GetFileAsync(fileName);
+            file2 = await siblingFolder2.GetFileAsync(fileName);
+            string actualContents1 = await file1.ReadAllTextAsync();
+            string actualContents2 = await file2.ReadAllTextAsync();
+            Assert.AreEqual(contents1, actualContents1);
+            Assert.AreEqual(contents2, actualContents2);
+
+            //  Cleanup
+            await siblingFolder1.DeleteAsync();
+            await siblingFolder2.DeleteAsync();
+        }
     }
 }
