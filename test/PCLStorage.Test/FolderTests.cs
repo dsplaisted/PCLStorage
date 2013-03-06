@@ -257,6 +257,66 @@ namespace PCLStorage.Test
                 async () => await rootFolder.GetFolderAsync(folderName));
         }
 
+        [TestMethod]
+        public async Task GetFoldersEmpty()
+        {
+            //  Arrange
+            IFolder folder = await Storage.AppLocalStorage.CreateFolderAsync("GetFoldersEmpty_Folder", CreationCollisionOption.FailIfExists);
+
+            //  Act
+            IList<IFolder> folders = await folder.GetFoldersAsync();
+
+            //  Assert
+            Assert.AreEqual(0, folders.Count, "Folder count");
+
+            //  Cleanup
+            await folder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task GetFoldersSingle()
+        {
+            //  Arrange
+            IFolder folder = await Storage.AppLocalStorage.CreateFolderAsync("GetFoldersSingle_Folder", CreationCollisionOption.FailIfExists);
+            string expectedFolderName = "Subfolder";
+            await folder.CreateFolderAsync(expectedFolderName, CreationCollisionOption.FailIfExists);
+
+            //  Act
+            IList<IFolder> folders = await folder.GetFoldersAsync();
+
+            //  Assert
+            Assert.AreEqual(1, folders.Count, "Folder count");
+            Assert.AreEqual(expectedFolderName, folders[0].Name);
+
+            //  Cleanup
+            await folder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task GetFoldersMultiple()
+        {
+            //  Arrange
+            IFolder folder = await Storage.AppLocalStorage.CreateFolderAsync("GetFoldersMultiple_Folder", CreationCollisionOption.FailIfExists);
+            var folderNames = new[] { "One", "2", "Hello" };
+            foreach (var fn in folderNames)
+            {
+                await folder.CreateFolderAsync(fn, CreationCollisionOption.FailIfExists);
+            }
+
+            //  Act
+            IList<IFolder> folders = await folder.GetFoldersAsync();
+
+            //  Assert
+            Assert.AreEqual(folderNames.Length, folders.Count, "Folder count");
+            foreach (var fn in folderNames)
+            {
+                Assert.IsTrue(folders.Count(f => f.Name == fn) == 1, "Folder " + fn + " in results");
+            }
+
+            //  Cleanup
+            await folder.DeleteAsync();
+        }
+
 
         [TestMethod]
         public async Task DeleteAppLocalStorageThrows()
