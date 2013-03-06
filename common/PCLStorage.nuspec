@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>PCLStorage</id>
+        <version>0.0.1</version>
+        <title>Portable Storage APIs</title>
+        <authors>Daniel Plaisted</authors>
+        <owners>Daniel Plaisted</owners>
+        <licenseUrl>http://pclstorage.codeplex.com/license</licenseUrl>
+        <projectUrl>http://pclstorage.codeplex.com/</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Provides a consistent, portable set of APIs to access local storage across .NET platforms.</description>
+        <summary>Provides a consistent, portable set of APIs to access local storage across .NET platforms.</summary>
+        <tags>io storage portable pcl</tags>
+        <dependencies>
+            <dependency id="Microsoft.Bcl.Async" version="1.0.14-rc" />
+        </dependencies>
+    </metadata>
+    <files>
+      <file src="..\PCLStorage\bin\Release\PCLStorage.dll" target="lib\portable-net45+sl4+wp71+win8\PCLStorage.dll" />
+      <file src="..\PCLStorage.FileSystem.Desktop\bin\Release\PCLStorage.dll" target="lib\net45\PCLStorage.dll" />
+      <file src="..\PCLStorage.IsoStore.SL\bin\Release\PCLStorage.dll" target="lib\sl4\PCLStorage.dll" />
+      <file src="..\PCLStorage.IsoStore.WindowsPhone\bin\Release\PCLStorage.dll" target="lib\wp71\PCLStorage.dll" />
+      <file src="..\PCLStorage.WinRT\bin\Release\PCLStorage.dll" target="lib\win8\PCLStorage.dll" />
+    </files>
+</package>
