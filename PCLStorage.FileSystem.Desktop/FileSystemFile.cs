@@ -37,7 +37,7 @@ namespace PCLStorage
             }
             else if (fileAccess == FileAccess.ReadAndWrite)
             {
-                ret = File.Open(Path, FileMode.OpenOrCreate, System.IO.FileAccess.ReadWrite);
+                ret = File.Open(Path, FileMode.Open, System.IO.FileAccess.ReadWrite);
             }
             else
             {
@@ -48,6 +48,10 @@ namespace PCLStorage
 
         public Task DeleteAsync()
         {
+            if (!File.Exists(Path))
+            {
+                throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path);
+            }
             File.Delete(Path);
 
             return Task.FromResult(true);

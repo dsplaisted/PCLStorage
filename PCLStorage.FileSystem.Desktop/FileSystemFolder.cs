@@ -11,11 +11,18 @@ namespace PCLStorage
     {
         readonly string _name;
         readonly string _path;
+        readonly bool _canDelete;
 
-        public FileSystemFolder(string path)
+        private FileSystemFolder(string path, bool canDelete)
         {
             _name = System.IO.Path.GetFileName(path);
             _path = path;
+            _canDelete = canDelete;
+        }
+
+        public FileSystemFolder(string path)
+            : this(path, false)
+        {
         }
 
         public string Name
@@ -30,6 +37,8 @@ namespace PCLStorage
 
         public Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
         {
+            EnsureExists();
+
             string nameToUse = desiredName;
             string newPath = System.IO.Path.Combine(Path, nameToUse);
             if (File.Exists(newPath))
@@ -78,6 +87,7 @@ namespace PCLStorage
             using (var stream = File.Create(path))
             {
             }
+
         }
 
         public Task<IFile> GetFileAsync(string name)
@@ -93,12 +103,14 @@ namespace PCLStorage
 
         public Task<IList<IFile>> GetFilesAsync()
         {
+            EnsureExists();
             IList<IFile> ret = Directory.GetFiles(Path).Select(f => new FileSystemFile(f)).ToList<IFile>().AsReadOnly();
             return Task.FromResult(ret);
         }
 
         public Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
         {
+            EnsureExists();
             string nameToUse = desiredName;
             string newPath = System.IO.Path.Combine(Path, nameToUse);
             if (Directory.Exists(newPath))
@@ -135,7 +147,7 @@ namespace PCLStorage
                 Directory.CreateDirectory(newPath);
             }
 
-            var ret = new FileSystemFolder(newPath);
+            var ret = new FileSystemFolder(newPath, true);
             return Task.FromResult<IFolder>(ret);
         }
 
@@ -146,20 +158,34 @@ namespace PCLStorage
             {
                 throw new PCLStorage.Exceptions.DirectoryNotFoundException("Directory does not exist: " + path);
             }
-            var ret = new FileSystemFolder(path);
+            var ret = new FileSystemFolder(path, true);
             return Task.FromResult<IFolder>(ret);
         }
 
         public Task<IList<IFolder>> GetFoldersAsync()
         {
-            IList<IFolder> ret = Directory.GetDirectories(Path).Select(d => new FileSystemFolder(d)).ToList<IFolder>().AsReadOnly();
+            EnsureExists();
+            IList<IFolder> ret = Directory.GetDirectories(Path).Select(d => new FileSystemFolder(d, true)).ToList<IFolder>().AsReadOnly();
             return Task.FromResult(ret);
         }
 
         public Task DeleteAsync()
         {
+            if (!_canDelete)
+            {
+                throw new IOException("Cannot delete root storage folder.");
+            }
+            EnsureExists();
             Directory.Delete(Path, true);
             return Task.FromResult(true);
+        }
+
+        void EnsureExists()
+        {
+            if (!Directory.Exists(Path))
+            {
+                throw new PCLStorage.Exceptions.DirectoryNotFoundException("Directory does not exist: " + Path);
+            }
         }
     }
 }
