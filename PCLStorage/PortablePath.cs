@@ -26,6 +26,25 @@ namespace PCLStorage
         {
 #if PORTABLE
             throw Storage.NotImplementedInReferenceAssembly();
+#elif WINDOWS_PHONE
+            //  WP7 only implements Path.Combine with two arguments, so implement this in terms of that
+            if (paths.Length == 0)
+            {
+                return string.Empty;
+            }
+            else if (paths.Length == 1)
+            {
+                return paths[0];
+            }
+            else
+            {
+                string ret = Path.Combine(paths[0], paths[1]);
+                foreach (string p in paths.Skip(2))
+                {
+                    ret = Path.Combine(ret, p);
+                }
+                return ret;
+            }
 #else
             return Path.Combine(paths);
 #endif

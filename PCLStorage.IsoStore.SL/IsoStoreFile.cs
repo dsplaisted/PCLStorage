@@ -86,6 +86,14 @@ namespace PCLStorage
 		{
             try
             {
+#if WINDOWS_PHONE
+                //  Windows Phone (at least WP7) doesn't throw an error if you try to delete something that doesn't exist,
+                //  so check for this manually for consistent behavior across platforms
+                if (!_parentFolder.Root.FileExists(Path))
+                {
+                    throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path);
+                }
+#endif
                 _parentFolder.Root.DeleteFile(Path);
             }
             catch (IsolatedStorageException ex)
