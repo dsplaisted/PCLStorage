@@ -66,6 +66,9 @@
     <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\common\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage.IsoStore.SL\IsoStoreFile.cs">
       <Link>IsoStoreFile.cs</Link>
     </Compile>
