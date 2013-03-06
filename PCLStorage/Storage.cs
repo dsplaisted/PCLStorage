@@ -28,7 +28,7 @@ namespace PCLStorage
 
         internal static Exception NotImplementedInReferenceAssembly()
         {
-            return new NotImplementedException();
+            return new NotImplementedException("This functionality is not implemented in the portable version of this assembly.  You should reference the PCLStorage NuGet package from your main application project in order to reference the platform-specific implementation.");
         }
 	}
 }
