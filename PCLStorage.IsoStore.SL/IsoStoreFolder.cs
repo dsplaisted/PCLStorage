@@ -54,6 +54,7 @@ namespace PCLStorage
 
 		public Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
 		{
+            EnsureExists();
 			string nameToUse = desiredName;
 			string path = System.IO.Path.Combine(Path, nameToUse);
 			if (Root.FileExists(path))
@@ -106,6 +107,8 @@ namespace PCLStorage
 
 		public Task<IFile> GetFileAsync(string name)
 		{
+            EnsureExists();
+
 			string path = System.IO.Path.Combine(Path, name);
 			if (!Root.FileExists(path))
 			{
@@ -117,6 +120,8 @@ namespace PCLStorage
 
 		public Task<IList<IFile>> GetFilesAsync()
 		{
+            EnsureExists();
+
 			string[] fileNames = Root.GetFileNames(System.IO.Path.Combine(Path, "*.*"));
 			IList<IFile> ret = fileNames.Select(fn => new IsoStoreFile(fn, this)).Cast<IFile>().ToList().AsReadOnly();
 			return TaskEx.FromResult(ret);
@@ -124,6 +129,8 @@ namespace PCLStorage
 
 		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
+            EnsureExists();
+
 			string nameToUse = desiredName;
 			string path = System.IO.Path.Combine(Path, nameToUse);
 			if (Root.DirectoryExists(path))
@@ -167,6 +174,8 @@ namespace PCLStorage
 
 		public Task<IFolder> GetFolderAsync(string name)
 		{
+            EnsureExists();
+
 			string path = System.IO.Path.Combine(Path, name);
 			if (!Root.DirectoryExists(path))
 			{
@@ -178,6 +187,8 @@ namespace PCLStorage
 
 		public Task<IList<IFolder>> GetFoldersAsync()
 		{
+            EnsureExists();
+
 			string[] folderNames = Root.GetDirectoryNames(System.IO.Path.Combine(Path, "*"));
 			IList<IFolder> ret = folderNames.Select(fn => new IsoStoreFolder(fn, this)).Cast<IFolder>().ToList().AsReadOnly();
 			return TaskEx.FromResult(ret);
@@ -185,6 +196,8 @@ namespace PCLStorage
 
 		public async Task DeleteAsync()
 		{
+            EnsureExists();
+
             if (string.IsNullOrEmpty(Path))
             {
                 throw new IOException("Cannot delete root Isolated Storage folder.");
@@ -202,5 +215,13 @@ namespace PCLStorage
 
 			Root.DeleteDirectory(Path);
 		}
+
+        void EnsureExists()
+        {
+            if (!Root.DirectoryExists(Path))
+            {
+                throw new Exceptions.DirectoryNotFoundException("The specified folder does not exist: " + Path);
+            }
+        }
 	}
 }

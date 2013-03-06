@@ -37,6 +37,7 @@ namespace PCLStorage
 
 		public async Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
 		{
+            await EnsureExistsAsync();
             StorageFile wrtFile;
             try
             {
@@ -56,12 +57,14 @@ namespace PCLStorage
 
 		public async Task<IFile> GetFileAsync(string name)
 		{
+            await EnsureExistsAsync();
 			StorageFile wrtFile = await _wrappedFolder.GetFileAsync(name);
 			return new WinRTFile(wrtFile);
 		}
 
 		public async Task<IList<IFile>> GetFilesAsync()
 		{
+            await EnsureExistsAsync();
 			var wrtFiles = await _wrappedFolder.GetFilesAsync();
 			var files = wrtFiles.Select(f => new WinRTFile(f)).ToList<IFile>();
 			return new ReadOnlyCollection<IFile>(files);
@@ -69,6 +72,7 @@ namespace PCLStorage
 
 		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
+            await EnsureExistsAsync();
 			StorageFolder wrtFolder;
             try
             {
@@ -88,6 +92,7 @@ namespace PCLStorage
 
 		public async Task<IFolder> GetFolderAsync(string name)
 		{
+            await EnsureExistsAsync();
 			StorageFolder wrtFolder;
             try
             {
@@ -103,19 +108,22 @@ namespace PCLStorage
 
 		public async Task<IList<IFolder>> GetFoldersAsync()
 		{
+            await EnsureExistsAsync();
 			var wrtFolders = await _wrappedFolder.GetFoldersAsync();
 			var folders = wrtFolders.Select(f => new WinRTFolder(f, false)).ToList<IFolder>();
 			return new ReadOnlyCollection<IFolder>(folders);
 		}
 
-		public Task DeleteAsync()
+		public async Task DeleteAsync()
 		{
+            await EnsureExistsAsync();
+
             if (_isRootFolder)
             {
                 throw new IOException("Cannot delete root storage folder.");
             }
 
-			return _wrappedFolder.DeleteAsync().AsTask();
+            await _wrappedFolder.DeleteAsync();
 		}
 
 		Windows.Storage.CreationCollisionOption GetWinRTCreationCollisionOption(CreationCollisionOption option)
@@ -141,5 +149,18 @@ namespace PCLStorage
 				throw new ArgumentException("Unrecognized CreationCollisionOption value: " + option);
 			}
 		}
+
+        async Task EnsureExistsAsync()
+        {
+            try
+            {
+                await StorageFolder.GetFolderFromPathAsync(Path);
+            }
+            catch (FileNotFoundException ex)
+            {
+                //  Folder does not exist
+                throw new Exceptions.DirectoryNotFoundException(ex.Message, ex);
+            }
+        }
 	}
 }

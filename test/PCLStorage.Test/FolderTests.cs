@@ -317,6 +317,46 @@ namespace PCLStorage.Test
             await folder.DeleteAsync();
         }
 
+        [TestMethod]
+        public async Task DeleteFolder()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            string subFolderName = "FolderToDelete";
+            IFolder folder = await rootFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
+
+            //  Act
+            await folder.DeleteAsync();
+
+            //  Assert
+            var folders = await rootFolder.GetFoldersAsync();
+            Assert.IsFalse(folders.Any(f => f.Name == subFolderName));
+        }
+
+        [TestMethod]
+        public async Task CreateFileInDeletedFolder()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            IFolder folder = await rootFolder.CreateFolderAsync("FolderToDeleteAndThenCreateFileIn", CreationCollisionOption.FailIfExists);
+            await folder.DeleteAsync();
+
+            //  Act & Assert
+            await ExceptionAssert.ThrowsAsync<Exceptions.DirectoryNotFoundException>(async () =>
+                { await folder.CreateFileAsync("Foo.txt", CreationCollisionOption.GenerateUniqueName); });
+        }
+
+        [TestMethod]
+        public async Task DeleteFolderTwice()
+        {
+            //  Arrange
+            IFolder rootFolder = Storage.AppLocalStorage;
+            IFolder folder = await rootFolder.CreateFolderAsync("FolderToDeleteTwice", CreationCollisionOption.FailIfExists);
+            await folder.DeleteAsync();
+
+            //  Act & Asserth
+            await ExceptionAssert.ThrowsAsync<Exceptions.DirectoryNotFoundException>(async () => await folder.DeleteAsync());
+        }
 
         [TestMethod]
         public async Task DeleteAppLocalStorageThrows()
