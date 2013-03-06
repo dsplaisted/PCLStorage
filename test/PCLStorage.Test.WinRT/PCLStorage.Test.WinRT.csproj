@@ -141,7 +141,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PCLStorage.WinRT\PCLStorage.WinRT.csproj">
+    <ProjectReference Include="..\..\src\PCLStorage.WinRT\PCLStorage.WinRT.csproj">
       <Project>{aac0913d-649a-49dd-834b-ef23d092d72b}</Project>
       <Name>PCLStorage.WinRT</Name>
     </ProjectReference>

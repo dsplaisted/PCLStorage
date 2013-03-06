@@ -68,7 +68,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PCLStorage.FileSystem.Desktop\PCLStorage.FileSystem.Desktop.csproj">
+    <ProjectReference Include="..\..\src\PCLStorage.FileSystem.Desktop\PCLStorage.FileSystem.Desktop.csproj">
       <Project>{9d3f208d-8bb4-47a9-8323-4cfd24314341}</Project>
       <Name>PCLStorage.FileSystem.Desktop</Name>
     </ProjectReference>

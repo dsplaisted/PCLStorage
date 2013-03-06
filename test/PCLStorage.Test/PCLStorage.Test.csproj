@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <ProjectReference Include="..\..\PCLStorage\PCLStorage.csproj">
+    <ProjectReference Include="..\..\src\PCLStorage\PCLStorage.csproj">
       <Project>{31f6b895-4ff7-481b-b483-e0e6b63cc312}</Project>
       <Name>PCLStorage</Name>
     </ProjectReference>
