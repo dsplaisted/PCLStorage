@@ -15,6 +15,9 @@ namespace PCLStorage
 				return new IsoStoreFolder(System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication());
 #elif NETFX_CORE
 				return new WinRTFolder(Windows.Storage.ApplicationData.Current.LocalFolder);
+#elif FILE_SYSTEM
+                var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                return new FileSystemFolder(localAppData);
 #else
                 throw Storage.NotImplementedInReferenceAssembly();
 #endif

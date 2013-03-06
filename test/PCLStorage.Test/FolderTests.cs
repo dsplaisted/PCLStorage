@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 #if NETFX_CORE
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#elif DESKTOP
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endif
 #if PORTABLE
 using PCLStorage.Exceptions;

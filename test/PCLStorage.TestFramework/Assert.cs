@@ -20,7 +20,7 @@ namespace PCLStorage.TestFramework
 
 		}
 	}
-#if !NETFX_CORE
+#if !NETFX_CORE && !DESKTOP
 	public static class Assert
 	{
 		public static void AreEqual(object expected, object actual, string message = null)

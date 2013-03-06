@@ -132,27 +132,27 @@ namespace PCLStorage
             EnsureExists();
 
 			string nameToUse = desiredName;
-			string path = System.IO.Path.Combine(Path, nameToUse);
-			if (Root.DirectoryExists(path))
+			string newPath = System.IO.Path.Combine(Path, nameToUse);
+			if (Root.DirectoryExists(newPath))
 			{
 				if (option == CreationCollisionOption.GenerateUniqueName)
 				{
-					for (int num = 2; Root.DirectoryExists(path); num++)
+					for (int num = 2; Root.DirectoryExists(newPath); num++)
 					{
 						nameToUse = desiredName + " (" + num + ")";
-						path = System.IO.Path.Combine(Path, nameToUse);
+						newPath = System.IO.Path.Combine(Path, nameToUse);
 					}
-                    Root.CreateDirectory(path);
+                    Root.CreateDirectory(newPath);
 				}
 				else if (option == CreationCollisionOption.ReplaceExisting)
 				{
                     IsoStoreFolder folderToDelete = new IsoStoreFolder(nameToUse, this);
                     await folderToDelete.DeleteAsync();
-					Root.CreateDirectory(path);
+					Root.CreateDirectory(newPath);
 				}
 				else if (option == CreationCollisionOption.FailIfExists)
 				{
-					throw new IOException("Directory already exists: " + path);
+					throw new IOException("Directory already exists: " + newPath);
 				}
 				else if (option == CreationCollisionOption.OpenIfExists)
 				{
@@ -165,7 +165,7 @@ namespace PCLStorage
 			}
 			else
 			{
-				Root.CreateDirectory(path);
+				Root.CreateDirectory(newPath);
 			}
 
 			var ret = new IsoStoreFolder(nameToUse, this);
