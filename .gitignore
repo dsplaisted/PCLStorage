@@ -14,9 +14,10 @@ packages/
 [Dd]ebug/
 [Rr]elease/
 x64/
-build/
+#build/
 [Bb]in/
 [Oo]bj/
+[Oo]utput/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
