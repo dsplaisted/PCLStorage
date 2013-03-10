@@ -3,14 +3,14 @@
     <metadata>
         <id>PCLStorage</id>
         <version>0.0.1</version>
-        <title>Portable Storage APIs</title>
+        <title>PCL Storage - Portable Storage APIs</title>
         <authors>Daniel Plaisted</authors>
         <owners>Daniel Plaisted</owners>
         <licenseUrl>http://pclstorage.codeplex.com/license</licenseUrl>
         <projectUrl>http://pclstorage.codeplex.com/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Provides a consistent, portable set of APIs to access local storage across .NET platforms.</description>
-        <summary>Provides a consistent, portable set of APIs to access local storage across .NET platforms.</summary>
+        <description>PCL Storage provides a consistent, portable set of local file IO APIs for .NET, Windows Phone, Windows Store, and Silverlight.  This makes it easier to create cross-platform .NET libraries and apps.</description>
+        <summary>PCL Storage provides a consistent, portable set of local file IO APIs across .NET platforms.</summary>
         <tags>io storage portable pcl</tags>
         <dependencies>
             <dependency id="Microsoft.Bcl.Async" version="1.0.14-rc" />
