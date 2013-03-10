@@ -21,6 +21,16 @@ namespace PCLStorage.Test
 	[TestClass]
     public class FileTests
     {
+        public async Task PCLStorageSample()
+        {
+            IFolder rootFolder = Storage.AppLocalStorage;
+            IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",
+                CreationCollisionOption.OpenIfExists);
+            IFile file = await folder.CreateFileAsync("answer.txt",
+                CreationCollisionOption.ReplaceExisting);
+            await file.WriteAllTextAsync("42");
+        }
+
 		[TestMethod]
 		public async Task GetFileThrowsWhenFileDoesNotExist()
 		{
