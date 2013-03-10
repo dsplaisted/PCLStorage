@@ -5,12 +5,12 @@ using System.Text;
 
 namespace PCLStorage
 {
-	public static class Storage
-	{
-		public static IFolder AppLocalStorage
-		{
-			get
-			{
+    public static class Storage
+    {
+        public static IFolder AppLocalStorage
+        {
+            get
+            {
 #if SILVERLIGHT
 				return new IsoStoreFolder(System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication());
 #elif NETFX_CORE
@@ -23,12 +23,12 @@ namespace PCLStorage
 #else
                 throw Storage.NotImplementedInReferenceAssembly();
 #endif
-			}
-		}
+            }
+        }
 
         internal static Exception NotImplementedInReferenceAssembly()
         {
             return new NotImplementedException("This functionality is not implemented in the portable version of this assembly.  You should reference the PCLStorage NuGet package from your main application project in order to reference the platform-specific implementation.");
         }
-	}
+    }
 }
