@@ -12,12 +12,12 @@ namespace PCLStorage
         {
             get
             {
-#if SILVERLIGHT
-				return Path.DirectorySeparatorChar;
-#elif NETFX_CORE
+#if NETFX_CORE
 				return '\\';
-#else
+#elif PORTABLE
                 throw Storage.NotImplementedInReferenceAssembly();
+#else
+                return Path.DirectorySeparatorChar;
 #endif
             }
         }
