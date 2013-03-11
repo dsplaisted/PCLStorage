@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PCLStorage
 {
-    [DebuggerDisplay("{Name = {_name}")]
+    [DebuggerDisplay("Name = {_name}")]
     public class FileSystemFolder : IFolder
     {
         readonly string _name;
