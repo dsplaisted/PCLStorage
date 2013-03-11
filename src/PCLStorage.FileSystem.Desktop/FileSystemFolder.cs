@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace PCLStorage
 {
+    [DebuggerDisplay("{Name = {_name}")]
     public class FileSystemFolder : IFolder
     {
         readonly string _name;

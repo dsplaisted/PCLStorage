@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO.IsolatedStorage;
 using System.Net;
 using System.Windows;
@@ -14,6 +15,7 @@ using System.IO;
 
 namespace PCLStorage
 {
+    [DebuggerDisplay("Name = {_name}")]
 	public class IsoStoreFile : IFile
 	{
 		readonly string _name;

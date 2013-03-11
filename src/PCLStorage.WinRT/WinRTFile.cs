@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ using Windows.Storage;
 
 namespace PCLStorage
 {
+    [DebuggerDisplay("Name = {Name}")]
 	public class WinRTFile : IFile
 	{
 		StorageFile _wrappedFile;

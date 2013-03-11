@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Net;
@@ -16,6 +17,7 @@ using System.Linq;
 
 namespace PCLStorage
 {
+    [DebuggerDisplay("Name = {_name}")]
 	public class IsoStoreFolder : IFolder
 	{
 		internal IsolatedStorageFile Root { get; private set; }
