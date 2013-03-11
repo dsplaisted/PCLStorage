@@ -13,16 +13,16 @@ namespace PCLStorage
     [DebuggerDisplay("Name = {Name}")]
 	public class WinRTFolder : IFolder
 	{
-		StorageFolder _wrappedFolder;
-        bool _isRootFolder;
+        private readonly IStorageFolder _wrappedFolder;
+        private readonly bool _isRootFolder;
 
-		private WinRTFolder(StorageFolder wrappedFolder, bool isRootFolder)
+        private WinRTFolder(IStorageFolder wrappedFolder, bool isRootFolder)
 		{
 			_wrappedFolder = wrappedFolder;
             _isRootFolder = isRootFolder;
 		}
 
-        public WinRTFolder(StorageFolder wrappedFolder)
+        public WinRTFolder(IStorageFolder wrappedFolder)
             : this(wrappedFolder, true)
         {
         }
@@ -60,7 +60,7 @@ namespace PCLStorage
 		public async Task<IFile> GetFileAsync(string name)
 		{
             await EnsureExistsAsync();
-			StorageFile wrtFile = await _wrappedFolder.GetFileAsync(name);
+			var wrtFile = await _wrappedFolder.GetFileAsync(name);
 			return new WinRTFile(wrtFile);
 		}
 

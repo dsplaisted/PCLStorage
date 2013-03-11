@@ -12,9 +12,9 @@ namespace PCLStorage
     [DebuggerDisplay("Name = {Name}")]
 	public class WinRTFile : IFile
 	{
-		StorageFile _wrappedFile;
+        private readonly IStorageFile _wrappedFile;
 
-		public WinRTFile(StorageFile wrappedFile)
+        public WinRTFile(IStorageFile wrappedFile)
 		{
 			_wrappedFile = wrappedFile;
 		}
