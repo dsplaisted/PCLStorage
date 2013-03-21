@@ -72,6 +72,9 @@
     <Compile Include="..\PCLStorage.IsoStore.SL\IsoStoreFile.cs">
       <Link>IsoStoreFile.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage.IsoStore.SL\IsoStoreFileSystem.cs">
+      <Link>IsoStoreFileSystem.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage.IsoStore.SL\IsoStoreFolder.cs">
       <Link>IsoStoreFolder.cs</Link>
     </Compile>

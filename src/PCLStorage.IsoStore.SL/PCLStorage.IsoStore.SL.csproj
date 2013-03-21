@@ -99,6 +99,7 @@
       <Link>Storage.cs</Link>
     </Compile>
     <Compile Include="IsoStoreFile.cs" />
+    <Compile Include="IsoStoreFileSystem.cs" />
     <Compile Include="IsoStoreFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

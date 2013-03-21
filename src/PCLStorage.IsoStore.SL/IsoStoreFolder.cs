@@ -25,10 +25,10 @@ namespace PCLStorage
 		readonly string _name;
 		readonly string _path;
 
-		public IsoStoreFolder()
-			: this (IsolatedStorageFile.GetUserStoreForApplication())
-		{
-		}
+        //public IsoStoreFolder()
+        //    : this (IsolatedStorageFile.GetUserStoreForApplication())
+        //{
+        //}
 
 		public IsoStoreFolder(IsolatedStorageFile root)
 		{
@@ -37,12 +37,23 @@ namespace PCLStorage
 			_path = string.Empty;
 		}
 
-		public IsoStoreFolder(string name, IsoStoreFolder parent)
+		public IsoStoreFolder(IsolatedStorageFile root, string path)
 		{
-			Root = parent.Root;
-			_name = name;
-			_path = System.IO.Path.Combine(parent.Path, _name);
+            Root = root;
+            //  Trim trailing backslash / slash off of end if it exists
+            if (path.EndsWith(System.IO.Path.DirectorySeparatorChar.ToString()))
+            {
+                path = path.Substring(0, path.Length - 1);
+            }
+            _name = System.IO.Path.GetFileName(path);
+            _path = path;
 		}
+
+        public IsoStoreFolder(string name, IsoStoreFolder parent)
+            : this(parent.Root, System.IO.Path.Combine(parent.Path, name))
+        {
+
+        }
 
 		public string Name
 		{

@@ -19,15 +19,20 @@ namespace PCLStorage
 	public class IsoStoreFile : IFile
 	{
 		readonly string _name;
-		readonly IsoStoreFolder _parentFolder;
+        readonly IsolatedStorageFile _root;
 		readonly string _path;
 
-		public IsoStoreFile(string name, IsoStoreFolder parentFolder)
-		{
-			_name = name;
-			_parentFolder = parentFolder;
-			_path = System.IO.Path.Combine(_parentFolder.Path, _name);
+        public IsoStoreFile(IsolatedStorageFile root, string path)
+        {
+            _root = root;
+            _path = path;
+            _name = System.IO.Path.GetFileName(path);
+        }
 
+		public IsoStoreFile(string name, IsoStoreFolder parentFolder)
+            : this(parentFolder.Root, System.IO.Path.Combine(parentFolder.Path, name))
+		{
+			
 		}
 
 		public string Name
@@ -58,7 +63,7 @@ namespace PCLStorage
 
 			try
 			{
-				IsolatedStorageFileStream stream = _parentFolder.Root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
+				IsolatedStorageFileStream stream = _root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
 				return TaskEx.FromResult<Stream>(stream);
 			}
 			catch (IsolatedStorageException ex)
@@ -67,7 +72,7 @@ namespace PCLStorage
 				bool fileDoesntExist = false;
 				try
 				{
-					if (!_parentFolder.Root.FileExists(Path))
+                    if (!_root.FileExists(Path))
 					{
 						fileDoesntExist = true;
 					}
@@ -91,12 +96,12 @@ namespace PCLStorage
 #if WINDOWS_PHONE
                 //  Windows Phone (at least WP7) doesn't throw an error if you try to delete something that doesn't exist,
                 //  so check for this manually for consistent behavior across platforms
-                if (!_parentFolder.Root.FileExists(Path))
+                if (!_root.FileExists(Path))
                 {
                     throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path);
                 }
 #endif
-                _parentFolder.Root.DeleteFile(Path);
+                _root.DeleteFile(Path);
             }
             catch (IsolatedStorageException ex)
             {
@@ -104,7 +109,7 @@ namespace PCLStorage
                 bool fileDoesntExist = false;
                 try
                 {
-                    if (!_parentFolder.Root.FileExists(Path))
+                    if (!_root.FileExists(Path))
                     {
                         fileDoesntExist = true;
                     }
