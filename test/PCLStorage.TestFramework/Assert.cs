@@ -65,11 +65,11 @@ namespace PCLStorage.TestFramework
 			string finalMessage = "Assert." + assertName + " failed.";
 			if (!string.IsNullOrEmpty(failMessage))
 			{
-				message += "  " + failMessage;
+				finalMessage += "  " + failMessage;
 			}
             if (!string.IsNullOrEmpty(message))
             {
-                message += "  " + message;
+                finalMessage += "  " + message;
             }
 
             if (innerException == null)
