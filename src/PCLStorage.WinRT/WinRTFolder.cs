@@ -16,15 +16,18 @@ namespace PCLStorage
         private readonly IStorageFolder _wrappedFolder;
         private readonly bool _isRootFolder;
 
-        private WinRTFolder(IStorageFolder wrappedFolder, bool isRootFolder)
-		{
-			_wrappedFolder = wrappedFolder;
-            _isRootFolder = isRootFolder;
-		}
-
         public WinRTFolder(IStorageFolder wrappedFolder)
-            : this(wrappedFolder, true)
         {
+            _wrappedFolder = wrappedFolder;
+            if (_wrappedFolder.Path == Windows.Storage.ApplicationData.Current.LocalFolder.Path ||
+                _wrappedFolder.Path == Windows.Storage.ApplicationData.Current.RoamingFolder.Path)
+            {
+                _isRootFolder = true;
+            }
+            else
+            {
+                _isRootFolder = false;
+            }
         }
 
 		public string Name
@@ -89,7 +92,7 @@ namespace PCLStorage
                 }
                 throw;
             }
-			return new WinRTFolder(wrtFolder, false);
+			return new WinRTFolder(wrtFolder);
 		}
 
 		public async Task<IFolder> GetFolderAsync(string name)
@@ -105,14 +108,14 @@ namespace PCLStorage
                 //  Folder does not exist
                 throw new Exceptions.DirectoryNotFoundException(ex.Message, ex);
             }
-			return new WinRTFolder(wrtFolder, false);
+			return new WinRTFolder(wrtFolder);
 		}
 
 		public async Task<IList<IFolder>> GetFoldersAsync()
 		{
             await EnsureExistsAsync();
 			var wrtFolders = await _wrappedFolder.GetFoldersAsync();
-			var folders = wrtFolders.Select(f => new WinRTFolder(f, false)).ToList<IFolder>();
+			var folders = wrtFolders.Select(f => new WinRTFolder(f)).ToList<IFolder>();
 			return new ReadOnlyCollection<IFolder>(folders);
 		}
 
