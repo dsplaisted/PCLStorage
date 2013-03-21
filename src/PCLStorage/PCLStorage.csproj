@@ -45,6 +45,7 @@
     </Compile>
     <Compile Include="Exceptions\PCLStorageExceptions.cs" />
     <Compile Include="FileExtensions.cs" />
+    <Compile Include="FileSystem.cs" />
     <Compile Include="IFile.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IFolder.cs" />

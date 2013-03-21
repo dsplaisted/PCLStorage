@@ -51,6 +51,9 @@
     <Compile Include="..\PCLStorage\FileExtensions.cs">
       <Link>FileExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage\FileSystem.cs">
+      <Link>FileSystem.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage\IFile.cs">
       <Link>IFile.cs</Link>
     </Compile>
