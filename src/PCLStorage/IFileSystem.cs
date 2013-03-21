@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PCLStorage
 {
@@ -10,10 +11,7 @@ namespace PCLStorage
         IFolder LocalStorage { get; }
         IFolder RoamingStorage { get; }
 
-        bool FileExists(string path);
-        bool FolderExists(string path);
-
-        IFile GetFileFromPath(string path);
-        IFolder GetFolderFromPath(string path);
+        Task<IFile> GetFileFromPathAsync(string path);
+        Task<IFolder> GetFolderFromPathAsync(string path);
     }
 }

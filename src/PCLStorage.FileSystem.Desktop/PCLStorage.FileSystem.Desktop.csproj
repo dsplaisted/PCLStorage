@@ -54,6 +54,9 @@
     <Compile Include="..\PCLStorage\IFile.cs">
       <Link>IFile.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage\IFileSystem.cs">
+      <Link>IFileSystem.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage\IFolder.cs">
       <Link>IFolder.cs</Link>
     </Compile>
