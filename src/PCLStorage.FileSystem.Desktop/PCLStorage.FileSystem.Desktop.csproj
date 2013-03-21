@@ -66,6 +66,7 @@
     <Compile Include="..\PCLStorage\Storage.cs">
       <Link>Storage.cs</Link>
     </Compile>
+    <Compile Include="DesktopFileSystem.cs" />
     <Compile Include="FileSystemFile.cs" />
     <Compile Include="FileSystemFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

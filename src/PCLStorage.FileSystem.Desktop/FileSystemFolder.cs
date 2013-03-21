@@ -15,7 +15,7 @@ namespace PCLStorage
         readonly string _path;
         readonly bool _canDelete;
 
-        private FileSystemFolder(string path, bool canDelete)
+        public FileSystemFolder(string path, bool canDelete)
         {
             _name = System.IO.Path.GetFileName(path);
             _path = path;
