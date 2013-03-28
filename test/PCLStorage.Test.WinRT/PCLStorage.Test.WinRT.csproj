@@ -113,6 +113,9 @@
     <Compile Include="..\PCLStorage.TestFramework\Assert.cs">
       <Link>Assert.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage.Test\FileSystemTests.cs">
+      <Link>FileSystemTests.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage.Test\FileTests.cs">
       <Link>FileTests.cs</Link>
     </Compile>
