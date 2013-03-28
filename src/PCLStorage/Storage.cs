@@ -11,18 +11,19 @@ namespace PCLStorage
         {
             get
             {
-#if SILVERLIGHT
-				return new IsoStoreFolder(System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication());
-#elif NETFX_CORE
-				return new WinRTFolder(Windows.Storage.ApplicationData.Current.LocalFolder);
-#elif FILE_SYSTEM
-                //  SpecialFolder.LocalApplicationData is not app-specific, so use the Windows Forms API to get the app data path
-                //var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                var localAppData = System.Windows.Forms.Application.LocalUserAppDataPath;
-                return new FileSystemFolder(localAppData);
-#else
-                throw Storage.NotImplementedInReferenceAssembly();
-#endif
+                return FileSystem.Current.LocalStorage;
+//#if SILVERLIGHT
+//                return new IsoStoreFolder(System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication());
+//#elif NETFX_CORE
+//                return new WinRTFolder(Windows.Storage.ApplicationData.Current.LocalFolder);
+//#elif FILE_SYSTEM
+//                //  SpecialFolder.LocalApplicationData is not app-specific, so use the Windows Forms API to get the app data path
+//                //var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+//                var localAppData = System.Windows.Forms.Application.LocalUserAppDataPath;
+//                return new FileSystemFolder(localAppData);
+//#else
+//                throw Storage.NotImplementedInReferenceAssembly();
+//#endif
             }
         }
 
