@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,14 +28,30 @@ namespace PCLStorage
 
         public async Task<IFile> GetFileFromPathAsync(string path)
         {
-            StorageFile storageFile = await StorageFile.GetFileFromPathAsync(path);
+            StorageFile storageFile;
+            try
+            {
+                storageFile = await StorageFile.GetFileFromPathAsync(path);
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
 
             return new WinRTFile(storageFile);
         }
 
         public async Task<IFolder> GetFolderFromPathAsync(string path)
         {
-            StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(path);
+            StorageFolder storageFolder;
+            try
+            {
+                storageFolder = await StorageFolder.GetFolderFromPathAsync(path);
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
 
             return new WinRTFolder(storageFolder);
         }
