@@ -23,7 +23,7 @@ namespace PCLStorage.Test
     {
         public async Task PCLStorageSample()
         {
-            IFolder rootFolder = Storage.AppLocalStorage;
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",
                 CreationCollisionOption.OpenIfExists);
             IFile file = await folder.CreateFileAsync("answer.txt",
@@ -31,11 +31,13 @@ namespace PCLStorage.Test
             await file.WriteAllTextAsync("42");
         }
 
+        IFileSystem TestFileSystem { get { return FileSystem.Current; } }
+
 		[TestMethod]
 		public async Task GetFileThrowsWhenFileDoesNotExist()
 		{
 			string fileName = Guid.NewGuid().ToString();
-			IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
 			await ExceptionAssert.ThrowsAsync<FileNotFoundException>(async () => await folder.GetFileAsync(fileName));
 		}
 
@@ -43,7 +45,7 @@ namespace PCLStorage.Test
         public async Task CreateFile()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string fileName = "fileToCreate.txt";
 
             //  Act
@@ -61,7 +63,7 @@ namespace PCLStorage.Test
         public async Task CreateFileSubFolder()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string subFolderName = "CreateFileSubFolder";
             IFolder subFolder = await folder.CreateFolderAsync(subFolderName, CreationCollisionOption.FailIfExists);
             string fileName = "fileToCreateInSubFolder.txt";
@@ -82,7 +84,7 @@ namespace PCLStorage.Test
         public async Task CreateFileNameCollision_GenerateUniqueName()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string baseFileName = "Collision_Unique";
             IFile file1 = await folder.CreateFileAsync(baseFileName + ".txt", CreationCollisionOption.FailIfExists);
 
@@ -101,7 +103,7 @@ namespace PCLStorage.Test
         public async Task CreateFileNameCollision_ReplaceExisting()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string fileName = "Collision_Replace.txt";
             IFile file1 = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
             await file1.WriteAllTextAsync("Hello, World");
@@ -122,7 +124,7 @@ namespace PCLStorage.Test
         public async Task CreateFileNameCollision_FailIfExists()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string fileName = "Collision_Fail.txt";
             IFile file1 = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 
@@ -140,7 +142,7 @@ namespace PCLStorage.Test
         public async Task CreateFileNameCollision_OpenIfExists()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string fileName = "Collision_OpenIfExists.txt";
             IFile file1 = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
             string contents = "Hello, World!";
@@ -162,7 +164,7 @@ namespace PCLStorage.Test
 		public async Task WriteAndReadFile()
 		{
 			//	Arrange
-			IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
 			IFile file = await folder.CreateFileAsync("readWriteFile.txt", CreationCollisionOption.FailIfExists);
 			string contents = "And so we beat on, boats against the current, born back ceaselessly into the past.";
 
@@ -181,7 +183,7 @@ namespace PCLStorage.Test
 		public async Task DeleteFile()
 		{
 			//	Arrange
-			IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
 			string fileName = "fileToDelete.txt";
 			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 
@@ -197,7 +199,7 @@ namespace PCLStorage.Test
 		public async Task OpenDeletedFile()
 		{
 			//	Arrange
-			IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
 			string fileName = "fileToDeleteAndOpen.txt";
 			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 			await file.DeleteAsync();
@@ -210,7 +212,7 @@ namespace PCLStorage.Test
 		public async Task DeleteFileTwice()
 		{
 			//	Arrange
-			IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
 			string fileName = "fileToDeleteTwice.txt";
 			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 			await file.DeleteAsync();
@@ -223,7 +225,7 @@ namespace PCLStorage.Test
         public async Task OpenFileForRead()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string fileName = "fileToOpenForRead.txt";
             IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 
@@ -245,7 +247,7 @@ namespace PCLStorage.Test
         public async Task OpenFileForReadAndWrite()
         {
             //  Arrange
-            IFolder folder = Storage.AppLocalStorage;
+            IFolder folder = TestFileSystem.LocalStorage;
             string fileName = "fileToOpenForReadAndWrite";
             IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 
@@ -267,7 +269,7 @@ namespace PCLStorage.Test
         public async Task NestedFolderWithSameName()
         {
             //  Arrange
-            IFolder rootFolder = Storage.AppLocalStorage;
+            IFolder rootFolder = TestFileSystem.LocalStorage;
             string folderName = "NestedFolderName";
             IFolder level1 = await rootFolder.CreateFolderAsync(folderName, CreationCollisionOption.FailIfExists);
             
@@ -289,7 +291,7 @@ namespace PCLStorage.Test
         public async Task SiblingFoldersContentsDiffer()
         {
             //  Arrange
-            IFolder rootFolder = Storage.AppLocalStorage;
+            IFolder rootFolder = TestFileSystem.LocalStorage;
             IFolder siblingFolder1 = await rootFolder.CreateFolderAsync("SiblingFolder1", CreationCollisionOption.FailIfExists);
             IFolder siblingFolder2 = await rootFolder.CreateFolderAsync("SiblingFolder2", CreationCollisionOption.FailIfExists);
             string fileName = "file.txt";

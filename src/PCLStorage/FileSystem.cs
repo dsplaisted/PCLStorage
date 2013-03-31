@@ -15,7 +15,7 @@ namespace PCLStorage
             {
                 if (_fileSystem == null)
                 {
-                    throw Storage.NotImplementedInReferenceAssembly();
+                    throw FileSystem.NotImplementedInReferenceAssembly();
                 }
                 return _fileSystem;
             }

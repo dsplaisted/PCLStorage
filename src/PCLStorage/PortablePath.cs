@@ -15,7 +15,7 @@ namespace PCLStorage
 #if NETFX_CORE
 				return '\\';
 #elif PORTABLE
-                throw Storage.NotImplementedInReferenceAssembly();
+                throw FileSystem.NotImplementedInReferenceAssembly();
 #else
                 return Path.DirectorySeparatorChar;
 #endif
@@ -25,7 +25,7 @@ namespace PCLStorage
         public static string Combine(params string[] paths)
         {
 #if PORTABLE
-            throw Storage.NotImplementedInReferenceAssembly();
+            throw FileSystem.NotImplementedInReferenceAssembly();
 #elif WINDOWS_PHONE
             //  WP7 only implements Path.Combine with two arguments, so implement this in terms of that
             if (paths.Length == 0)
