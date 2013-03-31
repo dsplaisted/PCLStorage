@@ -25,6 +25,29 @@ namespace PCLStorage.Test
         IFileSystem TestFileSystem { get { return FileSystem.Current; } }
 
         [TestMethod]
+        public void LocalStorageExists()
+        {
+            Assert.IsFalse(TestFileSystem.LocalStorage == null);
+        }
+
+        [TestMethod]
+        public void LocalStorageAndRoamingStorageHaveDifferentPaths()
+        {
+            if (TestFileSystem.RoamingStorage == null)
+            {
+                //  Not all platforms (specifically Silverlight/Windows Phone) implement roaming storage
+                return;
+            }
+
+            //  Act
+            string localPath = TestFileSystem.LocalStorage.Path;
+            string roamingPath = TestFileSystem.RoamingStorage.Path;
+
+            //  Assert
+            Assert.IsFalse(localPath == roamingPath, "Roaming path should not equal local path: " + localPath);
+        }
+
+        [TestMethod]
         public async Task GetFileFromPath()
         {
             //  Arrange
@@ -66,10 +89,60 @@ namespace PCLStorage.Test
             await folder.DeleteAsync();
         }
 
-        //[TestMethod]
-        //public async Task GetfileFromPath_WhenFolderDoesNotExist()
-        //{
+        [TestMethod]
+        public async Task GetFileFromPath_WhenFolderDoesNotExist()
+        {
+            //  Arrange
+            IFolder rootFolder = TestFileSystem.LocalStorage;
+            string pathForFile = PortablePath.Combine(rootFolder.Path, "NotAFolder", "file.txt");
 
-        //}
+            //  Act
+            IFile file = await TestFileSystem.GetFileFromPathAsync(pathForFile);
+
+            //  Assert
+            Assert.AreEqual(null, file);
+        }
+
+        [TestMethod]
+        public async Task GetFolderFromPath()
+        {
+            //  Arrange
+            IFolder folder = await TestFileSystem.LocalStorage.CreateFolderAsync("GetFolderFromPath_Folder", CreationCollisionOption.FailIfExists);
+            string fileName1 = "file1.txt";
+            string fileName2 = "file2.txt";
+            await folder.CreateFileAsync(fileName1, CreationCollisionOption.FailIfExists);
+            IFile file2 = await folder.CreateFileAsync(fileName2, CreationCollisionOption.FailIfExists);
+            await file2.WriteAllTextAsync("File 2 contents");
+
+            string expectedPath = folder.Path;
+
+            //  Act
+            IFolder gottenFolder = await TestFileSystem.GetFolderFromPathAsync(expectedPath);
+            var files = await gottenFolder.GetFilesAsync();
+            var fileNames = files.Select(f => f.Name);
+
+            //  Assert
+            Assert.AreEqual(expectedPath, gottenFolder.Path, "gottenFolder.Path");
+            Assert.AreEqual(2, files.Count, "file count");
+            Assert.IsTrue(fileNames.Contains("file1.txt"));
+            Assert.IsTrue(fileNames.Contains("file2.txt"));
+
+            //  Cleanup
+            await gottenFolder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task GetFolderFromPath_WhenFolderDoesNotExist()
+        {
+            //  Arrange
+            IFolder rootFolder = TestFileSystem.LocalStorage;
+            string pathForFolder = PortablePath.Combine(rootFolder.Path, "FolderThatDoesNotExist");
+
+            //  Act
+            IFolder folder = await TestFileSystem.GetFolderFromPathAsync(pathForFolder);
+
+            //  Assert
+            Assert.AreEqual(null, folder);
+        }
     }
 }
