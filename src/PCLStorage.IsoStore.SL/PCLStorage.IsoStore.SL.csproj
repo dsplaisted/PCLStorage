@@ -98,9 +98,6 @@
     <Compile Include="..\PCLStorage\PortablePath.cs">
       <Link>PortablePath.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage\Storage.cs">
-      <Link>Storage.cs</Link>
-    </Compile>
     <Compile Include="IsoStoreFile.cs" />
     <Compile Include="IsoStoreFileSystem.cs" />
     <Compile Include="IsoStoreFolder.cs" />

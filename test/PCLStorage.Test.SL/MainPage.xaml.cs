@@ -46,7 +46,7 @@ namespace PCLStorage.Test.SL
             RunTestsButton.IsEnabled = false;
             ClearIsoStoreButton.IsEnabled = false;
 
-            var isoStore = Storage.AppLocalStorage;
+            var isoStore = FileSystem.Current.LocalStorage;
             {
                 foreach (var file in await isoStore.GetFilesAsync())
                 {
