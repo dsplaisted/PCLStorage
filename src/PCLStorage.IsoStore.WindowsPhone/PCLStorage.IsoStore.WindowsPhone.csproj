@@ -92,15 +92,6 @@
     <Compile Include="..\PCLStorage\FileSystem.cs">
       <Link>FileSystem.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage\IFile.cs">
-      <Link>IFile.cs</Link>
-    </Compile>
-    <Compile Include="..\PCLStorage\IFileSystem.cs">
-      <Link>IFileSystem.cs</Link>
-    </Compile>
-    <Compile Include="..\PCLStorage\IFolder.cs">
-      <Link>IFolder.cs</Link>
-    </Compile>
     <Compile Include="..\PCLStorage\PortablePath.cs">
       <Link>PortablePath.cs</Link>
     </Compile>
@@ -109,6 +100,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
+      <Project>{EEBB53F3-EBDF-4DD0-82E5-FF9A2C8DBD72}</Project>
+      <Name>PCLStorage.Abstractions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

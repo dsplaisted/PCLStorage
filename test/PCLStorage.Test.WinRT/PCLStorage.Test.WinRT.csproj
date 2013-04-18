@@ -16,6 +16,8 @@
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>PCLStorage.Test.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>D9E3CD95A8B81EEF9F99BC442C4B7586B5EF731B</PackageCertificateThumbprint>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -128,6 +130,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="packages.config" />
     <None Include="PCLStorage.Test.WinRT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -145,15 +148,29 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
+      <Project>{eebb53f3-ebdf-4dd0-82e5-ff9a2c8dbd72}</Project>
+      <Name>PCLStorage.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\PCLStorage.WinRT\PCLStorage.WinRT.csproj">
       <Project>{aac0913d-649a-49dd-834b-ef23d092d72b}</Project>
       <Name>PCLStorage.WinRT</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.16\lib\win8\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.16\lib\win8\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.4\tools\Microsoft.Bcl.Build.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

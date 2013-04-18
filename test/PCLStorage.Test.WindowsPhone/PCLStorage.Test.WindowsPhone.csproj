@@ -114,6 +114,10 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
+      <Project>{EEBB53F3-EBDF-4DD0-82E5-FF9A2C8DBD72}</Project>
+      <Name>PCLStorage.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\PCLStorage.IsoStore.WindowsPhone\PCLStorage.IsoStore.WindowsPhone.csproj">
       <Project>{D6BDB17D-1B42-49DA-BADB-B09D7DB4B4EA}</Project>
       <Name>PCLStorage.IsoStore.WindowsPhone</Name>
