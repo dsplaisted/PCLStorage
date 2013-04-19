@@ -10,8 +10,8 @@
   
   <PropertyGroup>
     <MajorVersion>0</MajorVersion>
-    <MinorVersion>1</MinorVersion>
-    <Build>1</Build>
+    <MinorVersion>2</MinorVersion>
+    <Build>0</Build>
     <Revision>0</Revision>
 
     
