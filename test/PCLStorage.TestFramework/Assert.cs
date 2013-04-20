@@ -58,6 +58,22 @@ namespace PCLStorage.TestFramework
 			}
 		}
 
+        public static void IsNull(object obj, string message = null)
+        {
+            if (!object.ReferenceEquals(obj, null))
+            {
+                HandleFail("IsNull", null, message);
+            }
+        }
+
+        public static void IsNotNull(object obj, string message = null)
+        {
+            if (object.ReferenceEquals(obj, null))
+            {
+                HandleFail("IsNotNull", null, message);
+            }
+        }
+
 		
 
         static void HandleFail(string assertName, string failMessage, string message, Exception innerException = null)

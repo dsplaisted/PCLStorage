@@ -338,6 +338,27 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public async Task DeleteNonEmptyFolder()
+        {
+            //  Arrange
+            IFolder rootFolder = TestFileSystem.LocalStorage;
+            string folderToDeleteName = "FolderToDelete";
+            IFolder folder = await rootFolder.CreateFolderAsync(folderToDeleteName, CreationCollisionOption.FailIfExists);
+            IFile fileInFolder = await folder.CreateFileAsync("file.txt", CreationCollisionOption.FailIfExists);
+            await fileInFolder.WriteAllTextAsync("hello, world");
+            IFolder subfolder = await folder.CreateFolderAsync("subfolder", CreationCollisionOption.FailIfExists);
+
+            //  Act
+            await folder.DeleteAsync();
+
+            //  Assert
+            var folders = await rootFolder.GetFoldersAsync();
+            Assert.IsFalse(folders.Any(f => f.Name == folderToDeleteName));
+            Assert.IsNull(await TestFileSystem.GetFileFromPathAsync(fileInFolder.Path));
+            Assert.IsNull(await TestFileSystem.GetFolderFromPathAsync(subfolder.Path));
+        }
+
+        [TestMethod]
         public async Task CreateFileInDeletedFolder()
         {
             //  Arrange
