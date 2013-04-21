@@ -6,9 +6,18 @@ using System.Threading.Tasks;
 
 namespace PCLStorage
 {
+    /// <summary>
+    /// Represents a file system.
+    /// </summary>
     public interface IFileSystem
     {
+        /// <summary>
+        /// A folder representing storage which is local to the current device
+        /// </summary>
         IFolder LocalStorage { get; }
+        /// <summary>
+        /// A folder representing storage which may be synced with other devices for the same user
+        /// </summary>
         IFolder RoamingStorage { get; }
 
         /// <summary>
