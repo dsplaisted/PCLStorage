@@ -39,6 +39,7 @@ namespace PCLStorage
         {
             using (var stream = await file.OpenAsync(FileAccess.ReadAndWrite))
             {
+                stream.SetLength(0);
                 using (var sw = new StreamWriter(stream))
                 {
                     await sw.WriteAsync(contents);

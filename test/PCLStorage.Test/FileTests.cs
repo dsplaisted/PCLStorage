@@ -316,5 +316,25 @@ namespace PCLStorage.Test
             await siblingFolder1.DeleteAsync();
             await siblingFolder2.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task WriteAllTextOverwritesExistingContents()
+        {
+            //  Arrange
+            IFolder rootFolder = TestFileSystem.LocalStorage;
+            IFolder testFolder = await rootFolder.CreateFolderAsync("WriteAllTextFolder", CreationCollisionOption.FailIfExists);
+            IFile testFile = await testFolder.CreateFileAsync("testfile.txt", CreationCollisionOption.FailIfExists);
+            await testFile.WriteAllTextAsync("A man a plan a canal panama!");
+
+            //  Act
+            await testFile.WriteAllTextAsync("42");
+
+            //  Assert
+            string contents = await testFile.ReadAllTextAsync();
+            Assert.AreEqual("42", contents);
+
+            //  Cleanup
+            await testFolder.DeleteAsync();
+        }
     }
 }
