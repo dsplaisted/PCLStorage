@@ -44,7 +44,6 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Exceptions\PCLStorageExceptions.cs" />
-    <Compile Include="FileExtensions.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="PortablePath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
