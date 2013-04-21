@@ -6,6 +6,7 @@ using System.Text;
 
 namespace PCLStorage.Exceptions
 {
+    /// <exclude/>
     public class FileNotFoundException
 #if PORTABLE
  : IOException
@@ -13,12 +14,14 @@ namespace PCLStorage.Exceptions
         : System.IO.FileNotFoundException
 #endif
     {
+        /// <exclude/>
         public FileNotFoundException(string message)
             : base(message)
         {
 
         }
 
+        /// <exclude/>
         public FileNotFoundException(string message, Exception innerException)
             : base(message, innerException)
         {
@@ -26,6 +29,7 @@ namespace PCLStorage.Exceptions
         }
     }
 
+    /// <exclude/>
     public class DirectoryNotFoundException
 #if PORTABLE
         : IOException
@@ -35,12 +39,14 @@ namespace PCLStorage.Exceptions
         : System.IO.DirectoryNotFoundException
 #endif
     {
+        /// <exclude/>
         public DirectoryNotFoundException(string message)
             : base(message)
         {
 
         }
 
+        /// <exclude/>
         public DirectoryNotFoundException(string message, Exception innerException)
             : base(message, innerException)
         {

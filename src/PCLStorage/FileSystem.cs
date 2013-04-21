@@ -5,10 +5,16 @@ using System.Text;
 
 namespace PCLStorage
 {
+    /// <summary>
+    /// Provides access to an implementation of <see cref="IFileSystem"/> for the current platform
+    /// </summary>
     public static class FileSystem
     {
         static IFileSystem _fileSystem = CreateFileSystem();
 
+        /// <summary>
+        /// The implementation of <see cref="IFileSystem"/> for the current platform
+        /// </summary>
         public static IFileSystem Current
         {
             get

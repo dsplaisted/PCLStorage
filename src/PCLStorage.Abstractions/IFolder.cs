@@ -89,7 +89,7 @@ namespace PCLStorage
         /// <summary>
         /// Deletes this folder and all of its contents
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task which will complete after the folder is deleted</returns>
         Task DeleteAsync();
     }
 }

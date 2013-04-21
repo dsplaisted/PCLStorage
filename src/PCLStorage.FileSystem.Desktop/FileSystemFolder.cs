@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace PCLStorage
 {
+    /// <summary>
+    /// Represents a folder in the <see cref="DesktopFileSystem"/>
+    /// </summary>
     [DebuggerDisplay("Name = {_name}")]
     public class FileSystemFolder : IFolder
     {
@@ -15,6 +18,11 @@ namespace PCLStorage
         readonly string _path;
         readonly bool _canDelete;
 
+        /// <summary>
+        /// Creates a new <see cref="FileSystemFolder" /> corresponding to a specified path
+        /// </summary>
+        /// <param name="path">The folder path</param>
+        /// <param name="canDelete">Specifies whether the folder can be deleted (via <see cref="DeleteAsync"/>)</param>
         public FileSystemFolder(string path, bool canDelete)
         {
             _name = System.IO.Path.GetFileName(path);
@@ -22,21 +30,38 @@ namespace PCLStorage
             _canDelete = canDelete;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="FileSystemFolder" /> corresponding to a specified path
+        /// </summary>
+        /// <param name="path">The folder path</param>
+        /// <remarks>A folder created with this constructor cannot be deleted via <see cref="DeleteAsync"/></remarks>
         public FileSystemFolder(string path)
             : this(path, false)
         {
         }
 
+        /// <summary>
+        /// The name of the folder
+        /// </summary>
         public string Name
         {
             get { return _name; }
         }
 
+        /// <summary>
+        /// The "full path" of the folder, which should uniquely identify it within a given <see cref="IFileSystem"/>
+        /// </summary>
         public string Path
         {
             get { return _path; }
         }
 
+        /// <summary>
+        /// Creates a file in this folder
+        /// </summary>
+        /// <param name="desiredName">The name of the file to create</param>
+        /// <param name="option">Specifies how to behave if the specified file already exists</param>
+        /// <returns>The newly created file</returns>
         public Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
         {
             EnsureExists();
@@ -92,6 +117,11 @@ namespace PCLStorage
 
         }
 
+        /// <summary>
+        /// Gets a file in this folder
+        /// </summary>
+        /// <param name="name">The name of the file to get</param>
+        /// <returns>The requested file, or null if it does not exist</returns>
         public Task<IFile> GetFileAsync(string name)
         {
             string path = System.IO.Path.Combine(Path, name);
@@ -103,6 +133,10 @@ namespace PCLStorage
             return Task.FromResult<IFile>(ret);
         }
 
+        /// <summary>
+        /// Gets a list of the files in this folder
+        /// </summary>
+        /// <returns>A list of the files in the folder</returns>
         public Task<IList<IFile>> GetFilesAsync()
         {
             EnsureExists();
@@ -110,6 +144,12 @@ namespace PCLStorage
             return Task.FromResult(ret);
         }
 
+        /// <summary>
+        /// Creates a subfolder in this folder
+        /// </summary>
+        /// <param name="desiredName">The name of the folder to create</param>
+        /// <param name="option">Specifies how to behave if the specified folder already exists</param>
+        /// <returns>The newly created folder</returns>
         public Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
         {
             EnsureExists();
@@ -153,6 +193,11 @@ namespace PCLStorage
             return Task.FromResult<IFolder>(ret);
         }
 
+        /// <summary>
+        /// Gets a subfolder in this folder
+        /// </summary>
+        /// <param name="name">The name of the folder to get</param>
+        /// <returns>The requested folder, or null if it does not exist</returns>
         public Task<IFolder> GetFolderAsync(string name)
         {
             string path = System.IO.Path.Combine(Path, name);
@@ -164,6 +209,10 @@ namespace PCLStorage
             return Task.FromResult<IFolder>(ret);
         }
 
+        /// <summary>
+        /// Gets a list of subfolders in this folder
+        /// </summary>
+        /// <returns>A list of subfolders in the folder</returns>
         public Task<IList<IFolder>> GetFoldersAsync()
         {
             EnsureExists();
@@ -171,6 +220,10 @@ namespace PCLStorage
             return Task.FromResult(ret);
         }
 
+        /// <summary>
+        /// Deletes this folder and all of its contents
+        /// </summary>
+        /// <returns>A task which will complete after the folder is deleted</returns>
         public Task DeleteAsync()
         {
             if (!_canDelete)
