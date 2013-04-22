@@ -15,6 +15,9 @@ using System.IO;
 
 namespace PCLStorage
 {
+    /// <summary>
+    /// Represents a file in the <see cref="IsoStoreFileSystem"/>
+    /// </summary>
     [DebuggerDisplay("Name = {_name}")]
 	public class IsoStoreFile : IFile
 	{
@@ -22,6 +25,11 @@ namespace PCLStorage
         readonly IsolatedStorageFile _root;
 		readonly string _path;
 
+        /// <summary>
+        /// Creates a new <see cref="IsoStoreFile"/> based on the path to it within an <see cref="IsolatedStorageFile"/>
+        /// </summary>
+        /// <param name="root">An <see cref="IsolatedStorageFile"/></param>
+        /// <param name="path">The path in the <see cref="IsolatedStorageFile"/> to create an <see cref="IsoStoreFile"/> for</param>
         public IsoStoreFile(IsolatedStorageFile root, string path)
         {
             _root = root;
@@ -29,22 +37,38 @@ namespace PCLStorage
             _name = System.IO.Path.GetFileName(path);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="IsoStoreFile"/> from a file name and parent folder
+        /// </summary>
+        /// <param name="name">The file name</param>
+        /// <param name="parentFolder">The parent folder</param>
 		public IsoStoreFile(string name, IsoStoreFolder parentFolder)
             : this(parentFolder.Root, System.IO.Path.Combine(parentFolder.Path, name))
 		{
 			
 		}
 
+        /// <summary>
+        /// The name of the file
+        /// </summary>
 		public string Name
 		{
 			get { return _name; }
 		}
 
+        /// <summary>
+        /// The "full path" of the file, which should uniquely identify it within a given <see cref="IFileSystem"/>
+        /// </summary>
 		public string Path
 		{
 			get { return _path; }
 		}
 
+        /// <summary>
+        /// Opens the file
+        /// </summary>
+        /// <param name="fileAccess">Specifies whether the file should be opened in read-only or read/write mode</param>
+        /// <returns>A <see cref="Stream"/> which can be used to read from or write to the file</returns>
 		public Task<Stream> OpenAsync(FileAccess fileAccess)
 		{
 			System.IO.FileAccess nativeFileAccess;
@@ -89,6 +113,10 @@ namespace PCLStorage
 			}
 		}
 
+        /// <summary>
+        /// Deletes the file
+        /// </summary>
+        /// <returns>A task which will complete after the file is deleted.</returns>
 		public Task DeleteAsync()
 		{
             try

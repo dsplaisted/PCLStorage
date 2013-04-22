@@ -10,12 +10,19 @@ using Windows.Storage;
 
 namespace PCLStorage
 {
+    /// <summary>
+    /// Represents a folder in the <see cref="WinRTFileSystem"/>
+    /// </summary>
     [DebuggerDisplay("Name = {Name}")]
 	public class WinRTFolder : IFolder
 	{
         private readonly IStorageFolder _wrappedFolder;
         private readonly bool _isRootFolder;
 
+        /// <summary>
+        /// Creates a new <see cref="WinRTFolder"/>
+        /// </summary>
+        /// <param name="wrappedFolder">The WinRT <see cref="IStorageFolder"/> to wrap</param>
         public WinRTFolder(IStorageFolder wrappedFolder)
         {
             _wrappedFolder = wrappedFolder;
@@ -30,16 +37,28 @@ namespace PCLStorage
             }
         }
 
+        /// <summary>
+        /// The name of the folder
+        /// </summary>
 		public string Name
 		{
 			get { return _wrappedFolder.Name; }
 		}
 
+        /// <summary>
+        /// The "full path" of the folder, which should uniquely identify it within a given <see cref="IFileSystem"/>
+        /// </summary>
 		public string Path
 		{
 			get { return _wrappedFolder.Path; }
 		}
 
+        /// <summary>
+        /// Creates a file in this folder
+        /// </summary>
+        /// <param name="desiredName">The name of the file to create</param>
+        /// <param name="option">Specifies how to behave if the specified file already exists</param>
+        /// <returns>The newly created file</returns>
 		public async Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
 		{
             await EnsureExistsAsync();
@@ -60,6 +79,11 @@ namespace PCLStorage
 			return new WinRTFile(wrtFile);
 		}
 
+        /// <summary>
+        /// Gets a file in this folder
+        /// </summary>
+        /// <param name="name">The name of the file to get</param>
+        /// <returns>The requested file, or null if it does not exist</returns>
 		public async Task<IFile> GetFileAsync(string name)
 		{
             await EnsureExistsAsync();
@@ -67,6 +91,10 @@ namespace PCLStorage
 			return new WinRTFile(wrtFile);
 		}
 
+        /// <summary>
+        /// Gets a list of the files in this folder
+        /// </summary>
+        /// <returns>A list of the files in the folder</returns>
 		public async Task<IList<IFile>> GetFilesAsync()
 		{
             await EnsureExistsAsync();
@@ -75,6 +103,12 @@ namespace PCLStorage
 			return new ReadOnlyCollection<IFile>(files);
 		}
 
+        /// <summary>
+        /// Creates a subfolder in this folder
+        /// </summary>
+        /// <param name="desiredName">The name of the folder to create</param>
+        /// <param name="option">Specifies how to behave if the specified folder already exists</param>
+        /// <returns>The newly created folder</returns>
 		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
             await EnsureExistsAsync();
@@ -95,6 +129,11 @@ namespace PCLStorage
 			return new WinRTFolder(wrtFolder);
 		}
 
+        /// <summary>
+        /// Gets a subfolder in this folder
+        /// </summary>
+        /// <param name="name">The name of the folder to get</param>
+        /// <returns>The requested folder, or null if it does not exist</returns>
 		public async Task<IFolder> GetFolderAsync(string name)
 		{
             await EnsureExistsAsync();
@@ -111,6 +150,10 @@ namespace PCLStorage
 			return new WinRTFolder(wrtFolder);
 		}
 
+        /// <summary>
+        /// Gets a list of subfolders in this folder
+        /// </summary>
+        /// <returns>A list of subfolders in the folder</returns>
 		public async Task<IList<IFolder>> GetFoldersAsync()
 		{
             await EnsureExistsAsync();
@@ -119,6 +162,10 @@ namespace PCLStorage
 			return new ReadOnlyCollection<IFolder>(folders);
 		}
 
+        /// <summary>
+        /// Deletes this folder and all of its contents
+        /// </summary>
+        /// <returns>A task which will complete after the folder is deleted</returns>
 		public async Task DeleteAsync()
 		{
             await EnsureExistsAsync();

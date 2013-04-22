@@ -17,6 +17,9 @@ using System.Linq;
 
 namespace PCLStorage
 {
+    /// <summary>
+    /// Represents a folder in the <see cref="IsoStoreFileSystem"/>
+    /// </summary>
     [DebuggerDisplay("Name = {_name}")]
 	public class IsoStoreFolder : IFolder
 	{
@@ -25,11 +28,10 @@ namespace PCLStorage
 		readonly string _name;
 		readonly string _path;
 
-        //public IsoStoreFolder()
-        //    : this (IsolatedStorageFile.GetUserStoreForApplication())
-        //{
-        //}
-
+        /// <summary>
+        /// Creates a new <see cref="IsoStoreFolder"/> corresponding to the specified <see cref="IsolatedStorageFile"/>
+        /// </summary>
+        /// <param name="root">An <see cref="IsolatedStorageFile"/> to create an <see cref="IsoStoreFolder"/> for</param>
 		public IsoStoreFolder(IsolatedStorageFile root)
 		{
 			Root = root;
@@ -37,6 +39,11 @@ namespace PCLStorage
 			_path = string.Empty;
 		}
 
+        /// <summary>
+        /// Creates a new <see cref="IsoStoreFolder"/> corresponding to the specified path in an <see cref="IsolatedStorageFile"/>
+        /// </summary>
+        /// <param name="root">An <see cref="IsolatedStorageFile"/></param>
+        /// <param name="path">The path in the <see cref="IsolatedStorageFile"/> to create an <see cref="IsoStoreFolder"/> for</param>
 		public IsoStoreFolder(IsolatedStorageFile root, string path)
 		{
             Root = root;
@@ -49,22 +56,39 @@ namespace PCLStorage
             _path = path;
 		}
 
+        /// <summary>
+        /// Creates a new <see cref="IsoStoreFolder"/> corresponding to a subfolder of another <see cref="IsoStoreFolder"/>
+        /// </summary>
+        /// <param name="name">The name of the folder</param>
+        /// <param name="parent">The parent folder</param>
         public IsoStoreFolder(string name, IsoStoreFolder parent)
             : this(parent.Root, System.IO.Path.Combine(parent.Path, name))
         {
 
         }
 
+        /// <summary>
+        /// The name of the folder
+        /// </summary>
 		public string Name
 		{
 			get { return _name; }
 		}
 
+        /// <summary>
+        /// The "full path" of the folder, which should uniquely identify it within a given <see cref="IFileSystem"/>
+        /// </summary>
 		public string Path
 		{
 			get { return _path; }
 		}
 
+        /// <summary>
+        /// Creates a file in this folder
+        /// </summary>
+        /// <param name="desiredName">The name of the file to create</param>
+        /// <param name="option">Specifies how to behave if the specified file already exists</param>
+        /// <returns>The newly created file</returns>
 		public Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
 		{
             EnsureExists();
@@ -118,6 +142,11 @@ namespace PCLStorage
             }
         }
 
+        /// <summary>
+        /// Gets a file in this folder
+        /// </summary>
+        /// <param name="name">The name of the file to get</param>
+        /// <returns>The requested file, or null if it does not exist</returns>
 		public Task<IFile> GetFileAsync(string name)
 		{
             EnsureExists();
@@ -131,6 +160,10 @@ namespace PCLStorage
 			return TaskEx.FromResult<IFile>(ret);
 		}
 
+        /// <summary>
+        /// Gets a list of the files in this folder
+        /// </summary>
+        /// <returns>A list of the files in the folder</returns>
 		public Task<IList<IFile>> GetFilesAsync()
 		{
             EnsureExists();
@@ -140,6 +173,12 @@ namespace PCLStorage
 			return TaskEx.FromResult(ret);
 		}
 
+        /// <summary>
+        /// Creates a subfolder in this folder
+        /// </summary>
+        /// <param name="desiredName">The name of the folder to create</param>
+        /// <param name="option">Specifies how to behave if the specified folder already exists</param>
+        /// <returns>The newly created folder</returns>
 		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
             EnsureExists();
@@ -185,6 +224,11 @@ namespace PCLStorage
             return ret;
 		}
 
+        /// <summary>
+        /// Gets a subfolder in this folder
+        /// </summary>
+        /// <param name="name">The name of the folder to get</param>
+        /// <returns>The requested folder, or null if it does not exist</returns>
 		public Task<IFolder> GetFolderAsync(string name)
 		{
             EnsureExists();
@@ -198,6 +242,10 @@ namespace PCLStorage
 			return TaskEx.FromResult<IFolder>(ret);
 		}
 
+        /// <summary>
+        /// Gets a list of subfolders in this folder
+        /// </summary>
+        /// <returns>A list of subfolders in the folder</returns>
 		public Task<IList<IFolder>> GetFoldersAsync()
 		{
             EnsureExists();
@@ -207,6 +255,10 @@ namespace PCLStorage
 			return TaskEx.FromResult(ret);
 		}
 
+        /// <summary>
+        /// Deletes this folder and all of its contents
+        /// </summary>
+        /// <returns>A task which will complete after the folder is deleted</returns>
 		public async Task DeleteAsync()
 		{
             EnsureExists();
