@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -189,6 +190,25 @@ namespace PCLStorage.Test
             //  Cleanup
             await newFolder.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task CreateFolderWithMultipleThreads()
+        {
+            var items = new List<Task>();
+
+            for (var i = 0; i < 3; i++)
+            {
+                items.Add(TaskEx.Run(() => GetFolderWorker()));
+            }
+
+            await TaskEx.WhenAll(items);
+        }
+
+        private async Task GetFolderWorker()
+        {
+            var folder = await FileSystem.Current.LocalStorage.CreateFolderAsync("Json", CreationCollisionOption.OpenIfExists);
+        }
+
 
         [TestMethod]
         public async Task CreateFolderCollision_FailIfExists()
