@@ -194,21 +194,32 @@ namespace PCLStorage.Test
         [TestMethod]
         public async Task CreateFolderWithMultipleThreads()
         {
-            var items = new List<Task>();
+            //  Arrange
+            var folderName = "json";
+            var items = new List<Task<IFolder>>();
+            int iterations = 10;
 
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < iterations; i++)
             {
-                items.Add(TaskEx.Run(() => GetFolderWorker()));
+                var task = TaskEx.Run(async () =>
+                    {
+                        var folder = await FileSystem.Current.LocalStorage.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+                        return folder;
+                    });
+                items.Add(task);
             }
 
-            await TaskEx.WhenAll(items);
-        }
+            //  Act
+            List<IFolder> folders = (await TaskEx.WhenAll(items)).ToList();
 
-        private async Task GetFolderWorker()
-        {
-            var folder = await FileSystem.Current.LocalStorage.CreateFolderAsync("Json", CreationCollisionOption.OpenIfExists);
-        }
+            //  Assert
+            Assert.AreEqual(iterations, folders.Count, "Folder count");
+            for (int i=0; i<iterations; i++)
+            {
+                Assert.AreEqual(folderName, folders[i].Name, "Folder " + i + " name");
+            }
 
+        }
 
         [TestMethod]
         public async Task CreateFolderCollision_FailIfExists()
