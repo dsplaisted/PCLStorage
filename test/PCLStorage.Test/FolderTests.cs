@@ -191,8 +191,29 @@ namespace PCLStorage.Test
             await newFolder.DeleteAsync();
         }
 
+#if NETFX_CORE
         [TestMethod]
-        public async Task CreateFolderWithMultipleThreads()
+        public async Task ConcurrentGetFolderFromPath()
+        {
+            List<Task> tasks = new List<Task>();
+            for (int i = 0; i < 10; i++)
+            {
+                var task = Task.Run(async () =>
+                    {
+                        string localFolderPath = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+                        //await Task.Yield();
+                        var folder = await Windows.Storage.StorageFolder.GetFolderFromPathAsync(localFolderPath);
+                    });
+
+                tasks.Add(task);
+            }
+
+            await Task.WhenAll(tasks);
+        }
+#endif
+
+        [TestMethod]
+        public async Task ConcurrentCreateFolder()
         {
             //  Arrange
             var folderName = "json";
