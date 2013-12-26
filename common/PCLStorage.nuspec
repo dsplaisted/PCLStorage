@@ -9,19 +9,19 @@
         <licenseUrl>http://pclstorage.codeplex.com/license</licenseUrl>
         <projectUrl>http://pclstorage.codeplex.com/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>PCL Storage provides a consistent, portable set of local file IO APIs for .NET, Windows Phone, Windows Store, and Silverlight.  This makes it easier to create cross-platform .NET libraries and apps.</description>
+        <description>PCL Storage provides a consistent, portable set of local file IO APIs for .NET, Windows Phone, Windows Store, Xamarin.iOS, Xamarin.Android, and Silverlight.  This makes it easier to create cross-platform .NET libraries and apps.</description>
         <summary>PCL Storage provides a consistent, portable set of local file IO APIs across .NET platforms.</summary>
-        <tags>io storage file portable pcl winrt android xamarin monoandroid monodroid</tags>
+        <tags>io storage file portable pcl winrt android ios xamarin monoandroid monodroid monotouch</tags>
         <dependencies>
             <dependency id="Microsoft.Bcl.Async" version="1.0.165" />
             <dependency id="Microsoft.Bcl" version="1.1.6" />
         </dependencies>
     </metadata>
     <files>
-      <file src="..\src\PCLStorage\bin\Release\PCLStorage.dll" target="lib\portable-net45+sl4+wp71+win8+monoandroid\PCLStorage.dll" />
-      <file src="..\src\PCLStorage\bin\Release\PCLStorage.xml" target="lib\portable-net45+sl4+wp71+win8+monoandroid\PCLStorage.xml" />
-      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\portable-net45+sl4+wp71+win8+monoandroid\PCLStorage.Abstractions.dll" />
-      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\portable-net45+sl4+wp71+win8+monoandroid\PCLStorage.Abstractions.xml" />
+      <file src="..\src\PCLStorage\bin\Release\PCLStorage.dll" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.dll" />
+      <file src="..\src\PCLStorage\bin\Release\PCLStorage.xml" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.xml" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.Abstractions.dll" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.Abstractions.xml" />
 
       <file src="..\src\PCLStorage.FileSystem.Desktop\bin\Release\PCLStorage.dll" target="lib\net45\PCLStorage.dll" />
       <file src="..\src\PCLStorage.FileSystem.Desktop\bin\Release\PCLStorage.xml" target="lib\net45\PCLStorage.xml" />
@@ -47,5 +47,10 @@
       <file src="..\src\PCLStorage.Android\bin\Release\PCLStorage.xml" target="lib\monoandroid\PCLStorage.xml" />
       <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\monoandroid\PCLStorage.Abstractions.dll" />
       <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\monoandroid\PCLStorage.Abstractions.xml" />
+
+      <file src="..\src\PCLStorage.iOS\bin\iPhone\Release\PCLStorage.dll" target="lib\monotouch\PCLStorage.dll" />
+      <file src="..\src\PCLStorage.iOS\bin\iPhone\Release\PCLStorage.xml" target="lib\monotouch\PCLStorage.xml" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\monotouch\PCLStorage.Abstractions.dll" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\monotouch\PCLStorage.Abstractions.xml" />
     </files>
 </package>
