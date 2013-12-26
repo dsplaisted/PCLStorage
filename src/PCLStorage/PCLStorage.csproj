@@ -11,7 +11,7 @@
     <RootNamespace>PCLStorage</RootNamespace>
     <AssemblyName>PCLStorage</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile104</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile158</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -51,6 +51,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
+      <Project>{eebb53f3-ebdf-4dd0-82e5-ff9a2c8dbd72}</Project>
+      <Name>PCLStorage.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\portable-net40+sl4+win8+wp71\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -58,20 +64,14 @@
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\portable-net40+sl4+win8+wp71\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.IO">
-      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl4+win8+wp71\System.IO.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl5+win8+wp8\System.IO.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime">
-      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl4+win8+wp71\System.Runtime.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl5+win8+wp8\System.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks">
-      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl4+win8+wp71\System.Threading.Tasks.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl5+win8+wp8\System.Threading.Tasks.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
-      <Project>{eebb53f3-ebdf-4dd0-82e5-ff9a2c8dbd72}</Project>
-      <Name>PCLStorage.Abstractions</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" />
