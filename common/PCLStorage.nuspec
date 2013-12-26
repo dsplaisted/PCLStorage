@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>PCL Storage provides a consistent, portable set of local file IO APIs for .NET, Windows Phone, Windows Store, and Silverlight.  This makes it easier to create cross-platform .NET libraries and apps.</description>
         <summary>PCL Storage provides a consistent, portable set of local file IO APIs across .NET platforms.</summary>
-        <tags>io storage portable pcl</tags>
+        <tags>io storage file portable pcl winrt android xamarin monoandroid monodroid</tags>
         <dependencies>
             <dependency id="Microsoft.Bcl.Async" version="1.0.165" />
             <dependency id="Microsoft.Bcl" version="1.1.6" />
