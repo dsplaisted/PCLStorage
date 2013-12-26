@@ -1,4 +1,7 @@
-﻿using System;
+﻿//  Log the test results to Debug output even when compiling for release mode
+#define DEBUG
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
