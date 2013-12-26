@@ -21,7 +21,11 @@ namespace PCLStorage
             {
                 //  SpecialFolder.LocalApplicationData is not app-specific, so use the Windows Forms API to get the app data path
                 //var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+#if XAMARIN
+                var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+#else
                 var localAppData = System.Windows.Forms.Application.LocalUserAppDataPath;
+#endif
                 return new FileSystemFolder(localAppData);
             }
         }
@@ -33,10 +37,14 @@ namespace PCLStorage
         {
             get
             {
+#if XAMARIN
+                return null;
+#else
                 //  SpecialFolder.ApplicationData is not app-specific, so use the Windows Forms API to get the app data path
                 //var roamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var roamingAppData = System.Windows.Forms.Application.UserAppDataPath;
                 return new FileSystemFolder(roamingAppData);
+#endif
             }
         }
 
