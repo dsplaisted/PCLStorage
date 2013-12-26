@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
+    <metadata minClientVersion="2.7.2">
         <id>PCLStorage</id>
         <version>0.0.1</version>
         <title>PCL Storage - Portable Storage APIs</title>
@@ -18,10 +18,10 @@
         </dependencies>
     </metadata>
     <files>
-      <file src="..\src\PCLStorage\bin\Release\PCLStorage.dll" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.dll" />
-      <file src="..\src\PCLStorage\bin\Release\PCLStorage.xml" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.xml" />
-      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.Abstractions.dll" />
-      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\portable-net45+sl4+wp71+win8+monoandroid+monotouch\PCLStorage.Abstractions.xml" />
+      <file src="..\src\PCLStorage\bin\Release\PCLStorage.dll" target="lib\portable-net45+sl4+wp8+win8+monoandroid+monotouch\PCLStorage.dll" />
+      <file src="..\src\PCLStorage\bin\Release\PCLStorage.xml" target="lib\portable-net45+sl4+wp8+win8+monoandroid+monotouch\PCLStorage.xml" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\portable-net45+sl4+wp8+win8+monoandroid+monotouch\PCLStorage.Abstractions.dll" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\portable-net45+sl4+wp8+win8+monoandroid+monotouch\PCLStorage.Abstractions.xml" />
 
       <file src="..\src\PCLStorage.FileSystem.Desktop\bin\Release\PCLStorage.dll" target="lib\net45\PCLStorage.dll" />
       <file src="..\src\PCLStorage.FileSystem.Desktop\bin\Release\PCLStorage.xml" target="lib\net45\PCLStorage.xml" />
@@ -33,10 +33,10 @@
       <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\sl4\PCLStorage.Abstractions.dll" />
       <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\sl4\PCLStorage.Abstractions.xml" />
 
-      <file src="..\src\PCLStorage.WindowsPhone\bin\Release\PCLStorage.dll" target="lib\wp71\PCLStorage.dll" />
-      <file src="..\src\PCLStorage.WindowsPhone\bin\Release\PCLStorage.xml" target="lib\wp71\PCLStorage.xml" />
-      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\wp71\PCLStorage.Abstractions.dll" />
-      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\wp71\PCLStorage.Abstractions.xml" />
+      <file src="..\src\PCLStorage.WindowsPhone\bin\Release\PCLStorage.dll" target="lib\wp8\PCLStorage.dll" />
+      <file src="..\src\PCLStorage.WindowsPhone\bin\Release\PCLStorage.xml" target="lib\wp8\PCLStorage.xml" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.dll" target="lib\wp8\PCLStorage.Abstractions.dll" />
+      <file src="..\src\PCLStorage.Abstractions\bin\Release\PCLStorage.Abstractions.xml" target="lib\wp8\PCLStorage.Abstractions.xml" />
 
       <file src="..\src\PCLStorage.WinRT\bin\Release\PCLStorage.dll" target="lib\win8\PCLStorage.dll" />
       <file src="..\src\PCLStorage.WinRT\bin\Release\PCLStorage.xml" target="lib\win8\PCLStorage.xml" />
