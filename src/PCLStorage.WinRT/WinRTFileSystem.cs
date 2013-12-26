@@ -13,6 +13,15 @@ namespace PCLStorage
     /// </summary>
     public class WinRTFileSystem : IFileSystem
     {
+        Windows.Storage.ApplicationData _applicationData;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="WinRTFileSystem"/>
+        /// </summary>
+        public WinRTFileSystem()
+        {
+            _applicationData = ApplicationData.Current;
+        }
         /// <summary>
         /// A folder representing storage which is local to the current device
         /// </summary>
@@ -20,7 +29,7 @@ namespace PCLStorage
         {
             get
             {
-                return new WinRTFolder(Windows.Storage.ApplicationData.Current.LocalFolder);
+                return new WinRTFolder(_applicationData.LocalFolder);
             }
         }
 
@@ -31,7 +40,7 @@ namespace PCLStorage
         {
             get
             {
-                return new WinRTFolder(Windows.Storage.ApplicationData.Current.RoamingFolder);
+                return new WinRTFolder(_applicationData.RoamingFolder);
             }
         }
 

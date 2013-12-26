@@ -10,7 +10,7 @@ namespace PCLStorage
     /// </summary>
     public static class FileSystem
     {
-        static IFileSystem _fileSystem = CreateFileSystem();
+        static Lazy<IFileSystem> _fileSystem = new Lazy<IFileSystem>(() => CreateFileSystem(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
         /// <summary>
         /// The implementation of <see cref="IFileSystem"/> for the current platform
@@ -19,11 +19,12 @@ namespace PCLStorage
         {
             get
             {
-                if (_fileSystem == null)
+                IFileSystem ret = _fileSystem.Value;
+                if (ret == null)
                 {
                     throw FileSystem.NotImplementedInReferenceAssembly();
                 }
-                return _fileSystem;
+                return ret;
             }
         }
 
