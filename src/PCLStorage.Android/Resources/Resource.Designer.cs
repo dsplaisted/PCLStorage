@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("PCLStorage.Android.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("PCLStorage.Resource", IsApplication=false)]
 
-namespace PCLStorage.Android
+namespace PCLStorage
 {
 	
 	
