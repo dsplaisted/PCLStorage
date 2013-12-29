@@ -6,15 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#if NETFX_CORE
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#elif DESKTOP
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
-#if PORTABLE
-using PCLStorage.Exceptions;
-#endif
 using PCLTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PCLStorage.Test
 {
