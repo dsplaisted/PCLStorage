@@ -144,10 +144,6 @@
       <Project>{D6BDB17D-1B42-49DA-BADB-B09D7DB4B4EA}</Project>
       <Name>PCLStorage.WindowsPhone</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PCLStorage.TestFramework\PCLStorage.TestFramework.csproj">
-      <Project>{BB83895D-F149-4C79-B1D0-63401198F19C}</Project>
-      <Name>PCLStorage.TestFramework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PCLStorage.Test\PCLStorage.Test.csproj">
       <Project>{28668411-C26F-434F-88B1-B7E5F8D39C61}</Project>
       <Name>PCLStorage.Test</Name>
@@ -165,6 +161,12 @@
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Phone, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\wp8\Microsoft.Threading.Tasks.Extensions.Phone.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLTesting">
+      <HintPath>..\..\packages\PCLTesting.0.0.3\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLTesting.Portable">
+      <HintPath>..\..\packages\PCLTesting.0.0.3\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

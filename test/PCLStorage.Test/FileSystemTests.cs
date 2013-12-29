@@ -13,8 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 #if PORTABLE
 using PCLStorage.Exceptions;
 #endif
-
-using PCLStorage.TestFramework;
+using PCLTesting;
 
 
 namespace PCLStorage.Test

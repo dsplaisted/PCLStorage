@@ -44,10 +44,6 @@
       <Project>{31f6b895-4ff7-481b-b483-e0e6b63cc312}</Project>
       <Name>PCLStorage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PCLStorage.TestFramework\PCLStorage.TestFramework.csproj">
-      <Project>{bb83895d-f149-4c79-b1d0-63401198f19c}</Project>
-      <Name>PCLStorage.TestFramework</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystemTests.cs" />
@@ -56,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +61,12 @@
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\portable-net40+sl4+win8+wp71\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLTesting">
+      <HintPath>..\..\packages\PCLTesting.0.0.3\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLTesting.Portable">
+      <HintPath>..\..\packages\PCLTesting.0.0.3\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.Portable.dll</HintPath>
     </Reference>
     <Reference Include="System.IO">
       <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl5+win8+wp8\System.IO.dll</HintPath>

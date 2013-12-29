@@ -50,6 +50,12 @@
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
+    <Reference Include="PCLTesting">
+      <HintPath>..\..\packages\PCLTesting.0.0.3\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLTesting.Portable">
+      <HintPath>..\..\packages\PCLTesting.0.0.3\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.Portable.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -86,10 +92,6 @@
     <ProjectReference Include="..\..\src\PCLStorage.Android\PCLStorage.Android.csproj">
       <Project>{d813c9d8-d6d1-4d2b-af04-0d877656f47e}</Project>
       <Name>PCLStorage.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PCLStorage.TestFramework\PCLStorage.TestFramework.csproj">
-      <Project>{bb83895d-f149-4c79-b1d0-63401198f19c}</Project>
-      <Name>PCLStorage.TestFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\PCLStorage.Test\PCLStorage.Test.csproj">
       <Project>{28668411-c26f-434f-88b1-b7e5f8d39c61}</Project>

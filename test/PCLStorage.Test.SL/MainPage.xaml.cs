@@ -9,8 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using PCLStorage.TestFramework.Infrastructure;
 using System.IO.IsolatedStorage;
+using PCLTesting.Infrastructure;
 
 namespace PCLStorage.Test.SL
 {

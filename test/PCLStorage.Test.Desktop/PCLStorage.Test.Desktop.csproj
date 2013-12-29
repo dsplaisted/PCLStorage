@@ -48,6 +48,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net45\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="PCLTesting, Version=0.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PCLTesting.0.0.3\lib\net45\PCLTesting.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -67,9 +71,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="..\PCLStorage.TestFramework\Assert.cs">
-      <Link>Assert.cs</Link>
-    </Compile>
     <Compile Include="..\PCLStorage.Test\FileSystemTests.cs">
       <Link>FileSystemTests.cs</Link>
     </Compile>

@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
-using PCLStorage.TestFramework.Infrastructure;
+using PCLTesting.Infrastructure;
 
 namespace PCLStorage.Test.WindowsPhone
 {
