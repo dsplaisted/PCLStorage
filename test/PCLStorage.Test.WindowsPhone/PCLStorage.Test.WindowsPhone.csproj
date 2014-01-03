@@ -162,13 +162,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\wp8\Microsoft.Threading.Tasks.Extensions.Phone.dll</HintPath>
     </Reference>
-    <Reference Include="PCLTesting, Version=0.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PCLTesting, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PCLTesting.0.0.4\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.dll</HintPath>
+      <HintPath>..\..\packages\PCLTesting.0.1.0\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.dll</HintPath>
     </Reference>
-    <Reference Include="PCLTesting.Portable, Version=0.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PCLTesting.Portable, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PCLTesting.0.0.4\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.Portable.dll</HintPath>
+      <HintPath>..\..\packages\PCLTesting.0.1.0\lib\portable-net45+sl5+wp8+win8+monoandroid+monotouch\PCLTesting.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

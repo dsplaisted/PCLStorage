@@ -163,9 +163,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\win8\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="PCLTesting, Version=0.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PCLTesting, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PCLTesting.0.0.4\lib\win8\PCLTesting.dll</HintPath>
+      <HintPath>..\..\packages\PCLTesting.0.1.0\lib\win8\PCLTesting.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
