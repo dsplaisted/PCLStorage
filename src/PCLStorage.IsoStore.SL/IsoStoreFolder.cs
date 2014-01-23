@@ -199,7 +199,7 @@ namespace PCLStorage
 				else if (option == CreationCollisionOption.ReplaceExisting)
 				{
                     IsoStoreFolder folderToDelete = new IsoStoreFolder(nameToUse, this);
-                    await folderToDelete.DeleteAsync();
+                    await folderToDelete.DeleteAsync().ConfigureAwait(false);
 					Root.CreateDirectory(newPath);
 				}
 				else if (option == CreationCollisionOption.FailIfExists)
@@ -268,14 +268,14 @@ namespace PCLStorage
                 throw new IOException("Cannot delete root Isolated Storage folder.");
             }
 
-            foreach (var subfolder in await GetFoldersAsync())
+            foreach (var subfolder in await GetFoldersAsync().ConfigureAwait(false))
             {
-                await subfolder.DeleteAsync();
+                await subfolder.DeleteAsync().ConfigureAwait(false);
             }
 
-            foreach (var file in await GetFilesAsync())
+            foreach (var file in await GetFilesAsync().ConfigureAwait(false))
             {
-                await file.DeleteAsync();
+                await file.DeleteAsync().ConfigureAwait(false);
             }
 
 			Root.DeleteDirectory(Path);
