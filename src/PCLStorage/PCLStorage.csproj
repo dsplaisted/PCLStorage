@@ -36,17 +36,10 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\PCLStorage.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>strongnamekey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="strongnamekey.snk" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\common\CommonAssemblyInfo.cs">

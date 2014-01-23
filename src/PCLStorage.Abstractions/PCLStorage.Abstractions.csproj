@@ -36,12 +36,6 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\PCLStorage.Abstractions.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>strongnamekey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
@@ -55,7 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="strongnamekey.snk" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks">
