@@ -15,6 +15,11 @@ namespace PCLStorage
     [DebuggerDisplay("Name = {Name}")]
 	public class WinRTFile : IFile
 	{
+        /// <summary>
+        /// The HRESULT on a System.Exception thrown when a file collision occurs.
+        /// </summary>
+        private const int FILE_ALREADY_EXISTS = unchecked((int)0x800700B7);
+
         private readonly IStorageFile _wrappedFile;
 
         /// <summary>
@@ -101,7 +106,7 @@ namespace PCLStorage
             }
             catch (Exception ex)
             {
-                if (ex.HResult == unchecked((int)0x800700B7))
+                if (ex.HResult == FILE_ALREADY_EXISTS)
                 {
                     throw new IOException("File already exists.", ex);
                 }
@@ -138,7 +143,7 @@ namespace PCLStorage
             }
             catch (Exception ex)
             {
-                if (ex.HResult == unchecked((int)0x800700B7))
+                if (ex.HResult == FILE_ALREADY_EXISTS)
                 {
                     throw new IOException("File already exists.", ex);
                 }
