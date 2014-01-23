@@ -19,11 +19,11 @@ namespace PCLStorage
         /// <returns>The contents of the file</returns>
         public static async Task<string> ReadAllTextAsync(this IFile file)
         {
-            using (var stream = await file.OpenAsync(FileAccess.Read).ConfigureAwait(false))
+            using (var stream = await file.OpenAsync(FileAccess.Read))
             {
                 using (var sr = new StreamReader(stream))
                 {
-                    string text = await sr.ReadToEndAsync().ConfigureAwait(false);
+                    string text = await sr.ReadToEndAsync();
                     return text;
                 }
             }
@@ -37,12 +37,12 @@ namespace PCLStorage
         /// <returns>A task which completes when the write operation finishes</returns>
         public static async Task WriteAllTextAsync(this IFile file, string contents)
         {
-            using (var stream = await file.OpenAsync(FileAccess.ReadAndWrite).ConfigureAwait(false))
+            using (var stream = await file.OpenAsync(FileAccess.ReadAndWrite))
             {
                 stream.SetLength(0);
                 using (var sw = new StreamWriter(stream))
                 {
-                    await sw.WriteAsync(contents).ConfigureAwait(false);
+                    await sw.WriteAsync(contents);
                 }
             }
         }

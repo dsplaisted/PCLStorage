@@ -61,11 +61,11 @@ namespace PCLStorage
         /// <returns>The newly created file</returns>
 		public async Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
 		{
-            await EnsureExistsAsync().ConfigureAwait(false);
+            await EnsureExistsAsync();
             StorageFile wrtFile;
             try
             {
-                wrtFile = await _wrappedFolder.CreateFileAsync(desiredName, GetWinRTCreationCollisionOption(option)).AsTask().ConfigureAwait(false);
+                wrtFile = await _wrappedFolder.CreateFileAsync(desiredName, GetWinRTCreationCollisionOption(option));
             }
             catch (Exception ex)
             {
@@ -86,8 +86,8 @@ namespace PCLStorage
         /// <returns>The requested file, or null if it does not exist</returns>
 		public async Task<IFile> GetFileAsync(string name)
 		{
-            await EnsureExistsAsync().ConfigureAwait(false);
-            var wrtFile = await _wrappedFolder.GetFileAsync(name).AsTask().ConfigureAwait(false);
+            await EnsureExistsAsync();
+			var wrtFile = await _wrappedFolder.GetFileAsync(name);
 			return new WinRTFile(wrtFile);
 		}
 
@@ -97,8 +97,8 @@ namespace PCLStorage
         /// <returns>A list of the files in the folder</returns>
 		public async Task<IList<IFile>> GetFilesAsync()
 		{
-            await EnsureExistsAsync().ConfigureAwait(false);
-            var wrtFiles = await _wrappedFolder.GetFilesAsync().AsTask().ConfigureAwait(false);
+            await EnsureExistsAsync();
+			var wrtFiles = await _wrappedFolder.GetFilesAsync();
 			var files = wrtFiles.Select(f => new WinRTFile(f)).ToList<IFile>();
 			return new ReadOnlyCollection<IFile>(files);
 		}
@@ -111,11 +111,11 @@ namespace PCLStorage
         /// <returns>The newly created folder</returns>
 		public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
 		{
-            await EnsureExistsAsync().ConfigureAwait(false);
+            await EnsureExistsAsync();
 			StorageFolder wrtFolder;
             try
             {
-                wrtFolder = await _wrappedFolder.CreateFolderAsync(desiredName, GetWinRTCreationCollisionOption(option)).AsTask().ConfigureAwait(false);
+                wrtFolder = await _wrappedFolder.CreateFolderAsync(desiredName, GetWinRTCreationCollisionOption(option));
             }
             catch (Exception ex)
             {
@@ -136,11 +136,11 @@ namespace PCLStorage
         /// <returns>The requested folder, or null if it does not exist</returns>
 		public async Task<IFolder> GetFolderAsync(string name)
 		{
-            await EnsureExistsAsync().ConfigureAwait(false);
+            await EnsureExistsAsync();
 			StorageFolder wrtFolder;
             try
             {
-                wrtFolder = await _wrappedFolder.GetFolderAsync(name).AsTask().ConfigureAwait(false);
+                wrtFolder = await _wrappedFolder.GetFolderAsync(name);
             }
             catch (FileNotFoundException ex)
             {
@@ -156,8 +156,8 @@ namespace PCLStorage
         /// <returns>A list of subfolders in the folder</returns>
 		public async Task<IList<IFolder>> GetFoldersAsync()
 		{
-            await EnsureExistsAsync().ConfigureAwait(false);
-            var wrtFolders = await _wrappedFolder.GetFoldersAsync().AsTask().ConfigureAwait(false);
+            await EnsureExistsAsync();
+			var wrtFolders = await _wrappedFolder.GetFoldersAsync();
 			var folders = wrtFolders.Select(f => new WinRTFolder(f)).ToList<IFolder>();
 			return new ReadOnlyCollection<IFolder>(folders);
 		}
@@ -168,14 +168,14 @@ namespace PCLStorage
         /// <returns>A task which will complete after the folder is deleted</returns>
 		public async Task DeleteAsync()
 		{
-            await EnsureExistsAsync().ConfigureAwait(false);
+            await EnsureExistsAsync();
 
             if (_isRootFolder)
             {
                 throw new IOException("Cannot delete root storage folder.");
             }
 
-            await _wrappedFolder.DeleteAsync().AsTask().ConfigureAwait(false);
+            await _wrappedFolder.DeleteAsync();
 		}
 
 		Windows.Storage.CreationCollisionOption GetWinRTCreationCollisionOption(CreationCollisionOption option)
@@ -206,7 +206,7 @@ namespace PCLStorage
         {
             try
             {
-                await StorageFolder.GetFolderFromPathAsync(Path).AsTask().ConfigureAwait(false);
+                await StorageFolder.GetFolderFromPathAsync(Path);
             }
             catch (FileNotFoundException ex)
             {

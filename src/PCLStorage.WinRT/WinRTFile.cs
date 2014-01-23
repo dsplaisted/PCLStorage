@@ -63,7 +63,7 @@ namespace PCLStorage
 				throw new ArgumentException("Unrecognized FileAccess value: " + fileAccess);
 			}
 
-            var wrtStream = await _wrappedFile.OpenAsync(fileAccessMode).AsTask().ConfigureAwait(false);
+			var wrtStream = await _wrappedFile.OpenAsync(fileAccessMode);
 			return wrtStream.AsStream();
 		}
 
@@ -97,7 +97,7 @@ namespace PCLStorage
 
             try
             {
-                await _wrappedFile.RenameAsync(newName, (Windows.Storage.NameCollisionOption)collisionOption).AsTask().ConfigureAwait(false);
+                await  _wrappedFile.RenameAsync(newName, (Windows.Storage.NameCollisionOption)collisionOption).AsTask();
             }
             catch (Exception ex)
             {
@@ -129,12 +129,12 @@ namespace PCLStorage
                 throw new ArgumentException();
             }
 
-            var newFolder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(newPath)).AsTask().ConfigureAwait(false);
+            var newFolder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(newPath));
             string newName = System.IO.Path.GetFileName(newPath);
 
             try
             {
-                await _wrappedFile.MoveAsync(newFolder, newName, (Windows.Storage.NameCollisionOption)collisionOption).AsTask().ConfigureAwait(false);
+                await _wrappedFile.MoveAsync(newFolder, newName, (Windows.Storage.NameCollisionOption)collisionOption);
             }
             catch (Exception ex)
             {

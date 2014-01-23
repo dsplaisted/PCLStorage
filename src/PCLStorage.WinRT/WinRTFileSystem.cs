@@ -54,7 +54,7 @@ namespace PCLStorage
             StorageFile storageFile;
             try
             {
-                storageFile = await StorageFile.GetFileFromPathAsync(path).AsTask().ConfigureAwait(false);
+                storageFile = await StorageFile.GetFileFromPathAsync(path);
             }
             catch (FileNotFoundException)
             {
@@ -74,7 +74,7 @@ namespace PCLStorage
             StorageFolder storageFolder;
             try
             {
-                storageFolder = await StorageFolder.GetFolderFromPathAsync(path).AsTask().ConfigureAwait(false);
+                storageFolder = await StorageFolder.GetFolderFromPathAsync(path);
             }
             catch (FileNotFoundException)
             {
