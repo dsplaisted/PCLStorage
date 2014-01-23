@@ -330,5 +330,115 @@ namespace PCLStorage.Test
             //  Cleanup
             await testFolder.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task RenameFile()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "fileToRename.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+
+            //	Act
+            string renamedFile = "renamedFile.txt";
+            await file.RenameAsync(renamedFile);
+
+            //	Assert
+            Assert.AreEqual(renamedFile, file.Name);
+            Assert.AreEqual(PortablePath.Combine(TestFileSystem.LocalStorage.Path, file.Name), file.Path);
+            var files = await folder.GetFilesAsync();
+            Assert.IsFalse(files.Any(f => f.Name == originalFileName));
+            Assert.IsTrue(files.Any(f => f.Name == renamedFile));
+
+            // Cleanup
+            await file.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task RenameFile_FailIfExists()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "fileToRename.txt";
+            string renamedFile = "renamedFile.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+            IFile existingFile = await folder.CreateFileAsync(renamedFile, CreationCollisionOption.FailIfExists);
+
+            //	Act & Assert
+            await ExceptionAssert.ThrowsAsync<IOException>(async () => await file.RenameAsync(renamedFile, NameCollisionOption.FailIfExists));
+            Assert.AreEqual(originalFileName, file.Name);
+
+            var files = await folder.GetFilesAsync();
+            Assert.IsTrue(files.Any(f => f.Name == renamedFile));
+            Assert.IsTrue(files.Any(f => f.Name == originalFileName));
+
+            // Cleanup
+            await file.DeleteAsync();
+            await existingFile.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task RenameFile_GenerateUniqueName()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string fileName1 = "file1.txt";
+            string fileName2 = "file2.txt";
+            string fileName1_renamed = "file2 (2).txt";
+            IFile file1 = await folder.CreateFileAsync(fileName1, CreationCollisionOption.FailIfExists);
+            IFile file2 = await folder.CreateFileAsync(fileName2, CreationCollisionOption.FailIfExists);
+
+            //	Act
+            await file1.RenameAsync(fileName2, NameCollisionOption.GenerateUniqueName);
+
+            // Assert
+            Assert.AreEqual(fileName1_renamed, file1.Name);
+            var files = await folder.GetFilesAsync();
+            Assert.IsFalse(files.Any(f => f.Name == fileName1));
+            Assert.IsTrue(files.Any(f => f.Name == fileName2));
+            Assert.IsTrue(files.Any(f => f.Name == fileName1_renamed));
+
+            // Cleanup
+            await file1.DeleteAsync();
+            await file2.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task RenameFile_ReplaceExisting()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "fileToRename.txt";
+            string renamedFile = "renamedFile.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+            IFile existingFile = await folder.CreateFileAsync(renamedFile, CreationCollisionOption.FailIfExists);
+
+            //	Act & Assert
+            await file.RenameAsync(renamedFile, NameCollisionOption.ReplaceExisting);
+            Assert.AreEqual(renamedFile, file.Name);
+
+            var files = await folder.GetFilesAsync();
+            Assert.IsTrue(files.Any(f => f.Name == renamedFile));
+            Assert.IsFalse(files.Any(f => f.Name == originalFileName));
+
+            // Cleanup
+            await existingFile.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task RenameFile_BadArgs()
+        {
+            // Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "someFile.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+
+            // Act & assert
+            await ExceptionAssert.ThrowsAsync<ArgumentException>(async () => await file.RenameAsync(string.Empty));
+            await ExceptionAssert.ThrowsAsync<ArgumentNullException>(async () => await file.RenameAsync(null));
+
+            // Cleanup
+            await file.DeleteAsync();
+        }
     }
 }

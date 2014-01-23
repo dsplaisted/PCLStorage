@@ -76,8 +76,15 @@ namespace PCLStorage
 			return _wrappedFile.DeleteAsync().AsTask();
 		}
 
-
-        public Task RenameAsync(string newName, NameCollisionOption collisionOption)
+        /// <summary>
+        /// Renames a file without changing its location.
+        /// </summary>
+        /// <param name="newName">The new leaf name of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>
+        /// A task which will complete after the file is renamed.
+        /// </returns>
+        public async Task RenameAsync(string newName, NameCollisionOption collisionOption)
         {
             if (newName == null)
             {
@@ -88,9 +95,29 @@ namespace PCLStorage
                 throw new ArgumentException();
             }
 
-            return _wrappedFile.RenameAsync(newName, (Windows.Storage.NameCollisionOption)collisionOption).AsTask();
+            try
+            {
+                await  _wrappedFile.RenameAsync(newName, (Windows.Storage.NameCollisionOption)collisionOption).AsTask();
+            }
+            catch (Exception ex)
+            {
+                if (ex.HResult == unchecked((int)0x800700B7))
+                {
+                    throw new IOException("File already exists.", ex);
+                }
+
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Moves a file.
+        /// </summary>
+        /// <param name="newPath">The new full path of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>
+        /// A task which will complete after the file is moved.
+        /// </returns>
         public async Task MoveAsync(string newPath, NameCollisionOption collisionOption)
         {
             if (newPath == null)

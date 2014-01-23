@@ -82,11 +82,36 @@ namespace PCLStorage
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Renames a file without changing its location.
+        /// </summary>
+        /// <param name="newName">The new leaf name of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>
+        /// A task which will complete after the file is renamed.
+        /// </returns>
         public Task RenameAsync(string newName, NameCollisionOption collisionOption)
         {
+            if (newName == null)
+            {
+                throw new ArgumentNullException("newName");
+            }
+            else if (newName.Length == 0)
+            {
+                throw new ArgumentException();
+            }
+
             return MoveAsync(PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName), collisionOption);
         }
 
+        /// <summary>
+        /// Moves a file.
+        /// </summary>
+        /// <param name="newPath">The new full path of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>
+        /// A task which will complete after the file is moved.
+        /// </returns>
         public Task MoveAsync(string newPath, NameCollisionOption collisionOption)
         {
             if (newPath == null)
@@ -101,10 +126,10 @@ namespace PCLStorage
             string newDirectory = System.IO.Path.GetDirectoryName(newPath);
             string newName = System.IO.Path.GetFileName(newPath);
 
-            for (int counter = 0; ; counter++)
+            for (int counter = 1; ; counter++)
             {
                 string candidateName = newName;
-                if (counter > 0)
+                if (counter > 1)
                 {
                     candidateName = String.Format(
                         CultureInfo.InvariantCulture,
@@ -116,23 +141,18 @@ namespace PCLStorage
 
                 string candidatePath = PortablePath.Combine(newDirectory, candidateName);
 
-                switch (collisionOption)
+                if (File.Exists(candidatePath))
                 {
-                    case NameCollisionOption.FailIfExists:
-                        if (File.Exists(candidatePath))
-                        {
+                    switch (collisionOption)
+                    {
+                        case NameCollisionOption.FailIfExists:
                             throw new IOException("File already exists.");
-                        }
-
-                        break;
-                    case NameCollisionOption.GenerateUniqueName:
-                        if (File.Exists(candidatePath))
-                        {
-                            // try again with the new name.
-                            continue;
-                        }
-
-                        break;
+                        case NameCollisionOption.GenerateUniqueName:
+                            continue; // try again with a new name.
+                        case NameCollisionOption.ReplaceExisting:
+                            File.Delete(candidatePath);
+                            break;
+                    }
                 }
 
                 File.Move(_path, candidatePath);

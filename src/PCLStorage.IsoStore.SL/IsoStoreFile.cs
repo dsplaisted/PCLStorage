@@ -155,6 +155,14 @@ namespace PCLStorage
 			return TaskEx.FromResult(true);
 		}
 
+        /// <summary>
+        /// Renames a file without changing its location.
+        /// </summary>
+        /// <param name="newName">The new leaf name of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>
+        /// A task which will complete after the file is renamed.
+        /// </returns>
         public Task RenameAsync(string newName, NameCollisionOption collisionOption)
         {
             if (newName == null)
@@ -170,6 +178,14 @@ namespace PCLStorage
             return MoveAsync(newPath, collisionOption);
         }
 
+        /// <summary>
+        /// Moves a file.
+        /// </summary>
+        /// <param name="newPath">The new full path of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>
+        /// A task which will complete after the file is moved.
+        /// </returns>
         public Task MoveAsync(string newPath, NameCollisionOption collisionOption)
         {
             if (newPath == null)
