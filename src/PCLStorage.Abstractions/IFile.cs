@@ -48,5 +48,21 @@ namespace PCLStorage
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
         Task DeleteAsync();
+
+        /// <summary>
+        /// Renames a file without changing its location.
+        /// </summary>
+        /// <param name="newName">The new leaf name of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>A task which will complete after the file is renamed.</returns>
+        Task RenameAsync(string newName, NameCollisionOption collisionOption = NameCollisionOption.FailIfExists);
+
+        /// <summary>
+        /// Moves a file.
+        /// </summary>
+        /// <param name="newPath">The new full path of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <returns>A task which will complete after the file is moved.</returns>
+        Task MoveAsync(string newPath, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting);
     }
 }

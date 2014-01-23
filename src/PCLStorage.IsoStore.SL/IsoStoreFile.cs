@@ -20,10 +20,10 @@ namespace PCLStorage
     /// </summary>
     [DebuggerDisplay("Name = {_name}")]
 	public class IsoStoreFile : IFile
-	{
-		readonly string _name;
+    {
         readonly IsolatedStorageFile _root;
-		readonly string _path;
+		string _name;
+		string _path;
 
         /// <summary>
         /// Creates a new <see cref="IsoStoreFile"/> based on the path to it within an <see cref="IsolatedStorageFile"/>
@@ -154,5 +154,43 @@ namespace PCLStorage
             }
 			return TaskEx.FromResult(true);
 		}
-	}
+
+        public Task RenameAsync(string newName, NameCollisionOption collisionOption)
+        {
+            if (newName == null)
+            {
+                throw new ArgumentNullException("newName");
+            }
+            else if (newName.Length == 0)
+            {
+                throw new ArgumentException();
+            }
+
+            string newPath = PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName);
+            return MoveAsync(newPath, collisionOption);
+        }
+
+        public Task MoveAsync(string newPath, NameCollisionOption collisionOption)
+        {
+            if (newPath == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else if (newPath.Length == 0)
+            {
+                throw new ArgumentException();
+            }
+
+            if (_root.FileExists(newPath) && collisionOption == NameCollisionOption.FailIfExists)
+            {
+                throw new IOException("File already exists: " + newPath);
+            }
+
+            _root.MoveFile(_path, newPath);
+            _path = newPath;
+            _name = System.IO.Path.GetFileName(newPath);
+
+            return TaskEx.FromResult(true);
+        }
+    }
 }

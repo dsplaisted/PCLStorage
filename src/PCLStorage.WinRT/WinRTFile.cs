@@ -75,5 +75,36 @@ namespace PCLStorage
 		{
 			return _wrappedFile.DeleteAsync().AsTask();
 		}
-	}
+
+
+        public Task RenameAsync(string newName, NameCollisionOption collisionOption)
+        {
+            if (newName == null)
+            {
+                throw new ArgumentNullException("newName");
+            }
+            else if (newName.Length == 0)
+            {
+                throw new ArgumentException();
+            }
+
+            return _wrappedFile.RenameAsync(newName, (Windows.Storage.NameCollisionOption)collisionOption).AsTask();
+        }
+
+        public async Task MoveAsync(string newPath, NameCollisionOption collisionOption)
+        {
+            if (newPath == null)
+            {
+                throw new ArgumentNullException("newPath");
+            }
+            else if (newPath.Length == 0)
+            {
+                throw new ArgumentException();
+            }
+
+            var newFolder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(newPath));
+            string newName = System.IO.Path.GetFileName(newPath);
+            await _wrappedFile.MoveAsync(newFolder, newName, (Windows.Storage.NameCollisionOption)collisionOption);
+        }
+    }
 }

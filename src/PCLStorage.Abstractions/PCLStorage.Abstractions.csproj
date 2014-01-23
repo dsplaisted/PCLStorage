@@ -45,6 +45,7 @@
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NameCollisionOption.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

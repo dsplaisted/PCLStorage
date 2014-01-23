@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,8 +15,8 @@ namespace PCLStorage
     [DebuggerDisplay("Name = {_name}")]
     public class FileSystemFile : IFile
     {
-        readonly string _name;
-        readonly string _path;
+        string _name;
+        string _path;
 
         /// <summary>
         /// Creates a new <see cref="FileSystemFile"/> corresponding to the specified path
@@ -79,6 +80,66 @@ namespace PCLStorage
             File.Delete(Path);
 
             return Task.FromResult(true);
+        }
+
+        public Task RenameAsync(string newName, NameCollisionOption collisionOption)
+        {
+            return MoveAsync(PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName), collisionOption);
+        }
+
+        public Task MoveAsync(string newPath, NameCollisionOption collisionOption)
+        {
+            if (newPath == null)
+            {
+                throw new ArgumentNullException("newPath");
+            }
+            else if (newPath.Length == 0)
+            {
+                throw new ArgumentException();
+            }
+
+            string newDirectory = System.IO.Path.GetDirectoryName(newPath);
+            string newName = System.IO.Path.GetFileName(newPath);
+
+            for (int counter = 0; ; counter++)
+            {
+                string candidateName = newName;
+                if (counter > 0)
+                {
+                    candidateName = String.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0} ({1}){2}",
+                        System.IO.Path.GetFileNameWithoutExtension(newName),
+                        counter,
+                        System.IO.Path.GetExtension(newName));
+                }
+
+                string candidatePath = PortablePath.Combine(newDirectory, candidateName);
+
+                switch (collisionOption)
+                {
+                    case NameCollisionOption.FailIfExists:
+                        if (File.Exists(candidatePath))
+                        {
+                            throw new IOException("File already exists.");
+                        }
+
+                        break;
+                    case NameCollisionOption.GenerateUniqueName:
+                        if (File.Exists(candidatePath))
+                        {
+                            // try again with the new name.
+                            continue;
+                        }
+
+                        break;
+                }
+
+                File.Move(_path, candidatePath);
+                _path = candidatePath;
+                _name = candidateName;
+                return Task.FromResult(true);
+            }
         }
     }
 }
