@@ -440,5 +440,144 @@ namespace PCLStorage.Test
             // Cleanup
             await file.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task MoveFile_WithinDirectory()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "fileToMove.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+
+            //	Act
+            string movedFile = "movedFile.txt";
+            await file.MoveAsync(PortablePath.Combine(folder.Path, movedFile));
+
+            //	Assert
+            Assert.AreEqual(movedFile, file.Name);
+            Assert.AreEqual(PortablePath.Combine(TestFileSystem.LocalStorage.Path, file.Name), file.Path);
+            var files = await folder.GetFilesAsync();
+            Assert.IsFalse(files.Any(f => f.Name == originalFileName));
+            Assert.IsTrue(files.Any(f => f.Name == movedFile));
+
+            // Cleanup
+            await file.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task MoveFile_AcrossDirectories()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "fileToMove.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+            var subfolder = await folder.CreateFolderAsync("subfolder", CreationCollisionOption.FailIfExists);
+
+            //	Act
+            string movedFile = "movedFile.txt";
+            await file.MoveAsync(PortablePath.Combine(subfolder.Path, movedFile));
+
+            //	Assert
+            Assert.AreEqual(movedFile, file.Name);
+            Assert.AreEqual(PortablePath.Combine(subfolder.Path, file.Name), file.Path);
+            var files = await folder.GetFilesAsync();
+            Assert.IsFalse(files.Any(f => f.Name == originalFileName));
+            Assert.IsFalse(files.Any(f => f.Name == movedFile));
+            files = await subfolder.GetFilesAsync();
+            Assert.IsFalse(files.Any(f => f.Name == originalFileName));
+            Assert.IsTrue(files.Any(f => f.Name == movedFile));
+
+            // Cleanup
+            await subfolder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task MoveFile_FailIfExists()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "fileToMove.txt";
+            string movedFile = "movedFile.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+            IFile existingFile = await folder.CreateFileAsync(movedFile, CreationCollisionOption.FailIfExists);
+
+            //	Act & Assert
+            await ExceptionAssert.ThrowsAsync<IOException>(async () => await file.MoveAsync(PortablePath.Combine(folder.Path, movedFile), NameCollisionOption.FailIfExists));
+            Assert.AreEqual(originalFileName, file.Name);
+
+            var files = await folder.GetFilesAsync();
+            Assert.IsTrue(files.Any(f => f.Name == movedFile));
+            Assert.IsTrue(files.Any(f => f.Name == originalFileName));
+
+            // Cleanup
+            await file.DeleteAsync();
+            await existingFile.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task MoveFile_GenerateUniqueName()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string fileName1 = "file1.txt";
+            string fileName2 = "file2.txt";
+            IFile file1 = await folder.CreateFileAsync(fileName1, CreationCollisionOption.FailIfExists);
+            IFile file2 = await folder.CreateFileAsync(fileName2, CreationCollisionOption.FailIfExists);
+
+            //	Act
+            await file1.MoveAsync(PortablePath.Combine(folder.Path, fileName2), NameCollisionOption.GenerateUniqueName);
+
+            // Assert
+            string file1NameWithoutExtension = file1.Name.Substring(0, file1.Name.IndexOf('.'));
+            string fileName2WithoutExtension = fileName2.Substring(0, fileName2.IndexOf('.'));
+            Assert.IsTrue(file1NameWithoutExtension.StartsWith(fileName2WithoutExtension));
+            Assert.IsFalse(file1NameWithoutExtension.Equals(fileName2WithoutExtension));
+            var files = await folder.GetFilesAsync();
+            Assert.IsFalse(files.Any(f => f.Name == fileName1));
+            Assert.IsTrue(files.Any(f => f.Name == fileName2));
+            Assert.IsTrue(files.Any(f => f.Name == file1.Name));
+
+            // Cleanup
+            await file1.DeleteAsync();
+            await file2.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task MoveFile_ReplaceExisting()
+        {
+            //	Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "fileToMove.txt";
+            string movedFile = "movedFile.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+            IFile existingFile = await folder.CreateFileAsync(movedFile, CreationCollisionOption.FailIfExists);
+
+            //	Act & Assert
+            await file.MoveAsync(PortablePath.Combine(folder.Path, movedFile), NameCollisionOption.ReplaceExisting);
+            Assert.AreEqual(movedFile, file.Name);
+
+            var files = await folder.GetFilesAsync();
+            Assert.IsTrue(files.Any(f => f.Name == movedFile));
+            Assert.IsFalse(files.Any(f => f.Name == originalFileName));
+
+            // Cleanup
+            await existingFile.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task MoveFile_BadArgs()
+        {
+            // Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string originalFileName = "someFile.txt";
+            IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
+
+            // Act & assert
+            await ExceptionAssert.ThrowsAsync<ArgumentException>(async () => await file.MoveAsync(string.Empty));
+            await ExceptionAssert.ThrowsAsync<ArgumentNullException>(async () => await file.MoveAsync(null));
+
+            // Cleanup
+            await file.DeleteAsync();
+        }
     }
 }

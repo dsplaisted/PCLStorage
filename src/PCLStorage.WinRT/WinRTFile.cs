@@ -131,7 +131,20 @@ namespace PCLStorage
 
             var newFolder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(newPath));
             string newName = System.IO.Path.GetFileName(newPath);
-            await _wrappedFile.MoveAsync(newFolder, newName, (Windows.Storage.NameCollisionOption)collisionOption);
+
+            try
+            {
+                await _wrappedFile.MoveAsync(newFolder, newName, (Windows.Storage.NameCollisionOption)collisionOption);
+            }
+            catch (Exception ex)
+            {
+                if (ex.HResult == unchecked((int)0x800700B7))
+                {
+                    throw new IOException("File already exists.", ex);
+                }
+
+                throw;
+            }
         }
     }
 }
