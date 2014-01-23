@@ -13,10 +13,7 @@
 
         /// <summary>
         /// Replace the existing file or folder. Your app must have permission to access
-        /// the location that contains the existing file or folder.  Access to a location
-        /// can be granted in several ways, for example, by a capability declared in
-        /// your application's manifest, or by the user through the . You can use Windows.Storage.AccessCache
-        /// to manage the list of locations that are accessible to your app via the .
+        /// the location that contains the existing file or folder.
         /// </summary>
         ReplaceExisting = 1,
 
