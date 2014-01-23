@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{70760DD8-A408-4274-AAFE-0E06BC98DEDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCLStorage.Test", "test\PCLStorage.Test\PCLStorage.Test.csproj", "{28668411-C26F-434F-88B1-B7E5F8D39C61}"
@@ -37,6 +39,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCLStorage.Test.Android", "test\PCLStorage.Test.Android\PCLStorage.Test.Android.csproj", "{32922221-A523-4673-9C77-DE6B01C91F3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCLStorage.iOS", "src\PCLStorage.iOS\PCLStorage.iOS.csproj", "{27A782B4-6683-4849-B951-601289C23F73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A5AE3457-DDFF-432A-90D6-8462B560603C}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.proj = build\build.proj
+		common\CommonAssemblyInfo.cs = common\CommonAssemblyInfo.cs
+		common\PCLStorage.nuspec = common\PCLStorage.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
