@@ -84,12 +84,19 @@ namespace PCLStorage
         /// </summary>
         /// <param name="name">The name of the file to get</param>
         /// <returns>The requested file, or null if it does not exist</returns>
-		public async Task<IFile> GetFileAsync(string name)
-		{
+        public async Task<IFile> GetFileAsync(string name)
+        {
             await EnsureExistsAsync();
-			var wrtFile = await _wrappedFolder.GetFileAsync(name);
-			return new WinRTFile(wrtFile);
-		}
+            try
+            {
+                var wrtFile = await _wrappedFolder.GetFileAsync(name);
+                return new WinRTFile(wrtFile);
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new Exceptions.FileNotFoundException(ex.Message, ex);
+            }
+        }
 
         /// <summary>
         /// Gets a list of the files in this folder
