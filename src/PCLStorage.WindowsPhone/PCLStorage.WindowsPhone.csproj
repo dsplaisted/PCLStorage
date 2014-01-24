@@ -103,14 +103,14 @@
     <Compile Include="..\..\common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage.IsoStore.SL\IsoStoreFile.cs">
-      <Link>IsoStoreFile.cs</Link>
+    <Compile Include="..\PCLStorage.WinRT\WinRTFile.cs">
+      <Link>WinRTFile.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage.IsoStore.SL\IsoStoreFileSystem.cs">
-      <Link>IsoStoreFileSystem.cs</Link>
+    <Compile Include="..\PCLStorage.WinRT\WinRTFileSystem.cs">
+      <Link>WinRTFileSystem.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage.IsoStore.SL\IsoStoreFolder.cs">
-      <Link>IsoStoreFolder.cs</Link>
+    <Compile Include="..\PCLStorage.WinRT\WinRTFolder.cs">
+      <Link>WinRTFolder.cs</Link>
     </Compile>
     <Compile Include="..\PCLStorage\Exceptions\PCLStorageExceptions.cs">
       <Link>Exceptions\PCLStorageExceptions.cs</Link>

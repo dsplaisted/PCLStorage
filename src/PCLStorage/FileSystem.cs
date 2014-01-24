@@ -30,10 +30,10 @@ namespace PCLStorage
 
         static IFileSystem CreateFileSystem()
         {
-#if SILVERLIGHT
-			return new IsoStoreFileSystem();
-#elif NETFX_CORE
+#if NETFX_CORE || WINDOWS_PHONE
 			return new WinRTFileSystem();
+#elif SILVERLIGHT
+			return new IsoStoreFileSystem();
 #elif FILE_SYSTEM
             return new DesktopFileSystem();
 #else
