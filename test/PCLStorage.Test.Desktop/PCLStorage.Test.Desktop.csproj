@@ -80,6 +80,7 @@
       <Link>FolderTests.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UIDispatcherMock.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
