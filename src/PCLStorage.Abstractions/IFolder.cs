@@ -64,7 +64,6 @@ namespace PCLStorage
         /// <returns>A list of the files in the folder</returns>
         Task<IList<IFile>> GetFilesAsync();
 
-
         /// <summary>
         /// Creates a subfolder in this folder
         /// </summary>
@@ -85,6 +84,13 @@ namespace PCLStorage
         /// </summary>
         /// <returns>A list of subfolders in the folder</returns>
         Task<IList<IFolder>> GetFoldersAsync();
+
+        /// <summary>
+        /// Checks whether a folder or file exists at the given location.
+        /// </summary>
+        /// <param name="name">The name of the file or folder to check for.</param>
+        /// <returns>A task whose result is the result of the existence check.</returns>
+        Task<ExistenceCheckResult> CheckExistsAsync(string name);
 
         /// <summary>
         /// Deletes this folder and all of its contents

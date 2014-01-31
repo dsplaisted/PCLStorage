@@ -163,6 +163,63 @@ namespace PCLStorage
 		}
 
         /// <summary>
+        /// Checks whether a folder or file exists at the given location.
+        /// </summary>
+        /// <param name="name">The name of the file or folder to check for.</param>
+        /// <returns>
+        /// A task whose result is the result of the existence check.
+        /// </returns>
+        public async Task<ExistenceCheckResult> CheckExistsAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException();
+            }
+
+            // WinRT does not expose an Exists method, so we have to
+            // try accessing the entity to see if it succeeds.
+            // We could code this up with a catch block, but that means
+            // that a file existence check requires first chance exceptions
+            // are thrown and caught, which *can* slow the app down,
+            // and also bugs the developer who is debugging the app.
+            // So we just avoid all exceptions being *thrown*
+            // by checking for exception objects carefully.
+            var result = await _wrappedFolder.GetItemAsync(name).AsTaskNoThrow();
+            if (result.IsFaulted)
+            {
+                if (result.Exception.InnerException is FileNotFoundException)
+                {
+                    return ExistenceCheckResult.NotFound;
+                }
+                else
+                {
+                    // rethrow unexpected exceptions.
+                    result.GetAwaiter().GetResult();
+                    throw result.Exception; // shouldn't reach here anyway.
+                }
+            }
+            else if (result.IsCanceled)
+            {
+                throw new OperationCanceledException();
+            }
+            else
+            {
+                IStorageItem storageItem = result.Result;
+                if (storageItem.IsOfType(StorageItemTypes.File)) {
+                    return ExistenceCheckResult.FileExists;
+                }
+                else if (storageItem.IsOfType(StorageItemTypes.Folder))
+                {
+                    return ExistenceCheckResult.FolderExists;
+                }
+                else
+                {
+                    return ExistenceCheckResult.NotFound;
+                }
+            }
+        }
+
+        /// <summary>
         /// Deletes this folder and all of its contents
         /// </summary>
         /// <returns>A task which will complete after the folder is deleted</returns>
