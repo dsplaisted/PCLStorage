@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <BuildDependsOn>UpdateVersion</BuildDependsOn>
+    <BuildDependsOn>RestorePackages;UpdateVersion</BuildDependsOn>
   </PropertyGroup>
 
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)">
@@ -50,6 +50,14 @@
              Properties="Configuration=$(Configuration)"/>
   </Target>
 
+  <ItemGroup>
+    <Solution Include="$(PCLStorageRoot)\*.sln" />
+  </ItemGroup>
+
+  <Target Name="RestorePackages">
+    <Exec Command="&quot;$(NuGetExe)&quot; restore &quot;%(Solution.Identity)&quot;" />
+  </Target>
+  
   <Target Name="UpdateVersion">
     <RegexTransform Items="@(RegexTransform)" />
   </Target>
