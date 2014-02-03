@@ -256,6 +256,35 @@ namespace PCLStorage
 		}
 
         /// <summary>
+        /// Checks whether a folder or file exists at the given location.
+        /// </summary>
+        /// <param name="name">The name of the file or folder to check for.</param>
+        /// <returns>
+        /// A task whose result is the result of the existence check.
+        /// </returns>
+        public Task<ExistenceCheckResult> CheckExistsAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException();
+            }
+
+            var checkPath = PortablePath.Combine(Path, name);
+            if (Root.FileExists(checkPath))
+            {
+                return TaskEx.FromResult(ExistenceCheckResult.FileExists);
+            }
+            else if (Root.DirectoryExists(checkPath))
+            {
+                return TaskEx.FromResult(ExistenceCheckResult.FolderExists);
+            }
+            else
+            {
+                return TaskEx.FromResult(ExistenceCheckResult.NotFound);
+            }
+        }
+
+        /// <summary>
         /// Deletes this folder and all of its contents
         /// </summary>
         /// <returns>A task which will complete after the folder is deleted</returns>

@@ -417,6 +417,23 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public async Task CheckExists()
+        {
+            // setup
+            var file = await TestFileSystem.LocalStorage.CreateFileAsync("somefile", CreationCollisionOption.OpenIfExists);
+            var folder = await TestFileSystem.LocalStorage.CreateFolderAsync("somefolder", CreationCollisionOption.OpenIfExists);
+
+            // assertions
+            Assert.AreEqual(ExistenceCheckResult.NotFound, await TestFileSystem.LocalStorage.CheckExistsAsync("no-file-here"));
+            Assert.AreEqual(ExistenceCheckResult.FolderExists, await TestFileSystem.LocalStorage.CheckExistsAsync("somefolder"));
+            Assert.AreEqual(ExistenceCheckResult.FileExists, await TestFileSystem.LocalStorage.CheckExistsAsync("somefile"));
+
+            // clean up
+            await file.DeleteAsync();
+            await folder.DeleteAsync();
+        }
+
+        [TestMethod]
         public async Task DeleteFolderTwice()
         {
             //  Arrange
