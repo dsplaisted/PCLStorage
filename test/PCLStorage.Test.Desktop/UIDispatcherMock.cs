@@ -57,6 +57,7 @@ namespace PCLStorage.Test
         public static void MainThreadEntrypoint(Func<Task> mainThreadEntrypoint)
         {
             var syncContext = new UIDispatcherMock();
+            var oldSyncContext = SynchronizationContext.Current;
             SynchronizationContext.SetSynchronizationContext(syncContext);
             Exception unhandledException = null;
             syncContext.Post(
@@ -77,7 +78,7 @@ namespace PCLStorage.Test
                 },
                 null);
             syncContext.Loop();
-            SynchronizationContext.SetSynchronizationContext(null);
+            SynchronizationContext.SetSynchronizationContext(oldSyncContext);
             if (unhandledException != null)
             {
                 ExceptionDispatchInfo.Capture(unhandledException).Throw();

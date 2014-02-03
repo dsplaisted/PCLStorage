@@ -70,6 +70,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\PCLStorage.Test.WinRT\FileTestsForDesktop.cs">
+      <Link>FileTestsForDesktop.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage.Test\FileSystemTests.cs">
       <Link>FileSystemTests.cs</Link>
     </Compile>
