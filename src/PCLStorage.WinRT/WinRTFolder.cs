@@ -26,8 +26,11 @@ namespace PCLStorage
         public WinRTFolder(IStorageFolder wrappedFolder)
         {
             _wrappedFolder = wrappedFolder;
-            if (_wrappedFolder.Path == Windows.Storage.ApplicationData.Current.LocalFolder.Path ||
-                _wrappedFolder.Path == Windows.Storage.ApplicationData.Current.RoamingFolder.Path)
+            if (_wrappedFolder.Path == Windows.Storage.ApplicationData.Current.LocalFolder.Path
+#if !WINDOWS_PHONE
+                || _wrappedFolder.Path == Windows.Storage.ApplicationData.Current.RoamingFolder.Path
+#endif
+                )
             {
                 _isRootFolder = true;
             }
