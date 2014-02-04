@@ -112,6 +112,9 @@
     <SDKReference Include="TestPlatform, Version=11.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\PCLStorage.Test.Desktop\UIDispatcherMock.cs">
+      <Link>UIDispatcherMock.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage.Test\FileSystemTests.cs">
       <Link>FileSystemTests.cs</Link>
     </Compile>
@@ -121,6 +124,7 @@
     <Compile Include="..\PCLStorage.Test\FolderTests.cs">
       <Link>FolderTests.cs</Link>
     </Compile>
+    <Compile Include="FileTestsForDesktop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

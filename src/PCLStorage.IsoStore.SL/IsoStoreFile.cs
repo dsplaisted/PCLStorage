@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.IO.IsolatedStorage;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -10,8 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Threading.Tasks;
-using System.IO;
 
 namespace PCLStorage
 {
@@ -197,16 +198,43 @@ namespace PCLStorage
                 throw new ArgumentException();
             }
 
-            if (_root.FileExists(newPath) && collisionOption == NameCollisionOption.FailIfExists)
+            string newDirectory = System.IO.Path.GetDirectoryName(newPath);
+            string newName = System.IO.Path.GetFileName(newPath);
+
+            for (int counter = 1; ; counter++)
             {
-                throw new IOException("File already exists: " + newPath);
+                string candidateName = newName;
+                if (counter > 1)
+                {
+                    candidateName = String.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0} ({1}){2}",
+                        System.IO.Path.GetFileNameWithoutExtension(newName),
+                        counter,
+                        System.IO.Path.GetExtension(newName));
+                }
+
+                string candidatePath = PortablePath.Combine(newDirectory, candidateName);
+
+                if (_root.FileExists(candidatePath))
+                {
+                    switch (collisionOption)
+                    {
+                        case NameCollisionOption.FailIfExists:
+                            throw new IOException("File already exists.");
+                        case NameCollisionOption.GenerateUniqueName:
+                            continue; // try again with a new name.
+                        case NameCollisionOption.ReplaceExisting:
+                            _root.DeleteFile(candidatePath);
+                            break;
+                    }
+                }
+
+                _root.MoveFile(_path, candidatePath);
+                _path = candidatePath;
+                _name = candidateName;
+                return TaskEx.FromResult(true);
             }
-
-            _root.MoveFile(_path, newPath);
-            _path = newPath;
-            _name = System.IO.Path.GetFileName(newPath);
-
-            return TaskEx.FromResult(true);
         }
     }
 }

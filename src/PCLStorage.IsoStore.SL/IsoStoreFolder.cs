@@ -199,7 +199,7 @@ namespace PCLStorage
 				else if (option == CreationCollisionOption.ReplaceExisting)
 				{
                     IsoStoreFolder folderToDelete = new IsoStoreFolder(nameToUse, this);
-                    await folderToDelete.DeleteAsync();
+                    await folderToDelete.DeleteAsync().ConfigureAwait(false);
 					Root.CreateDirectory(newPath);
 				}
 				else if (option == CreationCollisionOption.FailIfExists)
@@ -256,6 +256,35 @@ namespace PCLStorage
 		}
 
         /// <summary>
+        /// Checks whether a folder or file exists at the given location.
+        /// </summary>
+        /// <param name="name">The name of the file or folder to check for.</param>
+        /// <returns>
+        /// A task whose result is the result of the existence check.
+        /// </returns>
+        public Task<ExistenceCheckResult> CheckExistsAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException();
+            }
+
+            var checkPath = PortablePath.Combine(Path, name);
+            if (Root.FileExists(checkPath))
+            {
+                return TaskEx.FromResult(ExistenceCheckResult.FileExists);
+            }
+            else if (Root.DirectoryExists(checkPath))
+            {
+                return TaskEx.FromResult(ExistenceCheckResult.FolderExists);
+            }
+            else
+            {
+                return TaskEx.FromResult(ExistenceCheckResult.NotFound);
+            }
+        }
+
+        /// <summary>
         /// Deletes this folder and all of its contents
         /// </summary>
         /// <returns>A task which will complete after the folder is deleted</returns>
@@ -268,14 +297,14 @@ namespace PCLStorage
                 throw new IOException("Cannot delete root Isolated Storage folder.");
             }
 
-            foreach (var subfolder in await GetFoldersAsync())
+            foreach (var subfolder in await GetFoldersAsync().ConfigureAwait(false))
             {
-                await subfolder.DeleteAsync();
+                await subfolder.DeleteAsync().ConfigureAwait(false);
             }
 
-            foreach (var file in await GetFilesAsync())
+            foreach (var file in await GetFilesAsync().ConfigureAwait(false))
             {
-                await file.DeleteAsync();
+                await file.DeleteAsync().ConfigureAwait(false);
             }
 
 			Root.DeleteDirectory(Path);
