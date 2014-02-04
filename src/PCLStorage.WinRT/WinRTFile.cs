@@ -18,7 +18,7 @@ namespace PCLStorage
         /// <summary>
         /// The HRESULT on a System.Exception thrown when a file collision occurs.
         /// </summary>
-        private const int FILE_ALREADY_EXISTS = unchecked((int)0x800700B7);
+        internal const int FILE_ALREADY_EXISTS = unchecked((int)0x800700B7);
 
         private readonly IStorageFile _wrappedFile;
 
