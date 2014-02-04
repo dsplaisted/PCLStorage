@@ -40,7 +40,11 @@ namespace PCLStorage
         {
             get
             {
+#if WINDOWS_PHONE
+                return null;
+#else
                 return new WinRTFolder(_applicationData.RoamingFolder);
+#endif
             }
         }
 
