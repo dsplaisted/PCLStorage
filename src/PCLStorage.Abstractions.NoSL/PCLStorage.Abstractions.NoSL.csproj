@@ -2,16 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9D3F208D-8BB4-47A9-8323-4CFD24314341}</ProjectGuid>
+    <ProjectGuid>{8F4C2E94-B8C5-477B-A315-CA58C70617E4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PCLStorage</RootNamespace>
-    <AssemblyName>PCLStorage</AssemblyName>
+    <AssemblyName>PCLStorage.Abstractions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -20,21 +22,19 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>FILE_SYSTEM;DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\PCLStorage.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\PCLStorage.Abstractions.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>FILE_SYSTEM;TRACE</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\PCLStorage.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\PCLStorage.Abstractions.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -43,40 +43,30 @@
     <AssemblyOriginatorKeyFile>..\..\common\strongnamekey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\..\common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage\Exceptions\PCLStorageExceptions.cs">
-      <Link>Exceptions\PCLStorageExceptions.cs</Link>
+    <Compile Include="..\PCLStorage.Abstractions\ExistenceCheckResult.cs">
+      <Link>ExistenceCheckResult.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage\FileSystem.cs">
-      <Link>FileSystem.cs</Link>
+    <Compile Include="..\PCLStorage.Abstractions\FileExtensions.cs">
+      <Link>FileExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\PCLStorage\PortablePath.cs">
-      <Link>PortablePath.cs</Link>
+    <Compile Include="..\PCLStorage.Abstractions\IFile.cs">
+      <Link>IFile.cs</Link>
     </Compile>
-    <Compile Include="DesktopFileSystem.cs" />
-    <Compile Include="FileSystemFile.cs" />
-    <Compile Include="FileSystemFolder.cs" />
+    <Compile Include="..\PCLStorage.Abstractions\IFileSystem.cs">
+      <Link>IFileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage.Abstractions\IFolder.cs">
+      <Link>IFolder.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\PCLStorage.Abstractions\NameCollisionOption.cs">
+      <Link>NameCollisionOption.cs</Link>
+    </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PCLStorage.Abstractions.NoSL\PCLStorage.Abstractions.NoSL.csproj">
-      <Project>{8f4c2e94-b8c5-477b-a315-ca58c70617e4}</Project>
-      <Name>PCLStorage.Abstractions.NoSL</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

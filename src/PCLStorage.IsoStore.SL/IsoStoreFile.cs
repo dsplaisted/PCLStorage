@@ -13,6 +13,10 @@ using System.Windows.Shapes;
 using System.Threading.Tasks;
 using System.IO;
 
+#if WINDOWS_PHONE
+using TaskEx = System.Threading.Tasks.Task;
+#endif
+
 namespace PCLStorage
 {
     /// <summary>
