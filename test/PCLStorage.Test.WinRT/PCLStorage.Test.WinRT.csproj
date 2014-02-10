@@ -149,9 +149,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
-      <Project>{eebb53f3-ebdf-4dd0-82e5-ff9a2c8dbd72}</Project>
-      <Name>PCLStorage.Abstractions</Name>
+    <ProjectReference Include="..\..\src\PCLStorage.Abstractions.NoSL\PCLStorage.Abstractions.NoSL.csproj">
+      <Project>{8f4c2e94-b8c5-477b-a315-ca58c70617e4}</Project>
+      <Name>PCLStorage.Abstractions.NoSL</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\PCLStorage.WinRT\PCLStorage.WinRT.csproj">
       <Project>{aac0913d-649a-49dd-834b-ef23d092d72b}</Project>
