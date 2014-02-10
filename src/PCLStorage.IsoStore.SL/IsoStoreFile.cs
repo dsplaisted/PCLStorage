@@ -14,6 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
+#if WINDOWS_PHONE
+using TaskEx = System.Threading.Tasks.Task;
+#endif
+
 namespace PCLStorage
 {
     /// <summary>
