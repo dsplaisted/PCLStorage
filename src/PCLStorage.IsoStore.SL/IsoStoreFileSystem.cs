@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO.IsolatedStorage;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -50,9 +51,11 @@ namespace PCLStorage
         /// Gets a file, given its path.  Returns null if the file does not exist.
         /// </summary>
         /// <param name="path">The path to a file, as returned from the <see cref="IFile.Path"/> property.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A file for the given path, or null if it does not exist.</returns>
-        public Task<IFile> GetFileFromPathAsync(string path)
+        public Task<IFile> GetFileFromPathAsync(string path, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             IFile ret = null;
             if (Root.FileExists(path))
             {
@@ -66,9 +69,11 @@ namespace PCLStorage
         /// Gets a folder, given its path.  Returns null if the folder does not exist.
         /// </summary>
         /// <param name="path">The path to a folder, as returned from the <see cref="IFolder.Path"/> property.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A folder for the specified path, or null if it does not exist.</returns>
-        public Task<IFolder> GetFolderFromPathAsync(string path)
+        public Task<IFolder> GetFolderFromPathAsync(string path, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             IFolder ret = null;
             if (Root.DirectoryExists(path))
             {

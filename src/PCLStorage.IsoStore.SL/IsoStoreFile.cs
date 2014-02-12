@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,11 +25,11 @@ namespace PCLStorage
     /// Represents a file in the <see cref="IsoStoreFileSystem"/>
     /// </summary>
     [DebuggerDisplay("Name = {_name}")]
-	public class IsoStoreFile : IFile
+    public class IsoStoreFile : IFile
     {
         readonly IsolatedStorageFile _root;
-		string _name;
-		string _path;
+        string _name;
+        string _path;
 
         /// <summary>
         /// Creates a new <see cref="IsoStoreFile"/> based on the path to it within an <see cref="IsolatedStorageFile"/>
@@ -47,83 +48,86 @@ namespace PCLStorage
         /// </summary>
         /// <param name="name">The file name</param>
         /// <param name="parentFolder">The parent folder</param>
-		public IsoStoreFile(string name, IsoStoreFolder parentFolder)
+        public IsoStoreFile(string name, IsoStoreFolder parentFolder)
             : this(parentFolder.Root, System.IO.Path.Combine(parentFolder.Path, name))
-		{
-			
-		}
+        {
+            
+        }
 
         /// <summary>
         /// The name of the file
         /// </summary>
-		public string Name
-		{
-			get { return _name; }
-		}
+        public string Name
+        {
+            get { return _name; }
+        }
 
         /// <summary>
         /// The "full path" of the file, which should uniquely identify it within a given <see cref="IFileSystem"/>
         /// </summary>
-		public string Path
-		{
-			get { return _path; }
-		}
+        public string Path
+        {
+            get { return _path; }
+        }
 
         /// <summary>
         /// Opens the file
         /// </summary>
         /// <param name="fileAccess">Specifies whether the file should be opened in read-only or read/write mode</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Stream"/> which can be used to read from or write to the file</returns>
-		public Task<Stream> OpenAsync(FileAccess fileAccess)
-		{
-			System.IO.FileAccess nativeFileAccess;
-			if (fileAccess == FileAccess.Read)
-			{
-				nativeFileAccess = System.IO.FileAccess.Read;
-			}
-			else if (fileAccess == FileAccess.ReadAndWrite)
-			{
-				nativeFileAccess = System.IO.FileAccess.ReadWrite;
-			}
-			else
-			{
-				throw new ArgumentException("Unrecognized FileAccess value: " + fileAccess);
-			}
+        public Task<Stream> OpenAsync(FileAccess fileAccess, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            System.IO.FileAccess nativeFileAccess;
+            if (fileAccess == FileAccess.Read)
+            {
+                nativeFileAccess = System.IO.FileAccess.Read;
+            }
+            else if (fileAccess == FileAccess.ReadAndWrite)
+            {
+                nativeFileAccess = System.IO.FileAccess.ReadWrite;
+            }
+            else
+            {
+                throw new ArgumentException("Unrecognized FileAccess value: " + fileAccess);
+            }
 
-			try
-			{
-				IsolatedStorageFileStream stream = _root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
-				return TaskEx.FromResult<Stream>(stream);
-			}
-			catch (IsolatedStorageException ex)
-			{
-				//	Check to see if error is because file does not exist, if so throw a more specific exception
-				bool fileDoesntExist = false;
-				try
-				{
+            try
+            {
+                IsolatedStorageFileStream stream = _root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
+                return TaskEx.FromResult<Stream>(stream);
+            }
+            catch (IsolatedStorageException ex)
+            {
+                //	Check to see if error is because file does not exist, if so throw a more specific exception
+                bool fileDoesntExist = false;
+                try
+                {
                     if (!_root.FileExists(Path))
-					{
-						fileDoesntExist = true;
-					}
-				}
-				catch { }
-				if (fileDoesntExist)
-				{
+                    {
+                        fileDoesntExist = true;
+                    }
+                }
+                catch { }
+                if (fileDoesntExist)
+                {
                     throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path, ex);
-				}
-				else
-				{
-					throw;
-				}
-			}
-		}
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
 
         /// <summary>
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
-		public Task DeleteAsync()
-		{
+        public Task DeleteAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             try
             {
 #if WINDOWS_PHONE
@@ -157,18 +161,19 @@ namespace PCLStorage
                     throw;
                 }
             }
-			return TaskEx.FromResult(true);
-		}
+            return TaskEx.FromResult(true);
+        }
 
         /// <summary>
         /// Renames a file without changing its location.
         /// </summary>
         /// <param name="newName">The new leaf name of the file.</param>
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>
         /// A task which will complete after the file is renamed.
         /// </returns>
-        public Task RenameAsync(string newName, NameCollisionOption collisionOption)
+        public Task RenameAsync(string newName, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
             if (newName == null)
             {
@@ -179,8 +184,9 @@ namespace PCLStorage
                 throw new ArgumentException();
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             string newPath = PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName);
-            return MoveAsync(newPath, collisionOption);
+            return MoveAsync(newPath, collisionOption, cancellationToken);
         }
 
         /// <summary>
@@ -188,10 +194,11 @@ namespace PCLStorage
         /// </summary>
         /// <param name="newPath">The new full path of the file.</param>
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>
         /// A task which will complete after the file is moved.
         /// </returns>
-        public Task MoveAsync(string newPath, NameCollisionOption collisionOption)
+        public Task MoveAsync(string newPath, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
             if (newPath == null)
             {
@@ -207,6 +214,7 @@ namespace PCLStorage
 
             for (int counter = 1; ; counter++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 string candidateName = newName;
                 if (counter > 1)
                 {

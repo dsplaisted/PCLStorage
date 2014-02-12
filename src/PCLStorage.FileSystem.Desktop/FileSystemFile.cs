@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PCLStorage
@@ -48,9 +49,11 @@ namespace PCLStorage
         /// Opens the file
         /// </summary>
         /// <param name="fileAccess">Specifies whether the file should be opened in read-only or read/write mode</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Stream"/> which can be used to read from or write to the file</returns>
-        public Task<Stream> OpenAsync(FileAccess fileAccess)
+        public Task<Stream> OpenAsync(FileAccess fileAccess, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             Stream ret;
             if (fileAccess == FileAccess.Read)
             {
@@ -71,8 +74,9 @@ namespace PCLStorage
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
-        public Task DeleteAsync()
+        public Task DeleteAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (!File.Exists(Path))
             {
                 throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path);
@@ -87,10 +91,11 @@ namespace PCLStorage
         /// </summary>
         /// <param name="newName">The new leaf name of the file.</param>
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>
         /// A task which will complete after the file is renamed.
         /// </returns>
-        public Task RenameAsync(string newName, NameCollisionOption collisionOption)
+        public Task RenameAsync(string newName, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
             if (newName == null)
             {
@@ -101,7 +106,7 @@ namespace PCLStorage
                 throw new ArgumentException();
             }
 
-            return MoveAsync(PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName), collisionOption);
+            return MoveAsync(PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName), collisionOption, cancellationToken);
         }
 
         /// <summary>
@@ -109,10 +114,11 @@ namespace PCLStorage
         /// </summary>
         /// <param name="newPath">The new full path of the file.</param>
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>
         /// A task which will complete after the file is moved.
         /// </returns>
-        public Task MoveAsync(string newPath, NameCollisionOption collisionOption)
+        public Task MoveAsync(string newPath, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
             if (newPath == null)
             {
@@ -128,6 +134,7 @@ namespace PCLStorage
 
             for (int counter = 1; ; counter++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 string candidateName = newName;
                 if (counter > 1)
                 {

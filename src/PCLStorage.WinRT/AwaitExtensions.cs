@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 
@@ -18,11 +19,12 @@ namespace PCLStorage
         /// </summary>
         /// <typeparam name="T">The type of value returned by the async operation.</typeparam>
         /// <param name="operation">The async operation.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task whose result is the completed task.</returns>
-        internal static Task<Task<T>> AsTaskNoThrow<T>(this IAsyncOperation<T> operation)
+        internal static Task<Task<T>> AsTaskNoThrow<T>(this IAsyncOperation<T> operation, CancellationToken cancellationToken)
         {
             var tcs = new TaskCompletionSource<Task<T>>();
-            var task = operation.AsTask();
+            var task = operation.AsTask(cancellationToken);
             task.ContinueWith((t, state) => ((TaskCompletionSource<Task<T>>)state).SetResult(t), tcs);
             return tcs.Task;
         }

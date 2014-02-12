@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PCLStorage
@@ -61,9 +62,11 @@ namespace PCLStorage
         /// </summary>
         /// <param name="desiredName">The name of the file to create</param>
         /// <param name="option">Specifies how to behave if the specified file already exists</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The newly created file</returns>
-        public Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option)
+        public Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             EnsureExists();
 
             string nameToUse = desiredName;
@@ -76,6 +79,7 @@ namespace PCLStorage
                     string desiredExtension = System.IO.Path.GetExtension(desiredName);
                     for (int num = 2; File.Exists(newPath); num++)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         nameToUse = desiredRoot + " (" + num + ")" + desiredExtension;
                         newPath = System.IO.Path.Combine(Path, nameToUse);
                     }
@@ -121,9 +125,11 @@ namespace PCLStorage
         /// Gets a file in this folder
         /// </summary>
         /// <param name="name">The name of the file to get</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested file, or null if it does not exist</returns>
-        public Task<IFile> GetFileAsync(string name)
+        public Task<IFile> GetFileAsync(string name, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             string path = System.IO.Path.Combine(Path, name);
             if (!File.Exists(path))
             {
@@ -137,8 +143,9 @@ namespace PCLStorage
         /// Gets a list of the files in this folder
         /// </summary>
         /// <returns>A list of the files in the folder</returns>
-        public Task<IList<IFile>> GetFilesAsync()
+        public Task<IList<IFile>> GetFilesAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             EnsureExists();
             IList<IFile> ret = Directory.GetFiles(Path).Select(f => new FileSystemFile(f)).ToList<IFile>().AsReadOnly();
             return Task.FromResult(ret);
@@ -149,9 +156,11 @@ namespace PCLStorage
         /// </summary>
         /// <param name="desiredName">The name of the folder to create</param>
         /// <param name="option">Specifies how to behave if the specified folder already exists</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The newly created folder</returns>
-        public Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option)
+        public Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             EnsureExists();
             string nameToUse = desiredName;
             string newPath = System.IO.Path.Combine(Path, nameToUse);
@@ -161,6 +170,7 @@ namespace PCLStorage
                 {
                     for (int num = 2; Directory.Exists(newPath); num++)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         nameToUse = desiredName + " (" + num + ")";
                         newPath = System.IO.Path.Combine(Path, nameToUse);
                     }
@@ -197,9 +207,11 @@ namespace PCLStorage
         /// Gets a subfolder in this folder
         /// </summary>
         /// <param name="name">The name of the folder to get</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested folder, or null if it does not exist</returns>
-        public Task<IFolder> GetFolderAsync(string name)
+        public Task<IFolder> GetFolderAsync(string name, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             string path = System.IO.Path.Combine(Path, name);
             if (!Directory.Exists(path))
             {
@@ -213,8 +225,9 @@ namespace PCLStorage
         /// Gets a list of subfolders in this folder
         /// </summary>
         /// <returns>A list of subfolders in the folder</returns>
-        public Task<IList<IFolder>> GetFoldersAsync()
+        public Task<IList<IFolder>> GetFoldersAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             EnsureExists();
             IList<IFolder> ret = Directory.GetDirectories(Path).Select(d => new FileSystemFolder(d, true)).ToList<IFolder>().AsReadOnly();
             return Task.FromResult(ret);
@@ -224,16 +237,18 @@ namespace PCLStorage
         /// Checks whether a folder or file exists at the given location.
         /// </summary>
         /// <param name="name">The name of the file or folder to check for.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>
         /// A task whose result is the result of the existence check.
         /// </returns>
-        public Task<ExistenceCheckResult> CheckExistsAsync(string name)
+        public Task<ExistenceCheckResult> CheckExistsAsync(string name, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException();
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             string checkPath = PortablePath.Combine(this.Path, name);
             if (File.Exists(checkPath))
             {
@@ -253,12 +268,13 @@ namespace PCLStorage
         /// Deletes this folder and all of its contents
         /// </summary>
         /// <returns>A task which will complete after the folder is deleted</returns>
-        public Task DeleteAsync()
+        public Task DeleteAsync(CancellationToken cancellationToken)
         {
             if (!_canDelete)
             {
                 throw new IOException("Cannot delete root storage folder.");
             }
+            cancellationToken.ThrowIfCancellationRequested();
             EnsureExists();
             Directory.Delete(Path, true);
             return Task.FromResult(true);
