@@ -101,7 +101,7 @@ namespace PCLStorage.Test
         {
             Task result = TestFileSystem.GetFileFromPathAsync(null);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@ namespace PCLStorage.Test
         {
             Task result = TestFileSystem.GetFolderFromPathAsync(null);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
         }
     }
 }

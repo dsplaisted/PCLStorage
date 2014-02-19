@@ -41,7 +41,7 @@ namespace PCLStorage.Test
         {
             Task result = TestFileSystem.LocalStorage.GetFileAsync(null);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace PCLStorage.Test
         {
             Task result = TestFileSystem.LocalStorage.CreateFolderAsync(null, CreationCollisionOption.FailIfExists);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
         }
 
         [TestMethod]
@@ -244,7 +244,7 @@ namespace PCLStorage.Test
 
             //  Assert
             Assert.AreEqual(iterations, folders.Count, "Folder count");
-            for (int i=0; i<iterations; i++)
+            for (int i = 0; i < iterations; i++)
             {
                 Assert.AreEqual(folderName, folders[i].Name, "Folder " + i + " name");
             }
@@ -315,7 +315,7 @@ namespace PCLStorage.Test
         {
             Task result = TestFileSystem.LocalStorage.GetFolderAsync(null);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
         }
 
         [TestMethod]
@@ -445,7 +445,7 @@ namespace PCLStorage.Test
         {
             Task result = TestFileSystem.LocalStorage.CreateFileAsync(null, CreationCollisionOption.FailIfExists);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
         }
 
         [TestMethod]
@@ -470,7 +470,7 @@ namespace PCLStorage.Test
         {
             Task result = TestFileSystem.LocalStorage.CheckExistsAsync(null);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
         }
 
         [TestMethod]

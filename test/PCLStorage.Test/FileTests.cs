@@ -440,7 +440,7 @@ namespace PCLStorage.Test
 
             result = file.RenameAsync(null);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
 
             // Cleanup
             await file.DeleteAsync();
@@ -584,7 +584,7 @@ namespace PCLStorage.Test
 
             result = file.MoveAsync(null);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+            Assert.AreEqual(typeof(ArgumentNullException), result.Exception.InnerException.GetType());
 
             // Cleanup
             await file.DeleteAsync();
