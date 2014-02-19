@@ -62,7 +62,7 @@ namespace PCLStorage.Test
             Assert.AreEqual(fileContents, gottenContents);
 
             //  Cleanup
-            await folder.DeleteAsync();            
+            await folder.DeleteAsync();
         }
 
         [TestMethod]
@@ -94,6 +94,14 @@ namespace PCLStorage.Test
 
             //  Assert
             Assert.AreEqual(null, file);
+        }
+
+        [TestMethod]
+        public void GetFileFromPath_Null()
+        {
+            Task result = TestFileSystem.GetFileFromPathAsync(null);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
         }
 
         [TestMethod]
@@ -136,6 +144,14 @@ namespace PCLStorage.Test
 
             //  Assert
             Assert.AreEqual(null, folder);
+        }
+
+        [TestMethod]
+        public void GetFolderFromPath_Null()
+        {
+            Task result = TestFileSystem.GetFolderFromPathAsync(null);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
         }
     }
 }

@@ -37,6 +37,14 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public void GetFile_Null()
+        {
+            Task result = TestFileSystem.LocalStorage.GetFileAsync(null);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+        }
+
+        [TestMethod]
         public async Task GetFileThatDoesNotExist()
         {
             //  Arrange
@@ -122,6 +130,14 @@ namespace PCLStorage.Test
 
             //  Cleanup
             await folder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public void CreateFolder_Null()
+        {
+            Task result = TestFileSystem.LocalStorage.CreateFolderAsync(null, CreationCollisionOption.FailIfExists);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
         }
 
         [TestMethod]
@@ -295,6 +311,14 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public void GetFolder_Null()
+        {
+            Task result = TestFileSystem.LocalStorage.GetFolderAsync(null);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+        }
+
+        [TestMethod]
         public async Task GetFolderThatDoesNotExist()
         {
             //  Arrange
@@ -417,6 +441,14 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public void CreateFile_Null()
+        {
+            Task result = TestFileSystem.LocalStorage.CreateFileAsync(null, CreationCollisionOption.FailIfExists);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
+        }
+
+        [TestMethod]
         public async Task CheckExists()
         {
             // setup
@@ -431,6 +463,14 @@ namespace PCLStorage.Test
             // clean up
             await file.DeleteAsync();
             await folder.DeleteAsync();
+        }
+
+        [TestMethod]
+        public void CheckExists_Null()
+        {
+            Task result = TestFileSystem.LocalStorage.CheckExistsAsync(null);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
         }
 
         [TestMethod]

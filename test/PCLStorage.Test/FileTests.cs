@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PCLStorage.Test
 {
-	[TestClass]
+    [TestClass]
     public class FileTests
     {
         public async Task PCLStorageSample()
@@ -27,13 +27,13 @@ namespace PCLStorage.Test
 
         IFileSystem TestFileSystem { get { return FileSystem.Current; } }
 
-		[TestMethod]
-		public async Task GetFileThrowsWhenFileDoesNotExist()
-		{
-			string fileName = Guid.NewGuid().ToString();
+        [TestMethod]
+        public async Task GetFileThrowsWhenFileDoesNotExist()
+        {
+            string fileName = Guid.NewGuid().ToString();
             IFolder folder = TestFileSystem.LocalStorage;
-			await ExceptionAssert.ThrowsAsync<FileNotFoundException>(async () => await folder.GetFileAsync(fileName));
-		}
+            await ExceptionAssert.ThrowsAsync<FileNotFoundException>(async () => await folder.GetFileAsync(fileName));
+        }
 
         [TestMethod]
         public async Task CreateFile()
@@ -154,66 +154,66 @@ namespace PCLStorage.Test
             await file2.DeleteAsync();
         }
 
-		[TestMethod]
-		public async Task WriteAndReadFile()
-		{
-			//	Arrange
+        [TestMethod]
+        public async Task WriteAndReadFile()
+        {
+            //	Arrange
             IFolder folder = TestFileSystem.LocalStorage;
-			IFile file = await folder.CreateFileAsync("readWriteFile.txt", CreationCollisionOption.FailIfExists);
-			string contents = "And so we beat on, boats against the current, born back ceaselessly into the past.";
+            IFile file = await folder.CreateFileAsync("readWriteFile.txt", CreationCollisionOption.FailIfExists);
+            string contents = "And so we beat on, boats against the current, born back ceaselessly into the past.";
 
-			//	Act
-			await file.WriteAllTextAsync(contents);
-			string readContents = await file.ReadAllTextAsync();
+            //	Act
+            await file.WriteAllTextAsync(contents);
+            string readContents = await file.ReadAllTextAsync();
 
-			//	Assert
-			Assert.AreEqual(contents, readContents);
+            //	Assert
+            Assert.AreEqual(contents, readContents);
 
-			//	Cleanup
-			await file.DeleteAsync();
-		}
+            //	Cleanup
+            await file.DeleteAsync();
+        }
 
-		[TestMethod]
-		public async Task DeleteFile()
-		{
-			//	Arrange
+        [TestMethod]
+        public async Task DeleteFile()
+        {
+            //	Arrange
             IFolder folder = TestFileSystem.LocalStorage;
-			string fileName = "fileToDelete.txt";
-			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            string fileName = "fileToDelete.txt";
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
 
-			//	Act
-			await file.DeleteAsync();
+            //	Act
+            await file.DeleteAsync();
 
-			//	Assert
-			var files = await folder.GetFilesAsync();
-			Assert.IsFalse(files.Any(f => f.Name == fileName));
-		}
+            //	Assert
+            var files = await folder.GetFilesAsync();
+            Assert.IsFalse(files.Any(f => f.Name == fileName));
+        }
 
-		[TestMethod]
-		public async Task OpenDeletedFile()
-		{
-			//	Arrange
+        [TestMethod]
+        public async Task OpenDeletedFile()
+        {
+            //	Arrange
             IFolder folder = TestFileSystem.LocalStorage;
-			string fileName = "fileToDeleteAndOpen.txt";
-			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
-			await file.DeleteAsync();
+            string fileName = "fileToDeleteAndOpen.txt";
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            await file.DeleteAsync();
 
-			//	Act & Assert
-			await ExceptionAssert.ThrowsAsync<IOException>(async () => { await file.OpenAsync(FileAccess.ReadAndWrite); });
-		}
+            //	Act & Assert
+            await ExceptionAssert.ThrowsAsync<IOException>(async () => { await file.OpenAsync(FileAccess.ReadAndWrite); });
+        }
 
-		[TestMethod]
-		public async Task DeleteFileTwice()
-		{
-			//	Arrange
+        [TestMethod]
+        public async Task DeleteFileTwice()
+        {
+            //	Arrange
             IFolder folder = TestFileSystem.LocalStorage;
-			string fileName = "fileToDeleteTwice.txt";
-			IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
-			await file.DeleteAsync();
+            string fileName = "fileToDeleteTwice.txt";
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            await file.DeleteAsync();
 
-			//	Act & Assert
-			await ExceptionAssert.ThrowsAsync<IOException>(async () => { await file.DeleteAsync(); });
-		}
+            //	Act & Assert
+            await ExceptionAssert.ThrowsAsync<IOException>(async () => { await file.DeleteAsync(); });
+        }
 
         [TestMethod]
         public async Task OpenFileForRead()
@@ -252,7 +252,7 @@ namespace PCLStorage.Test
                 //  Assert
                 Assert.IsTrue(stream.CanWrite);
                 Assert.IsTrue(stream.CanRead);
-                Assert.IsTrue(stream.CanSeek);                
+                Assert.IsTrue(stream.CanSeek);
             }
 
             //  Cleanup
@@ -266,7 +266,7 @@ namespace PCLStorage.Test
             IFolder rootFolder = TestFileSystem.LocalStorage;
             string folderName = "NestedFolderName";
             IFolder level1 = await rootFolder.CreateFolderAsync(folderName, CreationCollisionOption.FailIfExists);
-            
+
             //  Act
             IFolder level2 = await level1.CreateFolderAsync(folderName, CreationCollisionOption.FailIfExists);
 
@@ -434,8 +434,13 @@ namespace PCLStorage.Test
             IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
 
             // Act & assert
-            await ExceptionAssert.ThrowsAsync<ArgumentException>(async () => await file.RenameAsync(string.Empty));
-            await ExceptionAssert.ThrowsAsync<ArgumentNullException>(async () => await file.RenameAsync(null));
+            Task result = file.RenameAsync(string.Empty);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentException);
+
+            result = file.RenameAsync(null);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
 
             // Cleanup
             await file.DeleteAsync();
@@ -573,8 +578,13 @@ namespace PCLStorage.Test
             IFile file = await folder.CreateFileAsync(originalFileName, CreationCollisionOption.FailIfExists);
 
             // Act & assert
-            await ExceptionAssert.ThrowsAsync<ArgumentException>(async () => await file.MoveAsync(string.Empty));
-            await ExceptionAssert.ThrowsAsync<ArgumentNullException>(async () => await file.MoveAsync(null));
+            Task result = file.MoveAsync(string.Empty);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentException);
+
+            result = file.MoveAsync(null);
+            Assert.IsTrue(result.IsFaulted);
+            Assert.IsTrue(result.Exception.InnerException is ArgumentNullException);
 
             // Cleanup
             await file.DeleteAsync();
