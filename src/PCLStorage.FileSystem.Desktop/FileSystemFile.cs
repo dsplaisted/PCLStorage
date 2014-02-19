@@ -51,39 +51,38 @@ namespace PCLStorage
         /// <param name="fileAccess">Specifies whether the file should be opened in read-only or read/write mode</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Stream"/> which can be used to read from or write to the file</returns>
-        public Task<Stream> OpenAsync(FileAccess fileAccess, CancellationToken cancellationToken)
+        public async Task<Stream> OpenAsync(FileAccess fileAccess, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            Stream ret;
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
             if (fileAccess == FileAccess.Read)
             {
-                ret = File.OpenRead(Path);
+                return File.OpenRead(Path);
             }
             else if (fileAccess == FileAccess.ReadAndWrite)
             {
-                ret = File.Open(Path, FileMode.Open, System.IO.FileAccess.ReadWrite);
+                return File.Open(Path, FileMode.Open, System.IO.FileAccess.ReadWrite);
             }
             else
             {
                 throw new ArgumentException("Unrecognized FileAccess value: " + fileAccess);
             }
-            return Task.FromResult(ret);
         }
 
         /// <summary>
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
-        public Task DeleteAsync(CancellationToken cancellationToken)
+        public async Task DeleteAsync(CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
             if (!File.Exists(Path))
             {
                 throw new PCLStorage.Exceptions.FileNotFoundException("File does not exist: " + Path);
             }
+            
             File.Delete(Path);
-
-            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -95,18 +94,11 @@ namespace PCLStorage
         /// <returns>
         /// A task which will complete after the file is renamed.
         /// </returns>
-        public Task RenameAsync(string newName, NameCollisionOption collisionOption, CancellationToken cancellationToken)
+        public async Task RenameAsync(string newName, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
-            if (newName == null)
-            {
-                throw new ArgumentNullException("newName");
-            }
-            else if (newName.Length == 0)
-            {
-                throw new ArgumentException();
-            }
+            Requires.NotNullOrEmpty(newName, "newName");
 
-            return MoveAsync(PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName), collisionOption, cancellationToken);
+            await MoveAsync(PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName), collisionOption, cancellationToken);
         }
 
         /// <summary>
@@ -118,16 +110,11 @@ namespace PCLStorage
         /// <returns>
         /// A task which will complete after the file is moved.
         /// </returns>
-        public Task MoveAsync(string newPath, NameCollisionOption collisionOption, CancellationToken cancellationToken)
+        public async Task MoveAsync(string newPath, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
-            if (newPath == null)
-            {
-                throw new ArgumentNullException("newPath");
-            }
-            else if (newPath.Length == 0)
-            {
-                throw new ArgumentException();
-            }
+            Requires.NotNullOrEmpty(newPath, "newPath");
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
 
             string newDirectory = System.IO.Path.GetDirectoryName(newPath);
             string newName = System.IO.Path.GetFileName(newPath);
@@ -165,7 +152,7 @@ namespace PCLStorage
                 File.Move(_path, candidatePath);
                 _path = candidatePath;
                 _name = candidateName;
-                return Task.FromResult(true);
+                return;
             }
         }
     }

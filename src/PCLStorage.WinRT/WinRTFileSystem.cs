@@ -57,6 +57,8 @@ namespace PCLStorage
         /// <returns>A file for the given path, or null if it does not exist.</returns>
         public async Task<IFile> GetFileFromPathAsync(string path, CancellationToken cancellationToken)
         {
+            Requires.NotNullOrEmpty(path, "path");
+
             StorageFile storageFile;
             try
             {
@@ -78,6 +80,8 @@ namespace PCLStorage
         /// <returns>A folder for the specified path, or null if it does not exist.</returns>
         public async Task<IFolder> GetFolderFromPathAsync(string path, CancellationToken cancellationToken)
         {
+            Requires.NotNullOrEmpty(path, "path");
+
             StorageFolder storageFolder;
             try
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace PCLStorage
     /// <summary>
     /// Extensions for use internally by PCLStorage for awaiting.
     /// </summary>
-    internal static class AwaitExtensions
+    internal static partial class AwaitExtensions
     {
         /// <summary>
         /// Returns a task that completes when the async operation completes,

@@ -97,6 +97,9 @@
     <Compile Include="..\..\common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage\AwaitExtensions.cs">
+      <Link>AwaitExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage\Exceptions\PCLStorageExceptions.cs">
       <Link>Exceptions\PCLStorageExceptions.cs</Link>
     </Compile>
@@ -105,6 +108,9 @@
     </Compile>
     <Compile Include="..\PCLStorage\PortablePath.cs">
       <Link>PortablePath.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage\Requires.cs">
+      <Link>Requires.cs</Link>
     </Compile>
     <Compile Include="IsoStoreFile.cs" />
     <Compile Include="IsoStoreFileSystem.cs" />

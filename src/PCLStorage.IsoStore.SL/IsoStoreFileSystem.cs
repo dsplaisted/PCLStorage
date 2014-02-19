@@ -53,15 +53,16 @@ namespace PCLStorage
         /// <param name="path">The path to a file, as returned from the <see cref="IFile.Path"/> property.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A file for the given path, or null if it does not exist.</returns>
-        public Task<IFile> GetFileFromPathAsync(string path, CancellationToken cancellationToken)
+        public async Task<IFile> GetFileFromPathAsync(string path, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            IFile ret = null;
+            Requires.NotNullOrEmpty(path, "path");
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
             if (Root.FileExists(path))
             {
-                ret = new IsoStoreFile(Root, path);
+                return new IsoStoreFile(Root, path);
             }
-            return TaskEx.FromResult(ret);
+            return null;
 
         }
 
@@ -71,15 +72,17 @@ namespace PCLStorage
         /// <param name="path">The path to a folder, as returned from the <see cref="IFolder.Path"/> property.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A folder for the specified path, or null if it does not exist.</returns>
-        public Task<IFolder> GetFolderFromPathAsync(string path, CancellationToken cancellationToken)
+        public async Task<IFolder> GetFolderFromPathAsync(string path, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            IFolder ret = null;
+            Requires.NotNullOrEmpty(path, "path");
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
             if (Root.DirectoryExists(path))
             {
-                ret = new IsoStoreFolder(Root, path);
+                return new IsoStoreFolder(Root, path);
             }
-            return TaskEx.FromResult(ret);
+
+            return null;
         }
     }
 }

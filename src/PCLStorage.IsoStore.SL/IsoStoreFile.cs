@@ -76,9 +76,9 @@ namespace PCLStorage
         /// <param name="fileAccess">Specifies whether the file should be opened in read-only or read/write mode</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Stream"/> which can be used to read from or write to the file</returns>
-        public Task<Stream> OpenAsync(FileAccess fileAccess, CancellationToken cancellationToken)
+        public async Task<Stream> OpenAsync(FileAccess fileAccess, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
             System.IO.FileAccess nativeFileAccess;
             if (fileAccess == FileAccess.Read)
             {
@@ -96,7 +96,7 @@ namespace PCLStorage
             try
             {
                 IsolatedStorageFileStream stream = _root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
-                return TaskEx.FromResult<Stream>(stream);
+                return stream;
             }
             catch (IsolatedStorageException ex)
             {
@@ -125,9 +125,9 @@ namespace PCLStorage
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
-        public Task DeleteAsync(CancellationToken cancellationToken)
+        public async Task DeleteAsync(CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
             try
             {
 #if WINDOWS_PHONE
@@ -161,7 +161,6 @@ namespace PCLStorage
                     throw;
                 }
             }
-            return TaskEx.FromResult(true);
         }
 
         /// <summary>
@@ -173,20 +172,13 @@ namespace PCLStorage
         /// <returns>
         /// A task which will complete after the file is renamed.
         /// </returns>
-        public Task RenameAsync(string newName, NameCollisionOption collisionOption, CancellationToken cancellationToken)
+        public async Task RenameAsync(string newName, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
-            if (newName == null)
-            {
-                throw new ArgumentNullException("newName");
-            }
-            else if (newName.Length == 0)
-            {
-                throw new ArgumentException();
-            }
+            Requires.NotNullOrEmpty(newName, "newName");
 
-            cancellationToken.ThrowIfCancellationRequested();
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
             string newPath = PortablePath.Combine(System.IO.Path.GetDirectoryName(_path), newName);
-            return MoveAsync(newPath, collisionOption, cancellationToken);
+            await MoveAsync(newPath, collisionOption, cancellationToken);
         }
 
         /// <summary>
@@ -198,17 +190,11 @@ namespace PCLStorage
         /// <returns>
         /// A task which will complete after the file is moved.
         /// </returns>
-        public Task MoveAsync(string newPath, NameCollisionOption collisionOption, CancellationToken cancellationToken)
+        public async Task MoveAsync(string newPath, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
-            if (newPath == null)
-            {
-                throw new ArgumentNullException();
-            }
-            else if (newPath.Length == 0)
-            {
-                throw new ArgumentException();
-            }
+            Requires.NotNullOrEmpty(newPath, "newPath");
 
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
             string newDirectory = System.IO.Path.GetDirectoryName(newPath);
             string newName = System.IO.Path.GetFileName(newPath);
 
@@ -245,7 +231,7 @@ namespace PCLStorage
                 _root.MoveFile(_path, candidatePath);
                 _path = candidatePath;
                 _name = candidateName;
-                return TaskEx.FromResult(true);
+                return;
             }
         }
     }

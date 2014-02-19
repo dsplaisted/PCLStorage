@@ -55,6 +55,9 @@
     <Compile Include="..\PCLStorage.FileSystem.Desktop\FileSystemFolder.cs">
       <Link>FileSystemFolder.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage\AwaitExtensions.cs">
+      <Link>AwaitExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage\Exceptions\PCLStorageExceptions.cs">
       <Link>Exceptions\PCLStorageExceptions.cs</Link>
     </Compile>
@@ -63,6 +66,9 @@
     </Compile>
     <Compile Include="..\PCLStorage\PortablePath.cs">
       <Link>PortablePath.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage\Requires.cs">
+      <Link>Requires.cs</Link>
     </Compile>
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

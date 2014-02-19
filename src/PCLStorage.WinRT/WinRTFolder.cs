@@ -29,9 +29,9 @@ namespace PCLStorage
             _wrappedFolder = wrappedFolder;
             if (_wrappedFolder.Path == Windows.Storage.ApplicationData.Current.LocalFolder.Path
 #if !WINDOWS_PHONE
-                || _wrappedFolder.Path == Windows.Storage.ApplicationData.Current.RoamingFolder.Path
+ || _wrappedFolder.Path == Windows.Storage.ApplicationData.Current.RoamingFolder.Path
 #endif
-                )
+)
             {
                 _isRootFolder = true;
             }
@@ -66,6 +66,7 @@ namespace PCLStorage
         /// <returns>The newly created file</returns>
         public async Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option, CancellationToken cancellationToken)
         {
+            Requires.NotNullOrEmpty(desiredName, "desiredName");
             await EnsureExistsAsync(cancellationToken).ConfigureAwait(false);
             StorageFile wrtFile;
             try
@@ -92,6 +93,8 @@ namespace PCLStorage
         /// <returns>The requested file, or null if it does not exist</returns>
         public async Task<IFile> GetFileAsync(string name, CancellationToken cancellationToken)
         {
+            Requires.NotNullOrEmpty(name, "name");
+
             await EnsureExistsAsync(cancellationToken).ConfigureAwait(false);
             try
             {
@@ -125,6 +128,7 @@ namespace PCLStorage
         /// <returns>The newly created folder</returns>
         public async Task<IFolder> CreateFolderAsync(string desiredName, CreationCollisionOption option, CancellationToken cancellationToken)
         {
+            Requires.NotNullOrEmpty(desiredName, "desiredName");
             await EnsureExistsAsync(cancellationToken).ConfigureAwait(false);
             StorageFolder wrtFolder;
             try
@@ -151,6 +155,8 @@ namespace PCLStorage
         /// <returns>The requested folder, or null if it does not exist</returns>
         public async Task<IFolder> GetFolderAsync(string name, CancellationToken cancellationToken)
         {
+            Requires.NotNullOrEmpty(name, "name");
+
             await EnsureExistsAsync(cancellationToken).ConfigureAwait(false);
             StorageFolder wrtFolder;
             try
@@ -187,10 +193,7 @@ namespace PCLStorage
         /// </returns>
         public async Task<ExistenceCheckResult> CheckExistsAsync(string name, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException();
-            }
+            Requires.NotNullOrEmpty(name, "name");
 
             // WinRT does not expose an Exists method, so we have to
             // try accessing the entity to see if it succeeds.

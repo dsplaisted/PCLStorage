@@ -78,9 +78,10 @@ namespace PCLStorage
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
-        public Task DeleteAsync(CancellationToken cancellationToken)
+        public async Task DeleteAsync(CancellationToken cancellationToken)
         {
-            return _wrappedFile.DeleteAsync().AsTask(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            await _wrappedFile.DeleteAsync().AsTask(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -94,14 +95,7 @@ namespace PCLStorage
         /// </returns>
         public async Task RenameAsync(string newName, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
-            if (newName == null)
-            {
-                throw new ArgumentNullException("newName");
-            }
-            else if (newName.Length == 0)
-            {
-                throw new ArgumentException();
-            }
+            Requires.NotNullOrEmpty(newName, "newName");
 
             try
             {
@@ -129,14 +123,7 @@ namespace PCLStorage
         /// </returns>
         public async Task MoveAsync(string newPath, NameCollisionOption collisionOption, CancellationToken cancellationToken)
         {
-            if (newPath == null)
-            {
-                throw new ArgumentNullException("newPath");
-            }
-            else if (newPath.Length == 0)
-            {
-                throw new ArgumentException();
-            }
+            Requires.NotNullOrEmpty(newPath, "newPath");
 
             var newFolder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(newPath)).AsTask(cancellationToken).ConfigureAwait(false);
             string newName = System.IO.Path.GetFileName(newPath);
