@@ -19,6 +19,8 @@ x64/
 [Oo]bj/
 [Oo]utput/
 
+*.sln.ide/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

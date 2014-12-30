@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata minClientVersion="2.7.2">
+    <metadata minClientVersion="2.8.3">
         <id>PCLStorage</id>
-        <version>0.0.1</version>
+        <version>1.0.1</version>
         <title>PCL Storage - Portable Storage APIs</title>
         <authors>Daniel Plaisted</authors>
         <owners>Daniel Plaisted</owners>
@@ -72,10 +72,15 @@
       <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.dll" target="lib\monoandroid\PCLStorage.Abstractions.dll" />
       <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.xml" target="lib\monoandroid\PCLStorage.Abstractions.xml" />
 
-      <file src="..\src\PCLStorage.iOS\bin\iPhone\Release\PCLStorage.dll" target="lib\portable-monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.dll" />
-      <file src="..\src\PCLStorage.iOS\bin\iPhone\Release\PCLStorage.xml" target="lib\portable-monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.xml" />
-      <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.dll" target="lib\portable-monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.Abstractions.dll" />
-      <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.xml" target="lib\portable-monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.Abstractions.xml" />
+      <file src="..\src\PCLStorage.iOS\bin\iPhone\Release\PCLStorage.dll" target="lib\monotouch\PCLStorage.dll" />
+      <file src="..\src\PCLStorage.iOS\bin\iPhone\Release\PCLStorage.xml" target="lib\monotouch\PCLStorage.xml" />
+      <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.dll" target="lib\monotouch\PCLStorage.Abstractions.dll" />
+      <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.xml" target="lib\monotouch\PCLStorage.Abstractions.xml" />
+      
+      <file src="..\src\PCLStorage.iOS-Unified\bin\iPhone\Release\PCLStorage.dll" target="lib\portable-Xamarin.iOS+Xamarin.Mac\PCLStorage.dll" />
+      <file src="..\src\PCLStorage.iOS-Unified\bin\iPhone\Release\PCLStorage.xml" target="lib\portable-Xamarin.iOS+Xamarin.Mac\PCLStorage.xml" />
+      <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.dll" target="lib\portable-Xamarin.iOS+Xamarin.Mac\PCLStorage.Abstractions.dll" />
+      <file src="..\src\PCLStorage.Abstractions.NoSL\bin\Release\PCLStorage.Abstractions.xml" target="lib\portable-Xamarin.iOS+Xamarin.Mac\PCLStorage.Abstractions.xml" />
 
     </files>
 </package>
