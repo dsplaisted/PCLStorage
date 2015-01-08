@@ -60,13 +60,24 @@ aims to provide a common abstraction that is easy to take advantage of.
 
 ## APIs
 
-The primary APIs in PCL Storage are the IFile, IFolder, and IFileSystem
-interfaces. The APIs should be mostly self-explanatory and should feel very
-familiar if you have used the WinRT storage APIs.
+[API documentation for PCL
+Storage](http://www.nudoq.org/#!/Packages/PCLStorage/PCLStorage/FileSystem) can
+be found at [NuDoq](http://www.nudoq.org).  The definitions for the main
+APIs in PCL Storage are below.
 
-The IFileSystem interface is the main API entry point. You can get an instance
-of the implementation for the current platform with the FileSystem.Current
+The primary APIs in PCL Storage are the [IFile][], [IFolder][], and
+[IFileSystem][] interfaces. The APIs should be mostly self-explanatory and
+should feel very familiar if you have used the WinRT storage APIs.
+
+[IFile]: http://www.nudoq.org/#!/Packages/PCLStorage/PCLStorage.Abstractions/IFile "IFile documentation"
+[IFolder]: http://www.nudoq.org/#!/Packages/PCLStorage/PCLStorage.Abstractions/IFolder "IFolder documentation"
+[IFileSystem]: http://www.nudoq.org/#!/Packages/PCLStorage/PCLStorage.Abstractions/IFileSystem "IFileSystem documentation"
+
+The [IFileSystem][] interface is the main API entry point. You can get an instance
+of the implementation for the current platform with the [FileSystem.Current][]
 property.
+
+[FileSystem.Current]: http://www.nudoq.org/#!/Packages/PCLStorage/PCLStorage/FileSystem/P/Current "FileSystem.Current documentation"
 
 ```C#
 namespace PCLStorage
@@ -107,6 +118,9 @@ namespace PCLStorage
         Task<IFolder> GetFolderAsync(string name);
         Task<IList<IFolder>> GetFoldersAsync();
 
+        Task<ExistenceCheckResult> CheckExistsAsync(string name,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task DeleteAsync();
     }
 
@@ -123,6 +137,12 @@ namespace PCLStorage
 
         Task<Stream> OpenAsync(FileAccess fileAccess);
         Task DeleteAsync();
+        Task RenameAsync(string newName,
+          NameCollisionOption collisionOption = NameCollisionOption.FailIfExists,
+          CancellationToken cancellationToken = default(CancellationToken));
+        Task MoveAsync(string newPath,
+          NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting,
+          CancellationToken cancellationToken = default(CancellationToken));
     }
 
     public static class PortablePath
