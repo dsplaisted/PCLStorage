@@ -6,8 +6,8 @@
         <title>PCL Storage - Portable Storage APIs</title>
         <authors>Daniel Plaisted</authors>
         <owners>Daniel Plaisted</owners>
-        <licenseUrl>http://pclstorage.codeplex.com/license</licenseUrl>
-        <projectUrl>http://pclstorage.codeplex.com/</projectUrl>
+        <licenseUrl>https://github.com/dsplaisted/PCLStorage/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/dsplaisted/PCLStorage</projectUrl>
         <iconUrl>https://dsplaisted.blob.core.windows.net/oss/pickles_64.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>PCL Storage provides a consistent, portable set of local file IO APIs for .NET, Windows Phone, Windows Store, Xamarin.iOS, Xamarin.Android, and Silverlight.  This makes it easier to create cross-platform .NET libraries and apps.</description>
