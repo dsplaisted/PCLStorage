@@ -7,15 +7,17 @@ This makes it easier to create cross-platform .NET libraries and apps.
 Here is a sample showing how you can use PCL Storage to create a folder and
 write to a text file in that folder:
 
-    public async Task PCLStorageSample()
-    {
-        IFolder rootFolder = FileSystem.Current.LocalStorage;
-        IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",
-            CreationCollisionOption.OpenIfExists);
-        IFile file = await folder.CreateFileAsync("answer.txt",
-            CreationCollisionOption.ReplaceExisting);
-        await file.WriteAllTextAsync("42");
-    }
+```C#
+public async Task PCLStorageSample()
+{
+    IFolder rootFolder = FileSystem.Current.LocalStorage;
+    IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",
+        CreationCollisionOption.OpenIfExists);
+    IFile file = await folder.CreateFileAsync("answer.txt",
+        CreationCollisionOption.ReplaceExisting);
+    await file.WriteAllTextAsync("42");
+}
+```
 
 ## Installation
 
@@ -64,70 +66,72 @@ The IFileSystem interface is the main API entry point. You can get an instance
 of the implementation for the current platform with the FileSystem.Current
 property.
 
-    namespace PCLStorage
+```C#
+namespace PCLStorage
+{
+    public static class FileSystem
     {
-        public static class FileSystem
-        {
-            public static IFileSystem Current { get; }
-        }
-
-        public interface IFileSystem
-        {
-            IFolder LocalStorage { get; }
-            IFolder RoamingStorage { get; }
-
-            Task<IFile> GetFileFromPathAsync(string path);
-            Task<IFolder> GetFolderFromPathAsync(string path);
-        }
-
-        public enum CreationCollisionOption
-        {
-            GenerateUniqueName = 0,
-            ReplaceExisting = 1,
-            FailIfExists = 2,
-            OpenIfExists = 3,
-        }
-
-        public interface IFolder
-        {
-            string Name { get; }
-            string Path { get; }
-
-            Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option);
-            Task<IFile> GetFileAsync(string name);
-            Task<IList<IFile>> GetFilesAsync();
-
-            Task<IFolder> CreateFolderAsync(string desiredName,
-                CreationCollisionOption option);
-            Task<IFolder> GetFolderAsync(string name);
-            Task<IList<IFolder>> GetFoldersAsync();
-
-            Task DeleteAsync();
-        }
-
-        public enum FileAccess
-        {
-            Read,
-            ReadAndWrite
-        }
-
-        public interface IFile
-        {
-            string Name { get; }
-            string Path { get; }
-
-            Task<Stream> OpenAsync(FileAccess fileAccess);
-            Task DeleteAsync();
-        }
-
-        public static class PortablePath
-        {
-            public static char DirectorySeparatorChar { get; }
-            public static string Combine(params string[] paths);
-        }
-        public static class FileExtensions
-        {
-            public static async Task<string> ReadAllTextAsync(this IFile file)
-            public static async Task WriteAllTextAsync(this IFile file, string contents);
-        }
+        public static IFileSystem Current { get; }
     }
+
+    public interface IFileSystem
+    {
+        IFolder LocalStorage { get; }
+        IFolder RoamingStorage { get; }
+
+        Task<IFile> GetFileFromPathAsync(string path);
+        Task<IFolder> GetFolderFromPathAsync(string path);
+    }
+
+    public enum CreationCollisionOption
+    {
+        GenerateUniqueName = 0,
+        ReplaceExisting = 1,
+        FailIfExists = 2,
+        OpenIfExists = 3,
+    }
+
+    public interface IFolder
+    {
+        string Name { get; }
+        string Path { get; }
+
+        Task<IFile> CreateFileAsync(string desiredName, CreationCollisionOption option);
+        Task<IFile> GetFileAsync(string name);
+        Task<IList<IFile>> GetFilesAsync();
+
+        Task<IFolder> CreateFolderAsync(string desiredName,
+            CreationCollisionOption option);
+        Task<IFolder> GetFolderAsync(string name);
+        Task<IList<IFolder>> GetFoldersAsync();
+
+        Task DeleteAsync();
+    }
+
+    public enum FileAccess
+    {
+        Read,
+        ReadAndWrite
+    }
+
+    public interface IFile
+    {
+        string Name { get; }
+        string Path { get; }
+
+        Task<Stream> OpenAsync(FileAccess fileAccess);
+        Task DeleteAsync();
+    }
+
+    public static class PortablePath
+    {
+        public static char DirectorySeparatorChar { get; }
+        public static string Combine(params string[] paths);
+    }
+    public static class FileExtensions
+    {
+        public static async Task<string> ReadAllTextAsync(this IFile file)
+        public static async Task WriteAllTextAsync(this IFile file, string contents);
+    }
+}
+```
