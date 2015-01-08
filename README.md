@@ -1,5 +1,7 @@
 # PCL Storage
 
+![PCL Storage](https://dsplaisted.blob.core.windows.net/oss/pickles_64.png)
+
 PCL Storage provides a consistent, portable set of local file IO APIs for .NET,
 Windows Phone, Windows Store, Xamarin.iOS, Xamarin.Android, and Silverlight.
 This makes it easier to create cross-platform .NET libraries and apps.
