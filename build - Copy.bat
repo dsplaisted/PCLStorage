@@ -1,0 +1,1 @@
+msbuild %~dp0build\build.proj /p:Configuration=Release /t:Clean;BuildPackage

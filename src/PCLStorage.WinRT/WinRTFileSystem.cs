@@ -94,5 +94,30 @@ namespace PCLStorage
 
             return new WinRTFolder(storageFolder);
         }
+
+        /// <summary>
+        /// Gets a file from the App Bundle.  Returns null if the file does not exist.
+        /// </summary>
+        /// <param name="path">The path to a file, as returned from the <see cref="IFile.Path"/> property.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A file for the given path, or null if it does not exist.</returns>
+        public async Task<IFile> GetFileFromAppBundleAsync(string path, CancellationToken cancellationToken)
+        {
+            Requires.NotNullOrEmpty(path, "path");
+
+            StorageFile storageFile;
+            try
+            {
+                storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///" + path)).AsTask(cancellationToken).ConfigureAwait(false);
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
+
+            return new WinRTFile(storageFile);
+        }
+
+
     }
 }

@@ -64,6 +64,7 @@
     <Compile Include="..\PCLStorage\Requires.cs">
       <Link>Requires.cs</Link>
     </Compile>
+    <Compile Include="iOSFileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
