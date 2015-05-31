@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -154,6 +155,54 @@ namespace PCLStorage
                 _name = candidateName;
                 return;
             }
+        }
+
+
+        /// <summary>
+        /// Extract a zip file.
+        /// </summary>
+        /// <param name="desinationFolder">The destination folder for zip file extraction</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task with a List of strings containing the names of extracted files from the zip archive.</returns>
+        public async Task<List<string>> ExtractZip(string desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var extractedFilenames = new List<string>();
+            await Task.Factory.StartNew(() =>
+            {
+                ZipStorer zip = ZipStorer.Open(_path, System.IO.FileAccess.Read);
+                //// Read all directory contents
+                List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+                //// Extract all files in target directory
+                foreach (ZipStorer.ZipFileEntry entry in dir)
+                {
+                    bool result = false;
+                    extractedFilenames.Add(entry.FilenameInZip);
+                    var path = System.IO.Path.Combine(desinationFolder, System.IO.Path.GetFileName(entry.FilenameInZip));
+                    if (System.IO.File.Exists(path))
+                    {
+                        if (collisionOption == NameCollisionOption.ReplaceExisting)
+                        {
+                            System.IO.File.Delete(path);
+                            result = zip.ExtractFile(entry, path);
+                        }
+                    }
+                    else
+                    {
+                        result = zip.ExtractFile(entry, path);
+                    }
+                    if (result)
+                    {
+                        extractedFilenames.Add(System.IO.Path.GetFileName(entry.FilenameInZip));
+                    }
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                }
+                zip.Close();
+            }, cancellationToken);
+            return extractedFilenames;
         }
     }
 }

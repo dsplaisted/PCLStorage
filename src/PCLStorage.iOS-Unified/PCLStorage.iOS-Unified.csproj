@@ -71,6 +71,9 @@
     <Compile Include="..\PCLStorage\Requires.cs">
       <Link>Requires.cs</Link>
     </Compile>
+    <Compile Include="..\Zip\ZipStorer.cs">
+      <Link>ZipStorer.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

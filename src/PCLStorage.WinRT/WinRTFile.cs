@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -141,6 +142,43 @@ namespace PCLStorage
 
                 throw;
             }
+        }
+
+        public async Task<List<string>> ExtractZip(string desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var zipFiles = new List<string>();
+            var zipDataStream = await _wrappedFile.OpenReadAsync();// ReadFileFromDiskAsStream(ZipFilepath);
+            if (zipDataStream == null) return null;
+            try
+            {
+                ZipArchive zipArchive = new ZipArchive(zipDataStream.AsStream());
+                foreach (var zipArchiveEntry in zipArchive.Entries)
+                {
+                    var zipData = zipArchiveEntry.Open();
+                    if (zipData == null)
+                    {
+                        JK.JKTools.JKLog("JK#156# zipData == null speichern nicht möglich, " + ZipFilepath + ", " + ZipTargetFolder);
+                    }
+                    else
+                    {
+                        if (zipArchiveEntry.Name == null || zipArchiveEntry.Name.Length == 0)
+                        {
+                            JK.JKTools.JKLog("JK#157# kein gültiger Name für " + zipArchiveEntry.FullName + ", " + ZipFilepath + ", " + ZipTargetFolder);
+                        }
+                        else
+                        {
+                            await WriteFileToDisk(zipData, zipArchiveEntry.Name);
+                            zipFiles.Add(zipArchiveEntry.Name);
+                        }
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                JK.JKTools.JKLog("JK#91# ZipDecompress " + e.Message);
+            }
+            return zipFiles;
         }
     }
 }

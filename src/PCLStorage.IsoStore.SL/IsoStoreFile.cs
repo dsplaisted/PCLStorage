@@ -234,5 +234,11 @@ namespace PCLStorage
                 return;
             }
         }
+
+
+        public Task<System.Collections.Generic.List<string>> ExtractZip(string desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            throw new NotImplementedException();
+        }
     }
 }
