@@ -71,6 +71,23 @@ namespace PCLStorage
         }
 
         /// <summary>
+        /// Writes a stream to the file
+        /// </summary>
+        /// <param name="stream">The data stream which should be written to the file.</param>
+        /// <param name="fileAccess">Specifies whether the file should be overridden.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="bool"/> returns true for success</returns>
+        public async Task<bool> WriteAsync(Stream stream, CancellationToken cancellationToken)
+        {
+            if (stream == null) return false;
+            byte[] bytes = new byte[stream.Length];
+            await stream.ReadAsync(bytes, 0, (int)stream.Length).ConfigureAwait(false);
+            File.WriteAllBytes(this.Path, bytes);
+            stream.Close();
+            return true;
+        }
+
+        /// <summary>
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
@@ -165,7 +182,7 @@ namespace PCLStorage
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task with a List of strings containing the names of extracted files from the zip archive.</returns>
-        public async Task<List<string>> ExtractZip(string desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<string>> ExtractZip(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
         {
             var extractedFilenames = new List<string>();
             await Task.Factory.StartNew(() =>
@@ -178,7 +195,7 @@ namespace PCLStorage
                 {
                     bool result = false;
                     extractedFilenames.Add(entry.FilenameInZip);
-                    var path = System.IO.Path.Combine(desinationFolder, System.IO.Path.GetFileName(entry.FilenameInZip));
+                    var path = System.IO.Path.Combine(desinationFolder.Path, System.IO.Path.GetFileName(entry.FilenameInZip));
                     if (System.IO.File.Exists(path))
                     {
                         if (collisionOption == NameCollisionOption.ReplaceExisting)
@@ -204,5 +221,6 @@ namespace PCLStorage
             }, cancellationToken);
             return extractedFilenames;
         }
+
     }
 }

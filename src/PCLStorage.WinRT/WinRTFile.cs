@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -76,6 +75,18 @@ namespace PCLStorage
         }
 
         /// <summary>
+        /// Writes a stream to the file
+        /// </summary>
+        /// <param name="stream">The data stream which should be written to the file.</param>
+        /// <param name="fileAccess">Specifies whether the file should be overridden.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="bool"/> returns true for success</returns>
+        public async Task<bool> WriteAsync(Stream stream, CancellationToken cancellationToken)
+        {
+            return await TargetPlatformFileSystem.WriteStreamAsync(this, stream, cancellationToken);
+        }
+
+        /// <summary>
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
@@ -144,41 +155,17 @@ namespace PCLStorage
             }
         }
 
-        public async Task<List<string>> ExtractZip(string desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        /// <summary>
+        /// Extract a zip file.
+        /// </summary>
+        /// <param name="desinationFolder">The destination folder for zip file extraction</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task with a List of strings containing the names of extracted files from the zip archive.</returns>
+        public async Task<List<string>> ExtractZip(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var zipFiles = new List<string>();
-            var zipDataStream = await _wrappedFile.OpenReadAsync();// ReadFileFromDiskAsStream(ZipFilepath);
-            if (zipDataStream == null) return null;
-            try
-            {
-                ZipArchive zipArchive = new ZipArchive(zipDataStream.AsStream());
-                foreach (var zipArchiveEntry in zipArchive.Entries)
-                {
-                    var zipData = zipArchiveEntry.Open();
-                    if (zipData == null)
-                    {
-                        JK.JKTools.JKLog("JK#156# zipData == null speichern nicht möglich, " + ZipFilepath + ", " + ZipTargetFolder);
-                    }
-                    else
-                    {
-                        if (zipArchiveEntry.Name == null || zipArchiveEntry.Name.Length == 0)
-                        {
-                            JK.JKTools.JKLog("JK#157# kein gültiger Name für " + zipArchiveEntry.FullName + ", " + ZipFilepath + ", " + ZipTargetFolder);
-                        }
-                        else
-                        {
-                            await WriteFileToDisk(zipData, zipArchiveEntry.Name);
-                            zipFiles.Add(zipArchiveEntry.Name);
-                        }
-                    }
-                }
-
-            }
-            catch (Exception e)
-            {
-                JK.JKTools.JKLog("JK#91# ZipDecompress " + e.Message);
-            }
-            return zipFiles;
+            return await TargetPlatformFileSystem.ExtractZip(this, desinationFolder, collisionOption, cancellationToken);
         }
+
     }
 }

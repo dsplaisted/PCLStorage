@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="AwaitExtensions.WinRT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetPlatformFileSystem.cs" />
     <Compile Include="WinRTFile.cs" />
     <Compile Include="WinRTFileSystem.cs" />
     <Compile Include="WinRTFolder.cs" />

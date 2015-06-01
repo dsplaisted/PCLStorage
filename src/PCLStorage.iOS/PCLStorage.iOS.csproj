@@ -67,7 +67,7 @@
     <Compile Include="..\Zip\ZipStorer.cs">
       <Link>ZipStorer.cs</Link>
     </Compile>
-    <Compile Include="iOSFileSystem.cs" />
+    <Compile Include="TargetPlatformFileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

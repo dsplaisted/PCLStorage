@@ -75,6 +75,7 @@
       <Link>ZipStorer.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetPlatformFileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PCLStorage.Abstractions.NoSL\PCLStorage.Abstractions.NoSL.csproj">

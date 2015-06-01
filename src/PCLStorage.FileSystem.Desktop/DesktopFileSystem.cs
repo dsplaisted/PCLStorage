@@ -98,9 +98,10 @@ namespace PCLStorage
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A file for the given path, or null if it does not exist.</returns>
         //public partial Task<IFile> GetFileFromAppBundleAsync(string path, CancellationToken cancellationToken);
-        public Task<IFile> GetFileFromAppBundleAsync(string path, CancellationToken cancellationToken)
+        //public virtual Task<IFile> GetFileFromAppBundleAsync(string path, CancellationToken cancellationToken);
+        public async Task<IFile> GetFileFromAppBundleAsync(string path, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await TargetPlatformFileSystem.GetFileFromAppBundleAsync(path, cancellationToken);
         }
     }
 }

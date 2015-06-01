@@ -46,6 +46,14 @@ namespace PCLStorage
         Task<Stream> OpenAsync(FileAccess fileAccess, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Writes a stream to the file
+        /// </summary>
+        /// <param name="stream">The data stream which should be written to the file.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><see cref="bool"/>Returns true for success.</returns>
+        Task<bool> WriteAsync(Stream stream, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Deletes the file
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -81,6 +89,6 @@ namespace PCLStorage
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task which will complete after the file is moved.</returns>
-        Task<List<string>> ExtractZip(string desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken));
+        Task<List<string>> ExtractZip(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
