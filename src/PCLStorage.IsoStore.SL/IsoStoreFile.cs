@@ -240,7 +240,7 @@ namespace PCLStorage
             }
         }
 
-        public Task<System.Collections.Generic.List<string>> ExtractZip(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<System.Collections.Generic.List<string>> ExtractZipAsync(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotImplementedException();
         }

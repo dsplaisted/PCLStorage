@@ -90,7 +90,7 @@ namespace PCLStorage
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task with a List of strings containing the names of extracted files from the zip archive.</returns>
-        public static async Task<List<string>> ExtractZip(IFile zipFile, IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<List<string>> ExtractZipAsync(IFile zipFile, IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotImplementedException();
         }

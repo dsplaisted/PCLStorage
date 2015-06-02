@@ -182,42 +182,50 @@ namespace PCLStorage
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task with a List of strings containing the names of extracted files from the zip archive.</returns>
-        public async Task<List<string>> ExtractZip(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<string>> ExtractZipAsync(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
         {
+            //Extraction fails on Android if the zip files comes from the asset folder; couldnt' find out why
             var extractedFilenames = new List<string>();
             await Task.Factory.StartNew(() =>
             {
-                ZipStorer zip = ZipStorer.Open(_path, System.IO.FileAccess.Read);
-                //// Read all directory contents
-                List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
-                //// Extract all files in target directory
-                foreach (ZipStorer.ZipFileEntry entry in dir)
+                try
                 {
-                    bool result = false;
-                    extractedFilenames.Add(entry.FilenameInZip);
-                    var path = System.IO.Path.Combine(desinationFolder.Path, System.IO.Path.GetFileName(entry.FilenameInZip));
-                    if (System.IO.File.Exists(path))
+                    ZipStorer zip = ZipStorer.Open(_path, System.IO.FileAccess.Read);
+                    //// Read all directory contents
+                    List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+                    //// Extract all files in target directory
+                    foreach (ZipStorer.ZipFileEntry entry in dir)
                     {
-                        if (collisionOption == NameCollisionOption.ReplaceExisting)
+                        bool result = false;
+                        extractedFilenames.Add(entry.FilenameInZip);
+                        var path = System.IO.Path.Combine(desinationFolder.Path, System.IO.Path.GetFileName(entry.FilenameInZip));
+                        if (System.IO.File.Exists(path))
                         {
-                            System.IO.File.Delete(path);
+                            if (collisionOption == NameCollisionOption.ReplaceExisting)
+                            {
+                                System.IO.File.Delete(path);
+                                result = zip.ExtractFile(entry, path);
+                            }
+                        }
+                        else
+                        {
                             result = zip.ExtractFile(entry, path);
                         }
+                        if (result)
+                        {
+                            extractedFilenames.Add(System.IO.Path.GetFileName(entry.FilenameInZip));
+                        }
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
                     }
-                    else
-                    {
-                        result = zip.ExtractFile(entry, path);
-                    }
-                    if (result)
-                    {
-                        extractedFilenames.Add(System.IO.Path.GetFileName(entry.FilenameInZip));
-                    }
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        break;
-                    }
+                    zip.Close();
                 }
-                zip.Close();
+                catch (Exception)
+                {
+
+                }
             }, cancellationToken);
             return extractedFilenames;
         }
