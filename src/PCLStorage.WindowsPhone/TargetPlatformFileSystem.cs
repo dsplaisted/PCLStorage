@@ -86,6 +86,7 @@ namespace PCLStorage
         /// <summary>
         /// Extract a zip file.
         /// </summary>
+        /// <param name="zipFile">The zip archive</param>
         /// <param name="desinationFolder">The destination folder for zip file extraction</param>
         /// <param name="collisionOption">How to deal with collisions with existing files.</param>
         /// <param name="cancellationToken">The cancellation token.</param>

@@ -39,16 +39,20 @@ namespace PCLStorage
                 System.IO.Directory.CreateDirectory(tempPath);
             }
             tempPath = System.IO.Path.Combine(tempPath, path);
-            var oStream = new FileOutputStream(tempPath);
-            byte[] buffer = new byte[2048];
-            int length = 2048;
-            while (iStream.Read(buffer, 0, length) > 0)
+            if (System.IO.Directory.Exists(tempPath) == false)
             {
-                oStream.Write(buffer, 0, length);
+                //Files from the app package can't change so there is no need to copy them again
+                var oStream = new FileOutputStream(tempPath);
+                byte[] buffer = new byte[2048];
+                int length = 2048;
+                while (iStream.Read(buffer, 0, length) > 0)
+                {
+                    oStream.Write(buffer, 0, length);
+                }
+                oStream.Flush();
+                oStream.Close();
+                iStream.Close();
             }
-            oStream.Flush();
-            oStream.Close();
-            iStream.Close();	
 
             if (System.IO.File.Exists(tempPath) == false)
             {

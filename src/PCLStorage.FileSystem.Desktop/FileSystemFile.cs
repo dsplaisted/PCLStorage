@@ -197,7 +197,6 @@ namespace PCLStorage
                     foreach (ZipStorer.ZipFileEntry entry in dir)
                     {
                         bool result = false;
-                        extractedFilenames.Add(entry.FilenameInZip);
                         var path = System.IO.Path.Combine(desinationFolder.Path, System.IO.Path.GetFileName(entry.FilenameInZip));
                         if (System.IO.File.Exists(path))
                         {
@@ -213,7 +212,7 @@ namespace PCLStorage
                         }
                         if (result)
                         {
-                            extractedFilenames.Add(System.IO.Path.GetFileName(entry.FilenameInZip));
+                            extractedFilenames.Add(entry.FilenameInZip);
                         }
                         if (cancellationToken.IsCancellationRequested)
                         {
