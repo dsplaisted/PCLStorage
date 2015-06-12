@@ -38,10 +38,11 @@ namespace PCLStorage
             {
                 System.IO.Directory.CreateDirectory(tempPath);
             }
+            path = System.IO.Path.GetFileName(path); //No subfolder inside the tempfolder
             tempPath = System.IO.Path.Combine(tempPath, path);
-            if (System.IO.Directory.Exists(tempPath) == false)
+            //Files from the app package can't change so there is no need to copy them again
+            if (System.IO.File.Exists(tempPath) == false)
             {
-                //Files from the app package can't change so there is no need to copy them again
                 var oStream = new FileOutputStream(tempPath);
                 byte[] buffer = new byte[2048];
                 int length = 2048;
@@ -53,7 +54,6 @@ namespace PCLStorage
                 oStream.Close();
                 iStream.Close();
             }
-
             if (System.IO.File.Exists(tempPath) == false)
             {
                 return null;

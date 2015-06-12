@@ -240,6 +240,58 @@ namespace PCLStorage
             }
         }
 
+        /// <summary>
+        /// Copy a file.
+        /// </summary>
+        /// <param name="newPath">The new full path of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task which will complete after the file is moved.</returns>
+        public async Task CopyAsync(string newPath, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Requires.NotNullOrEmpty(newPath, "newPath");
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+            string newDirectory = System.IO.Path.GetDirectoryName(newPath);
+            string newName = System.IO.Path.GetFileName(newPath);
+
+            for (int counter = 1; ; counter++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                string candidateName = newName;
+                if (counter > 1)
+                {
+                    candidateName = String.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0} ({1}){2}",
+                        System.IO.Path.GetFileNameWithoutExtension(newName),
+                        counter,
+                        System.IO.Path.GetExtension(newName));
+                }
+
+                string candidatePath = PortablePath.Combine(newDirectory, candidateName);
+
+                if (_root.FileExists(candidatePath))
+                {
+                    switch (collisionOption)
+                    {
+                        case NameCollisionOption.FailIfExists:
+                            throw new IOException("File already exists.");
+                        case NameCollisionOption.GenerateUniqueName:
+                            continue; // try again with a new name.
+                        case NameCollisionOption.ReplaceExisting:
+                            _root.DeleteFile(candidatePath);
+                            break;
+                    }
+                }
+
+                _root.CopyFile(_path, candidatePath);
+                _path = candidatePath;
+                _name = candidateName;
+                return;
+            }
+        }
+
         public Task<System.Collections.Generic.List<string>> ExtractZipAsync(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotImplementedException();
