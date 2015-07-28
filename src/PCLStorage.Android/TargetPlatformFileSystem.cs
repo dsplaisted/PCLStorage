@@ -30,8 +30,18 @@ namespace PCLStorage
             //I was not able to access files from the Assets folder like 'file://android_asset/'
             //Now I copy the file into a temp folder first
             //Hopefully somebody got a better solution for this
-
-            Stream iStream = Application.Context.Assets.Open(path);
+            Stream iStream = null;
+            try
+            {
+                iStream = Application.Context.Assets.Open(path);
+            }
+            catch (Exception)
+            {
+            }
+            if (iStream == null)
+            {
+                return null;
+            }
             var tempPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
             tempPath = System.IO.Path.Combine(tempPath, "appbundlefilestempfolder");
             if (System.IO.Directory.Exists(tempPath) == false)
