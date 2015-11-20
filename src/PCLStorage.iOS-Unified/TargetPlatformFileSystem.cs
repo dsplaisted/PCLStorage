@@ -33,6 +33,10 @@ namespace PCLStorage
             {
                 f = new FileSystemFile(bundlePath);
             }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("JK#237c# GetFileFromAppBundleAsync Error file (" + path + ") must be in the Recources folder marked as BundleResource.");
+            }
             return f;
         }
 

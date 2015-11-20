@@ -112,6 +112,7 @@ namespace PCLStorage
             }
             catch (FileNotFoundException)
             {
+                System.Diagnostics.Debug.WriteLine("JK#237b# GetFileFromAppBundleAsync Error file (" + path + ") must be in the project folder marked as content.");
                 return null;
             }
 
