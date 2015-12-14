@@ -22,9 +22,9 @@ namespace PCLStorage
         /// <param name="path">The path to a file, as returned from the <see cref="IFile.Path"/> property.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A file for the given path, or null if it does not exist.</returns>
-        public static async Task<IFile> GetFileFromAppBundleAsync(string path, CancellationToken cancellationToken)
+        public static async Task<IFile> GetFileFromAppBundleAsync(string assetFolderFilePath, CancellationToken cancellationToken)
         {
-            Requires.NotNullOrEmpty(path, "path");
+            Requires.NotNullOrEmpty(assetFolderFilePath, "assetFolderFilePath");
             await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
 
             //I was not able to access files from the Assets folder like 'file://android_asset/'
@@ -49,14 +49,14 @@ namespace PCLStorage
             {
                 System.IO.Directory.CreateDirectory(tempPath);
             }
-            path = System.IO.Path.GetFileName(path); //No subfolder inside the tempfolder
+            var path = System.IO.Path.GetFileName(assetFolderFilePath); //No subfolder inside the tempfolder
             tempPath = System.IO.Path.Combine(tempPath, path);
             //Files from the app package can't change so there is no need to copy them again
             if (System.IO.File.Exists(tempPath) == false)
             {
                 try
                 {
-                    using (var br = new BinaryReader(Application.Context.Assets.Open(path)))
+                    using (var br = new BinaryReader(Application.Context.Assets.Open(assetFolderFilePath)))
                     {
                         using (var bw = new BinaryWriter(new FileStream(tempPath, FileMode.Create)))
                         {
