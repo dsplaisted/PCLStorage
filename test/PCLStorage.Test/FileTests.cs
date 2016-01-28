@@ -36,6 +36,63 @@ namespace PCLStorage.Test
         }
 
         [TestMethod]
+        public async Task AppendFile()
+        {
+            //  Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string fileName = "fileToAppend.txt";
+            
+            //  Act
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.FailIfExists);
+            await file.AppendAllTextAsync("Test");
+            var text = await file.ReadAllTextAsync();
+
+            //  Assert
+            Assert.AreEqual("Test", text);
+
+            // Act
+            await file.AppendAllTextAsync("Test");
+            text = await file.ReadAllTextAsync();
+
+            //  Assert
+            Assert.AreEqual("TestTest", text);
+
+
+            //  Cleanup
+            await file.DeleteAsync();
+        }
+
+        [TestMethod]
+        public async Task AppendLines()
+        {
+            //  Arrange
+            IFolder folder = TestFileSystem.LocalStorage;
+            string fileName = "fileToAppend.txt";
+            string expected = "Test" + Environment.NewLine + "Test" + Environment.NewLine;
+
+            //  Act
+            IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            await file.AppendAllLinesAsync("Test", "Test");
+            var text = await file.ReadAllTextAsync();
+
+            //  Assert
+            Assert.AreEqual(expected, text);
+
+            // Act
+            var lines = new List<string>(){"Test", "Test"};
+            await file.AppendAllLinesAsync(lines);
+            expected += expected;
+            text = await file.ReadAllTextAsync();
+
+            //  Assert
+            Assert.AreEqual(expected, text);
+
+
+            //  Cleanup
+            await file.DeleteAsync();
+        }
+
+        [TestMethod]
         public async Task CreateFile()
         {
             //  Arrange
