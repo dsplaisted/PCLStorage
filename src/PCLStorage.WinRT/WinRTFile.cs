@@ -75,6 +75,18 @@ namespace PCLStorage
         }
 
         /// <summary>
+        /// Writes a stream to the file
+        /// </summary>
+        /// <param name="stream">The data stream which should be written to the file.</param>
+        /// <param name="fileAccess">Specifies whether the file should be overridden.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="bool"/> returns true for success</returns>
+        public async Task<bool> WriteAsync(Stream stream, CancellationToken cancellationToken)
+        {
+            return await TargetPlatformFileSystem.WriteStreamAsync(this, stream, cancellationToken);
+        }
+
+        /// <summary>
         /// Deletes the file
         /// </summary>
         /// <returns>A task which will complete after the file is deleted.</returns>
@@ -142,5 +154,47 @@ namespace PCLStorage
                 throw;
             }
         }
+
+        /// <summary>
+        /// Copy a file.
+        /// </summary>
+        /// <param name="newPath">The new full path of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task which will complete after the file is moved.</returns>
+        public async Task CopyAsync(string newPath, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Requires.NotNullOrEmpty(newPath, "newPath");
+
+            var newFolder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(newPath)).AsTask(cancellationToken).ConfigureAwait(false);
+            string newName = System.IO.Path.GetFileName(newPath);
+
+            try
+            {
+                await _wrappedFile.CopyAsync(newFolder, newName, (Windows.Storage.NameCollisionOption)collisionOption).AsTask(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                if (ex.HResult == FILE_ALREADY_EXISTS)
+                {
+                    throw new IOException("File already exists.", ex);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Extract a zip file.
+        /// </summary>
+        /// <param name="desinationFolder">The destination folder for zip file extraction</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task with a List of strings containing the names of extracted files from the zip archive.</returns>
+        public async Task<List<string>> ExtractZipAsync(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await TargetPlatformFileSystem.ExtractZipAsync(this, desinationFolder, collisionOption, cancellationToken);
+        }
+
     }
 }

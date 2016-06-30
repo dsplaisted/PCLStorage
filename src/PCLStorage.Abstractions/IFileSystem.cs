@@ -36,5 +36,14 @@ namespace PCLStorage
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A folder for the specified path, or null if it does not exist.</returns>
         Task<IFolder> GetFolderFromPathAsync(string path, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Gets a file from the App Bundle.  Returns null if the file does not exist.
+        /// </summary>
+        /// <param name="path">The path to a file, as returned from the <see cref="IFile.Path"/> property.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A file for the given path, or null if it does not exist.</returns>
+        Task<IFile> GetFileFromAppBundleAsync(string path, CancellationToken cancellationToken);
+
     }
 }

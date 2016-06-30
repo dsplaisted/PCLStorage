@@ -1,1 +1,1 @@
-msbuild %~dp0build\build.proj /p:Configuration=Release /t:Clean;BuildPackage
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild build\build.proj /p:Configuration=Release /t:Clean;BuildPackage

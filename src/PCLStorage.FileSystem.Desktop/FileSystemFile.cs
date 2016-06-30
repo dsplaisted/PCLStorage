@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -67,6 +68,23 @@ namespace PCLStorage
             {
                 throw new ArgumentException("Unrecognized FileAccess value: " + fileAccess);
             }
+        }
+
+        /// <summary>
+        /// Writes a stream to the file
+        /// </summary>
+        /// <param name="stream">The data stream which should be written to the file.</param>
+        /// <param name="fileAccess">Specifies whether the file should be overridden.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="bool"/> returns true for success</returns>
+        public async Task<bool> WriteAsync(Stream stream, CancellationToken cancellationToken)
+        {
+            if (stream == null) return false;
+            byte[] bytes = new byte[stream.Length];
+            await stream.ReadAsync(bytes, 0, (int)stream.Length).ConfigureAwait(false);
+            File.WriteAllBytes(this.Path, bytes);
+            stream.Close();
+            return true;
         }
 
         /// <summary>
@@ -155,5 +173,114 @@ namespace PCLStorage
                 return;
             }
         }
+
+
+        /// <summary>
+        /// Copy a file.
+        /// </summary>
+        /// <param name="newPath">The new full path of the file.</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task which will complete after the file is moved.</returns>
+        public async Task CopyAsync(string newPath, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Requires.NotNullOrEmpty(newPath, "newPath");
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
+            string newDirectory = System.IO.Path.GetDirectoryName(newPath);
+            string newName = System.IO.Path.GetFileName(newPath);
+
+            for (int counter = 1; ; counter++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                string candidateName = newName;
+                if (counter > 1)
+                {
+                    candidateName = String.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0} ({1}){2}",
+                        System.IO.Path.GetFileNameWithoutExtension(newName),
+                        counter,
+                        System.IO.Path.GetExtension(newName));
+                }
+
+                string candidatePath = PortablePath.Combine(newDirectory, candidateName);
+
+                if (File.Exists(candidatePath))
+                {
+                    switch (collisionOption)
+                    {
+                        case NameCollisionOption.FailIfExists:
+                            throw new IOException("File already exists.");
+                        case NameCollisionOption.GenerateUniqueName:
+                            continue; // try again with a new name.
+                        case NameCollisionOption.ReplaceExisting:
+                            File.Delete(candidatePath);
+                            break;
+                    }
+                }
+
+                File.Copy(_path, candidatePath);
+                _path = candidatePath;
+                _name = candidateName;
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Extract a zip file.
+        /// </summary>
+        /// <param name="desinationFolder">The destination folder for zip file extraction</param>
+        /// <param name="collisionOption">How to deal with collisions with existing files.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task with a List of strings containing the names of extracted files from the zip archive.</returns>
+        public async Task<List<string>> ExtractZipAsync(IFolder desinationFolder, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            //Extraction fails on Android if the zip files comes from the asset folder; couldnt' find out why
+            var extractedFilenames = new List<string>();
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    ZipStorer zip = ZipStorer.Open(_path, System.IO.FileAccess.Read);
+                    //// Read all directory contents
+                    List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+                    //// Extract all files in target directory
+                    foreach (ZipStorer.ZipFileEntry entry in dir)
+                    {
+                        bool result = false;
+                        var path = System.IO.Path.Combine(desinationFolder.Path, System.IO.Path.GetFileName(entry.FilenameInZip));
+                        if (System.IO.File.Exists(path))
+                        {
+                            if (collisionOption == NameCollisionOption.ReplaceExisting)
+                            {
+                                System.IO.File.Delete(path);
+                                result = zip.ExtractFile(entry, path);
+                            }
+                        }
+                        else
+                        {
+                            result = zip.ExtractFile(entry, path);
+                        }
+                        if (result)
+                        {
+                            extractedFilenames.Add(entry.FilenameInZip);
+                        }
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                    zip.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+            }, cancellationToken);
+            return extractedFilenames;
+        }
+
     }
 }
