@@ -26,25 +26,38 @@ namespace PCLStorage
 
         #endregion
 
+#if !WINDOWS_PHONE
+
         internal static FileSystemFileStats FromPath(string path)
         {
-            
+
+
+
             var fileInfo = new FileInfo(path);
 
-            return new FileSystemFileStats()
+            var fileStats = new FileSystemFileStats()
             {
                 Name = fileInfo.Name,
                 Extension = fileInfo.Extension,
                 CreationTime = fileInfo.CreationTime,
-                CreationTimeUTC = fileInfo.CreationTimeUtc,
                 LastWriteTime = fileInfo.LastWriteTime,
-                LastWriteTimeUTC = fileInfo.LastWriteTimeUtc,
                 LastAccessTime = fileInfo.LastAccessTime,
-                LastAccessTimeUTC = fileInfo.LastAccessTimeUtc,
                 Length = fileInfo.Length
             };
 
+#if !SILVERLIGHT
+            fileStats.CreationTimeUTC = fileInfo.CreationTimeUtc;
+            fileStats.LastWriteTimeUTC = fileInfo.LastWriteTimeUtc;
+            fileStats.LastAccessTimeUTC = fileInfo.LastAccessTimeUtc;
+#endif
+
+            return fileStats;
+
+
+
         }
+#endif
 
     }
+
 }

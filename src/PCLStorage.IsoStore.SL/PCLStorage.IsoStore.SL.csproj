@@ -97,6 +97,9 @@
     <Compile Include="..\..\common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage.FileSystem.Desktop\FileSystemFileStats.cs">
+      <Link>FileSystemFileStats.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage\AwaitExtensions.cs">
       <Link>AwaitExtensions.cs</Link>
     </Compile>
