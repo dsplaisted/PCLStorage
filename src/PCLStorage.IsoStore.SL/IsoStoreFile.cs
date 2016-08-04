@@ -95,6 +95,7 @@ namespace PCLStorage
 
             try
             {
+                
                 IsolatedStorageFileStream stream = _root.OpenFile(Path, FileMode.Open, nativeFileAccess, FileShare.Read);
                 return stream;
             }
@@ -233,6 +234,49 @@ namespace PCLStorage
                 _name = candidateName;
                 return;
             }
+        }
+
+        public async Task<IFileStats> GetFileStats(CancellationToken cancellationToken = new CancellationToken())
+        {
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
+            var localCreationTime = _root.GetCreationTime(_path);
+            var localLastWriteTime = _root.GetLastWriteTime(_path);
+            var localLastAccessTime = _root.GetLastAccessTime(_path);
+
+            var fileStats = new FileSystemFileStats()
+            {
+                Name = _name,
+                Extension = System.IO.Path.GetExtension(_name),
+                CreationTime = localCreationTime.DateTime,
+                CreationTimeUTC = localCreationTime.UtcDateTime,
+                LastWriteTime = localLastWriteTime.DateTime,
+                LastWriteTimeUTC = localLastWriteTime.UtcDateTime,
+                LastAccessTime = localLastAccessTime.DateTime,
+                LastAccessTimeUTC = localLastAccessTime.UtcDateTime
+            };
+
+            return fileStats;
+
+        }
+
+        public Task SetCreationTime(DateTime creationTime, bool utc = false,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task SetLastAccessTime(DateTime lastAccessTime, bool utc = false,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task SetLastWriteTime(DateTime lastWriteTime, bool utc = false,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new NotSupportedException();
         }
     }
 }

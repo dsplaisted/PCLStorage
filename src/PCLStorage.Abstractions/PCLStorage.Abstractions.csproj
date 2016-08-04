@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="ExistenceCheckResult.cs" />
     <Compile Include="FileExtensions.cs" />
+    <Compile Include="IFileStats.cs" />
     <Compile Include="IFile.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IFolder.cs" />

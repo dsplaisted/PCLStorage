@@ -155,5 +155,50 @@ namespace PCLStorage
                 return;
             }
         }
+
+        public async Task<IFileStats> GetFileStats(CancellationToken cancellationToken = new CancellationToken())
+        {
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
+            return FileSystemFileStats.FromPath(Path);
+
+        }
+
+        public async Task SetCreationTime(DateTime creationTime, bool utc = false, CancellationToken cancellationToken = new CancellationToken())
+        {
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
+            if (utc)
+                File.SetCreationTimeUtc(Path, creationTime);
+            else
+                File.SetCreationTime(Path, creationTime);
+
+        }
+
+        public async Task SetLastAccessTime(DateTime lastAccessTime, bool utc = false, CancellationToken cancellationToken = new CancellationToken())
+        {
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
+            if (utc)
+                File.SetLastAccessTimeUtc(Path, lastAccessTime);
+            else
+                File.SetLastAccessTime(Path, lastAccessTime);
+
+        }
+
+        public async Task SetLastWriteTime(DateTime lastWriteTime, bool utc = false, CancellationToken cancellationToken = new CancellationToken())
+        {
+
+            await AwaitExtensions.SwitchOffMainThreadAsync(cancellationToken);
+
+            if (utc)
+                File.SetLastWriteTimeUtc(Path, lastWriteTime);
+            else
+                File.SetLastWriteTime(Path, lastWriteTime);
+
+        }
     }
 }

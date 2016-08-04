@@ -589,5 +589,52 @@ namespace PCLStorage.Test
             // Cleanup
             await file.DeleteAsync();
         }
+
+        [TestMethod]
+        public async Task GetFileStats()
+        {
+
+            IFolder folder = TestFileSystem.LocalStorage;
+            string fileName = "readfilestats";
+            string fileExtension = ".txt";
+            IFile file = await folder.CreateFileAsync(fileName + fileExtension, CreationCollisionOption.ReplaceExisting);
+
+            var stats = await file.GetFileStats();
+
+            Assert.AreEqual(0, stats.Length);
+            Assert.AreEqual(fileName+fileExtension, stats.Name);
+            Assert.AreEqual(fileExtension, stats.Extension);
+
+            await file.DeleteAsync();
+
+        }
+
+        [TestMethod]
+        public async Task WriteFileStats()
+        {
+
+            IFolder folder = TestFileSystem.LocalStorage;
+            var dateTime = DateTime.Parse("1.1.2000");
+            string fileName = "redfilestats";
+            string fileExtension = ".txt";
+            IFile file = await folder.CreateFileAsync(fileName + fileExtension, CreationCollisionOption.ReplaceExisting);
+
+            await file.SetCreationTime(dateTime);
+            await file.SetLastWriteTime(dateTime);
+            await file.SetLastAccessTime(dateTime);
+
+            var stats = await file.GetFileStats();
+
+            Assert.AreEqual(0, stats.Length);
+            Assert.AreEqual(fileName + fileExtension, stats.Name);
+            Assert.AreEqual(fileExtension, stats.Extension);
+            Assert.AreEqual(dateTime, stats.CreationTime);
+            Assert.AreEqual(dateTime, stats.LastWriteTime);
+            Assert.AreEqual(dateTime, stats.LastAccessTime);
+
+            await file.DeleteAsync();
+
+        }
+
     }
 }
