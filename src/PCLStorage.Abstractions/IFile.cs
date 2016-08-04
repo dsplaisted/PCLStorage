@@ -73,5 +73,40 @@ namespace PCLStorage
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task which will complete after the file is moved.</returns>
         Task MoveAsync(string newPath, NameCollisionOption collisionOption = NameCollisionOption.ReplaceExisting, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Gets the FileStats of this file
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task which will return FileStats after completion.</returns>
+        Task<IFileStats> GetFileStats(CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Writes creation time
+        /// </summary>
+        /// <param name="creationTime">The time at which the file has been created</param>
+        /// <param name="utc">Set to true if you want to write utc time</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task which will complete after the creation time was written.</returns>
+        Task SetCreationTime(DateTime creationTime, bool utc = false, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Writes last access time
+        /// </summary>
+        /// <param name="lastAccessTime">The time at which the file has been last accessed</param>
+        /// <param name="utc">Set to true if you want to write utc time</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task which will complete after the last access time was written.</returns>
+        Task SetLastAccessTime(DateTime lastAccessTime, bool utc = false, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Writes last write time
+        /// </summary>
+        /// <param name="lastWriteTime">The time at which the file has been last written</param>
+        /// <param name="utc">Set to true if you want to write utc time</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task which will complete after the last write time was written.</returns>
+        Task SetLastWriteTime(DateTime lastWriteTime, bool utc = false, CancellationToken cancellationToken = default(CancellationToken));
+
     }
 }

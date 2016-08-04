@@ -53,6 +53,9 @@
     <Compile Include="..\PCLStorage.FileSystem.Desktop\FileSystemFile.cs">
       <Link>FileSystemFile.cs</Link>
     </Compile>
+    <Compile Include="..\PCLStorage.FileSystem.Desktop\FileSystemFileStats.cs">
+      <Link>FileSystemFileStats.cs</Link>
+    </Compile>
     <Compile Include="..\PCLStorage.FileSystem.Desktop\FileSystemFolder.cs">
       <Link>FileSystemFolder.cs</Link>
     </Compile>

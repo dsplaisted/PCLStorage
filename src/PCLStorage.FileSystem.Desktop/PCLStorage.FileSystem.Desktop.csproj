@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="DesktopFileSystem.cs" />
     <Compile Include="FileSystemFile.cs" />
+    <Compile Include="FileSystemFileStats.cs" />
     <Compile Include="FileSystemFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
