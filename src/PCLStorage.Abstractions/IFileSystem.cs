@@ -17,6 +17,10 @@ namespace PCLStorage
         /// </summary>
         IFolder LocalStorage { get; }
         /// <summary>
+        /// A folder representing storage where documents are saved
+        /// </summary>
+        IFolder DocumentStorage { get; }
+        /// <summary>
         /// A folder representing storage which may be synced with other devices for the same user
         /// </summary>
         IFolder RoamingStorage { get; }

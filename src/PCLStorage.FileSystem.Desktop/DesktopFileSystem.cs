@@ -35,6 +35,26 @@ namespace PCLStorage
         }
 
         /// <summary>
+        /// A folder representing storage where documents are saved. It is the same as LocalStorage, except for iOS.
+        /// </summary>
+        public IFolder DocumentStorage
+        {
+            get
+            {
+                //  SpecialFolder.LocalApplicationData is not app-specific, so use the Windows Forms API to get the app data path
+                //var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+#if ANDROID
+                var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+#elif IOS
+                var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+#else
+                var localAppData = System.Windows.Forms.Application.LocalUserAppDataPath;
+#endif
+                return new FileSystemFolder(localAppData);
+            }
+        }
+
+        /// <summary>
         /// A folder representing storage which may be synced with other devices for the same user
         /// </summary>
         public IFolder RoamingStorage
