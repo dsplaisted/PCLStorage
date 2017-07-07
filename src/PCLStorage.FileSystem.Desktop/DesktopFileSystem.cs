@@ -25,8 +25,11 @@ namespace PCLStorage
 #if ANDROID
                 var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 #elif IOS
-                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var localAppData = Path.Combine(documents, "..", "Library");
+                NSUrl[] urls = NSFileManager.DefaultManager.GetUrls(NSSearchPathDirectory.LibraryDirectory, NSSearchPathDomain.User);
+                if (urls == null || urls.Count() == 0) {
+                  throw new Exception("Failed to find the folder; this should never happen.");
+                }
+                return urls[0].Path;
 #else
                 var localAppData = System.Windows.Forms.Application.LocalUserAppDataPath;
 #endif
