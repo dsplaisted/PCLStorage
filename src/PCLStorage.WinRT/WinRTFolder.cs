@@ -203,7 +203,7 @@ namespace PCLStorage
             // and also bugs the developer who is debugging the app.
             // So we just avoid all exceptions being *thrown*
             // by checking for exception objects carefully.
-            var result = await _wrappedFolder.GetItemAsync(name).AsTaskNoThrow(cancellationToken);
+            var result = await _wrappedFolder.GetItemAsync(name).AsTaskNoThrow(cancellationToken).ConfigureAwait(false);
             if (result.IsFaulted)
             {
                 if (result.Exception.InnerException is FileNotFoundException)
