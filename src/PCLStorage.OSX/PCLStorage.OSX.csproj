@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{50EC2217-EEC7-46A6-914D-666182DE9AE6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PCLStorage</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>PCLStorage</AssemblyName>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;OSX;FILE_SYSTEM</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Profiling>false</Profiling>
+    <UseRefCounting>false</UseRefCounting>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <CreatePackage>false</CreatePackage>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Profiling>false</Profiling>
+    <UseRefCounting>false</UseRefCounting>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <CreatePackage>false</CreatePackage>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <DefineConstants>OSX;FILE_SYSTEM</DefineConstants>
+    <DocumentationFile>bin\Release\PCLStorage.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\PCLStorage\AwaitExtensions.cs">
+      <Link>AwaitExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage\PortablePath.cs">
+      <Link>PortablePath.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage\Requires.cs">
+      <Link>Requires.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage.FileSystem.Desktop\DesktopFileSystem.cs">
+      <Link>DesktopFileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage.FileSystem.Desktop\FileSystemFile.cs">
+      <Link>FileSystemFile.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage.FileSystem.Desktop\FileSystemFolder.cs">
+      <Link>FileSystemFolder.cs</Link>
+    </Compile>
+    <Compile Include="..\PCLStorage\Exceptions\PCLStorageExceptions.cs">
+      <Link>Exceptions\PCLStorageExceptions.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\PCLStorage.Abstractions.NoSL\PCLStorage.Abstractions.NoSL.csproj">
+      <Project>{8F4C2E94-B8C5-477B-A315-CA58C70617E4}</Project>
+      <Name>PCLStorage.Abstractions.NoSL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PCLStorage.Abstractions\PCLStorage.Abstractions.csproj">
+      <Project>{EEBB53F3-EBDF-4DD0-82E5-FF9A2C8DBD72}</Project>
+      <Name>PCLStorage.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
