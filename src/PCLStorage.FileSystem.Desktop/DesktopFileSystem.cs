@@ -35,9 +35,8 @@ namespace PCLStorage
         }
 
         /// <summary>
-        /// A folder representing storage where documents are saved. On Android, the application name should be added to the path to reach the a specific application's data.
-        /// Ex: On Android, add "com.Developer.AppName/files" at the end of the path and create a new folder, to save files specific to the app.
-        /// This will appear in the file system under Android/data/com.Developer.AppName/files
+        /// A folder representing storage where documents are saved. On Android, this represents the Device Storage, which is accessible throught the file explorer.
+        /// On iOS, this represents the folder that can be accessed through iTunes, to add files.
         /// </summary>
         public IFolder DocumentStorage
         {
@@ -46,9 +45,10 @@ namespace PCLStorage
                 //  SpecialFolder.LocalApplicationData is not app-specific, so use the Windows Forms API to get the app data path
                 //var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 #if ANDROID
-                //This folder
-                var localAppData = Android.OS.Environment.ExternalStorageDirectory.Path + "/Android/data/";
+                //This represents local device storage.
+                var localAppData = Android.OS.Environment.ExternalStorageDirectory.Path;
 #elif IOS
+                //This location can be accessed through iTunes to add files.
                 var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 #else
                 var localAppData = System.Windows.Forms.Application.LocalUserAppDataPath;
